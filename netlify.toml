@@ -1,0 +1,6 @@
+[build]
+  command = "ng build --configuration production"
+  publish = "dist/cartelera/browser"
+
+[build.environment]
+  ANGULAR_PROJECT = "cartelera"
