@@ -1,0 +1,16 @@
+<!-- src/app/cartel/cartel.component.html -->
+<div class="cartel-container">
+  <h2 class="titulo-seccion">🗓️ Charlas y Capacitaciones del Mes de Mayo 2025</h2>
+  <h3 class="titulo-seccion">Hospital General Tipo I de Tecpán Guatemala</h3>
+  <div class="grid-eventos">
+    <div class="evento" *ngFor="let evento of eventosDelMes">
+      <h3 class="evento-titulo">{{ evento.TEMA }}</h3>
+      <p><strong>🧪 Actividad:</strong> {{ evento.ACTIVIDAD }}</p>
+      <p><strong>🏥 Departamento:</strong> {{ evento.DEPARTAMENTO_SERVICIO_ENCARGADO }}</p>
+      <p><strong>👩‍⚕️ Responsable:</strong> {{ evento.PERSONA_RESPONSABLE }}</p>
+      <p><strong>⏳ Duración:</strong> {{ evento.TIEMPO_APROXIMADO }}</p>
+      <p class="evento-fecha"><strong>📅 Fecha:</strong> {{ evento.FECHAS_A_DESARROLLAR }}</p>
+      <p><strong>💻 Modalidad:</strong> {{ evento.MODALIDAD }}</p>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:cartelera": "node dist/cartelera/server/server.mjs"
+    "serve:ssr:cartelera": "node dist/cartelera/server/server.mjs",
+    "serve:ssr:angular19-app": "node dist/angular19-app/server/server.mjs"
   },
   "private": true,
   "dependencies": {
