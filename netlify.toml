@@ -1,6 +1,8 @@
 [build]
-  command = "ng build --configuration production"
+  command = "yarn build"
   publish = "dist/cartelera/browser"
 
-[build.environment]
-  ANGULAR_PROJECT = "cartelera"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
