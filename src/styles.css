@@ -4,3 +4,14 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: rgb(25, 40, 87);
 }
+
+.btn-c {
+  padding: 0.6rem;
+  margin: 0.2rem;
+  background-color: #0d47a1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}

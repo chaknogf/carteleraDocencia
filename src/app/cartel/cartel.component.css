@@ -1,5 +1,5 @@
 .cartel-container {
-  max-width: 900px;
+  max-width: 94dvw ;
   margin: 2rem auto;
   padding: 1.5rem;
   background-color: #c5ccd2;
@@ -47,4 +47,19 @@
 
 .evento-descripcion {
   color: #333;
+}
+
+.varsider {
+  display: flex;
+  justify-content: flex-end; /* Esto alinea a la derecha */
+  padding: 1rem 0; /* Opcional para separación */
+}
+
+.access {
+  padding: 0.6rem 1.2rem;
+  background-color: #0d47a1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

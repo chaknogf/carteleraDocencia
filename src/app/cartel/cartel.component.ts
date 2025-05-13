@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 export interface Evento {
   TEMA: string;
@@ -17,11 +18,21 @@ export interface Evento {
   templateUrl: './cartel.component.html',
   styleUrls: ['./cartel.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule,]
 })
 
 
+
 export class CartelComponent {
+
+  constructor(private router: Router) { }
+
+  acceso() {
+    this.router.navigate(['tabla']);
+  }
+
+
+
   eventosDelMes: Evento[] = [
     {
       "TEMA": "Beneficios de la Lactancia Materna",

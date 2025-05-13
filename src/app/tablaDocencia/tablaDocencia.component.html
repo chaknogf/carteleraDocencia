@@ -1,0 +1,26 @@
+<div class="tabla-container">
+  <h1>Tabla Docencia</h1>
+  <button class="btn-c" (click)="volver()">Volver a Cartelera</button>
+  <button class="btn-c" (click)="agregarDocencia()">Agregar Capacitacion</button>
+  <table>
+    <tr>
+      <th>Tema</th>
+      <th>Actividad</th>
+      <th>Modalidad</th>
+      <th>Fecha</th>
+      <th>Estado de la actividad</th>
+      <th>Acciones</th>
+    </tr>
+    <tr *ngFor="let docencia of data">
+      <td>{{ docencia.TEMA }}</td>
+      <td>{{ docencia.ACTIVIDAD }}</td>
+      <td>{{ docencia.MODALIDAD }}</td>
+      <td>{{ docencia.FECHAS_A_DESARROLLAR }}</td>
+      <td>{{ docencia.ESTADO }}</td>
+      <td>
+        <button class="btn-c" (click)="editarDocencia(docencia)">Editar</button>
+        <button class="btn-c" (click)="eliminarDocencia(docencia)">Eliminar</button>
+      </td>
+    </tr>
+  </table>
+</div>
