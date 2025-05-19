@@ -1,19 +1,36 @@
 <!-- src/app/cartel/cartel.component.html -->
 <div class="cartel-container">
   <div class="varsider">
-    <button class="btn-c" (click)="acceso()">Acceder</button>
+    <button class="btn-c" (click)="open()">Acceder</button>
   </div>
   <h2 class="titulo-seccion">🗓️ Charlas y Capacitaciones del Mes de Mayo 2025</h2>
   <h3 class="titulo-seccion">Hospital General Tipo I de Tecpán Guatemala</h3>
   <div class="grid-eventos">
-    <div class="evento" *ngFor="let evento of eventosDelMes">
-      <h3 class="evento-titulo">{{ evento.TEMA }}</h3>
-      <p><strong>🧪 Actividad:</strong> {{ evento.ACTIVIDAD }}</p>
-      <p><strong>🏥 Departamento:</strong> {{ evento.DEPARTAMENTO_SERVICIO_ENCARGADO }}</p>
-      <p><strong>👩‍⚕️ Responsable:</strong> {{ evento.PERSONA_RESPONSABLE }}</p>
-      <p><strong>⏳ Duración:</strong> {{ evento.TIEMPO_APROXIMADO }}</p>
-      <p class="evento-fecha"><strong>📅 Fecha:</strong> {{ evento.FECHAS_A_DESARROLLAR }}</p>
-      <p><strong>💻 Modalidad:</strong> {{ evento.MODALIDAD }}</p>
+    <div class="evento" *ngFor="let evento of eventos">
+      <h3 class="evento-titulo">{{ evento.tema }}</h3>
+      <p><strong>🧪 Actividad:</strong> {{ evento.actividad }}</p>
+      <p><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
+     <div *ngIf="isResponsableValido(evento.persona_responsable)">
+  <strong>👩‍⚕️ Responsable(s):</strong>
+  <ul>
+    <li *ngFor="let r of evento.persona_responsable | keyvalue">
+      <ng-container *ngIf="r.value.nombre">
+        {{ r.value.nombre }} - {{ r.value.puesto }}
+      </ng-container>
+    </li>
+  </ul>
+</div>
+      <p><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
+      <p class="evento-fecha"><strong>📅 Fecha:</strong> {{ evento.fechas_a_desarrollar | fechaLarga }}</p>
+      <p><strong>💻 Modalidad:</strong> {{ evento.modalidad }}</p>
     </div>
+  </div>
+</div>
+
+
+<div class="modal-backdrop" *ngIf="visible()">
+  <div class="modal-content">
+    <button class="close-button" (click)="close()">×</button>
+    <app-login></app-login>
   </div>
 </div>

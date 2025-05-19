@@ -1,0 +1,24 @@
+<div class="form-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+	<p class="title">Login</p>
+	<form class="form">
+		<div class="input-group">
+			<label for="username">Username</label>
+			<input type="text" id="username" formControlName="username" placeholder="">
+		</div>
+		<div class="input-group">
+			<label for="password">Password</label>
+			<input type="password" id="password" formControlName="password" placeholder="">
+			<!-- <div class="forgot">
+				<a rel="noopener noreferrer" href="#">Forgot Password?</a>
+			</div> -->
+		</div>
+		<button (click)="onSubmit()" class="sign" type="submit" [disabled]="loading">Sign in</button>
+	</form>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+
+
+
+</div>

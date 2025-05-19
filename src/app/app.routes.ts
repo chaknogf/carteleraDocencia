@@ -7,5 +7,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'eventos', pathMatch: 'full' },
   { path: 'eventos', component: CartelComponent },
   { path: 'tabla', component: TablaDocenciaComponent },
-  { path: 'formulario', component: FormularioComponent }
+  { path: 'formulario', component: FormularioComponent },
+  { path: 'editarActividad/:id', component: FormularioComponent },
+
 ];

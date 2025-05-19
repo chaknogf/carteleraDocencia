@@ -1,23 +1,189 @@
 <div class="formulario-container">
   <button class="btn-c" (click)="volver()">Volver</button>
   <h1>Formulario</h1>
-  <form>
-    <label for="tema">Tema:</label>
-    <input type="text" id="tema" name="tema">
-    <br>
-    <label for="actividad">Actividad:</label>
-    <input type="text" id="actividad" name="actividad">
-    <br>
-    <label for="modalidad">Modalidad:</label>
-    <input type="text" id="modalidad" name="modalidad">
-    <br>
-    <label for="fecha">Fecha:</label>
-    <input type="date" id="fecha" name="fecha">
-    <br>
-    <label for="estado">Estado:</label>
-    <input type="text" id="estado" name="estado">
-    <br>
-    <button class="btn-c" type="submit">Enviar</button>
+  <form class="dos-columnas" (ngSubmit)="guardar()">
+
+    <div class="form-group">
+       <label for="tema">Tema:</label>
+    <input
+    type="text"
+    id="tema"
+    name="tema"
+    [(ngModel)]="actividad.tema">
+
+    </div>
+
+    <div class="form-group">
+      <label for="tipoActividad">Tipo de Actividad:</label>
+      <select
+        id="tipoActividad"
+        name="tipoActividad"
+        [(ngModel)]="actividad.actividad">
+        <option value=""></option>
+        <option value="1">Capacitación</option>
+        <option value="2">Charla</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="servicioEncargado">Servicio Encargado:</label>
+      <input
+      type="text"
+      id="servicioEncargado"
+      name="servicioEncargado"
+      [(ngModel)]="actividad.servicio_encargado">
+
+    </div>
+
+
+   <div class="form-group">
+  <label>Responsables:</label>
+  <div *ngFor="let responsable of actividad.persona_responsable | keyvalue">
+    <div>
+      <label for="nombre{{responsable.key}}">Nombre:</label>
+      <input type="text" id="nombre{{responsable.key}}" name="nombre" [(ngModel)]="responsable.value.nombre">
+    </div>
+    <div>
+      <label for="puesto{{responsable.key}}">Puesto:</label>
+      <input type="text" id="puesto{{responsable.key}}" name="puesto" [(ngModel)]="responsable.value.puesto">
+    </div>
+    <button class="btn-c"
+      type="button"
+      *ngIf="(actividad.persona_responsable | keyvalue).length > 1"
+      (click)="removerResponsable(responsable.key)"
+    >-</button>
+  </div>
+  <button class="btn-c" type="button" (click)="agregarResponsable()">+</button>
+</div>
+
+<div class="form-group">
+  <label for="tiempoAproximado">Tiempo Aproximado:</label>
+    <input
+      type="text"
+      id="tiempoAproximado"
+      name="tiempoAproximado"
+      [(ngModel)]="actividad.tiempo_aproximado">
+
+</div>
+
+<div class="form-group">
+  <label for="modalidad">Modalidad:</label>
+    <select
+      id="modalidad"
+      name="modalidad"
+      [(ngModel)]="actividad.modalidad">
+      <option value=""></option>
+      <option value="P">Presencial</option>
+      <option value="V">Virtual</option>
+    </select>
+
+</div>
+
+<div class="form-group">
+  <label for="fecha">Fecha:</label>
+    <input
+      type="date"
+      id="fecha"
+      name="fecha"
+      [(ngModel)]="actividad.fechas_a_desarrollar" >
+
+</div>
+
+<div class="form-group">
+  <label for="estado">Estado:</label>
+    <select
+      id="estado"
+      name="estado"
+      [(ngModel)]="actividad.estado">
+      <option value=""></option>
+      <option value="P">Programada</option>
+      <option value="C">Completada</option>
+    </select>
+
+</div>
+<h2 class="detalles">Detalles:</h2>
+
+<div class="form-group"></div>
+<div class="form-group">
+   <label for="link">Link</label>
+      <input type="text" id="link" name="link" [(ngModel)]="detalle.link">
+</div>
+<div class="form-group">
+  <label for="duracion">Duración</label>
+  <input type="text" id="duracion" name="duracion" [(ngModel)]="detalle.duracion">
+
+</div>
+
+<div class="form-group">
+  <label for="grupoDirigido">Grupo Dirigido</label>
+  <input type="text" id="grupoDirigido" name="grupoDirigido" [(ngModel)]="detalle.grupo_dirigido">
+</div>
+
+<div class="form-group">
+  <label for="lugar">Lugar</label>
+  <input type="text" id="lugar" name="lugar" [(ngModel)]="detalle.lugar">
+
+</div>
+
+<div class="form-group">
+  <label for="contenido">Contenido</label>
+  <input type="text" id="contenido" name="contenido" [(ngModel)]="detalle.contenido">
+</div>
+
+<div class="form-group">
+   <label for="asistencia">Asistencia</label>
+   <input type="number" id="asistencia" name="asistencia" [(ngModel)]="detalle.asistencia">
+</div>
+
+<div class="form-group">
+  <label for="inasistencia">Inasistencia</label>
+  <input type="number" id="inasistencia" name="inasistencia" [(ngModel)]="detalle.inasistencia">
+</div>
+
+<div class="form-group">
+  <label for="excelente">Excelente</label>
+  <input type="number" id="excelente" name="excelente" [(ngModel)]="detalle.excelente">
+</div>
+
+<div class="form-group">
+  <label for="bueno">Bueno</label>
+  <input type="number" id="bueno" name="bueno" [(ngModel)]="detalle.bueno">
+</div>
+
+<div class="form-group">
+  <label for="regular">Regular</label>
+  <input type="number" id="regular" name="regular" [(ngModel)]="detalle.regular">
+</div>
+
+<div class="form-group">
+  <label for="deficiente">Deficiente</label>
+  <input type="number" id="deficiente" name="deficiente" [(ngModel)]="detalle.deficiente">
+</div>
+
+<div class="form-group">
+  <label for="fechaEntregaInforme">Fecha Entrega Informe</label>
+  <input type="date" id="fechaEntregaInforme" name="fechaEntregaInforme" [(ngModel)]="detalle.fecha_entrega_informe">
+</div>
+
+<div class="form-group">
+  <label for="mes">Mes</label>
+    <select id="mes" name="mes" [(ngModel)]="detalle.mes" (ngModelChange)="actualizarMes($event)">
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+    </select>
+</div>
+
+    <button class="btn-c" type="submit">Guardar</button>
   </form>
 
 

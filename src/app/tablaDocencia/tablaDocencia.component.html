@@ -1,26 +1,103 @@
 <div class="tabla-container">
   <h1>Tabla Docencia</h1>
-  <button class="btn-c" (click)="volver()">Volver a Cartelera</button>
+  <div class="filtrar"> <button class="btn-c" (click)="volver()">Volver a Cartelera</button>
   <button class="btn-c" (click)="agregarDocencia()">Agregar Capacitacion</button>
+  <div class="buscar">
+    <button class="btn-c" (click)="open()">Filtrar</button>
+    <button class="btn-c" (click)="limpiarFiltros()">limpiar</button>
+  </div>
+</div>
+
+
   <table>
     <tr>
+      <th>ID</th>
+      <th>Mes</th>
       <th>Tema</th>
+      <th>Encargado</th>
       <th>Actividad</th>
       <th>Modalidad</th>
       <th>Fecha</th>
       <th>Estado de la actividad</th>
+      <th>Entrega de informe</th>
       <th>Acciones</th>
     </tr>
-    <tr *ngFor="let docencia of data">
-      <td>{{ docencia.TEMA }}</td>
-      <td>{{ docencia.ACTIVIDAD }}</td>
-      <td>{{ docencia.MODALIDAD }}</td>
-      <td>{{ docencia.FECHAS_A_DESARROLLAR }}</td>
-      <td>{{ docencia.ESTADO }}</td>
+    <tr *ngFor="let docencia of actividades">
+      <td>{{ docencia.id }}</td>
+      <td>{{ docencia.detalles.mes | mes }}</td>
+      <td>{{ docencia.tema }}</td>
+      <td>
+  {{ docencia.servicio_encargado }}
+ <div *ngIf="isResponsableValido(docencia.persona_responsable)">
+  <strong>👩‍⚕️ Responsable(s):</strong>
+  <ul>
+    <li *ngFor="let r of docencia.persona_responsable | keyvalue">
+      <ng-container *ngIf="r.value.nombre">
+        {{ r.value.nombre }} - {{ r.value.puesto }}
+      </ng-container>
+    </li>
+  </ul>
+</div>
+</td>
+      <td>{{ docencia.actividad | actividad }}</td>
+      <td>{{ docencia.modalidad | modalidad }}</td>
+      <td>{{ docencia.fechas_a_desarrollar | fechaLarga }}</td>
+      <td>{{ docencia.estado | estado }}</td>
+      <td>{{ docencia.detalles.fecha_entrega_informe }}</td>
       <td>
         <button class="btn-c" (click)="editarDocencia(docencia)">Editar</button>
-        <button class="btn-c" (click)="eliminarDocencia(docencia)">Eliminar</button>
+        <button class="btn-c" (click)="eliminarDocencia(docencia.id)">Eliminar</button>
       </td>
     </tr>
   </table>
+  <div *ngIf="!actividades.length" class="no-actividades">
+    <p>No hay actividades para mostrar.</p>
+  </div>
+  <div class="paginacion">
+  <button [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
+  <span>Página {{ paginaActual + 1 }}</span>
+  <button (click)="skipPlus()">Siguiente</button>
+</div>
+
+
+</div>
+
+
+<div *ngIf="visible()" class="modal-backdrop">
+  <div class="modal-content">
+    <button class="close-button" (click)="close()">×</button>
+
+    <form (ngSubmit)="listarActividades()" #docenciaForm="ngForm">
+      <label for="tema">Tema:</label>
+      <input type="text" id="tema" name="tema" [(ngModel)]="buscarTema" />
+
+      <label for="mes">Mes:</label>
+      <select id="mes" name="mes" [(ngModel)]="buscarMes">
+        <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
+      </select>
+
+      <label for="actividad">Actividad:</label>
+      <select id="actividad" name="actividad" [(ngModel)]="buscarActividad">
+        <option *ngFor="let actividad of actividadesTipo" [value]="actividad.value">{{ actividad.label }}</option>
+      </select>
+
+      <label for="modalidad">Modalidad:</label>
+      <select id="modalidad" name="modalidad" [(ngModel)]="buscarModalidad">
+        <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">{{ modalidad.label }}</option>
+      </select>
+
+      <label for="fecha">Fecha:</label>
+      <input type="date" id="fecha" name="fecha" [(ngModel)]="buscarFecha" />
+
+      <label for="estado">Estado:</label>
+      <select id="estado" name="estado" [(ngModel)]="buscarEstado">
+        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+      </select>
+
+      <label for="persona_responsable">Responsable:</label>
+      <input type="text" id="persona_responsable" name="persona_responsable" [(ngModel)]="buscarPersona" />
+
+      <button type="submit" (click)="listarActividades()" >Buscar..</button>
+    </form>
+  </div>
 </div>

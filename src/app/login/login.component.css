@@ -1,0 +1,124 @@
+.form-container {
+  background-color: rgba(31, 41, 55, 1); /* Fondo oscuro y elegante */
+  color: rgba(243, 244, 246, 1);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 0.9rem auto; /* Centrar el formulario y añadir márgenes */
+  max-width: 500px; /* Ancho máximo para pantallas más grandes */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+
+}
+
+.title {
+  text-align: center;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.75rem;
+}
+
+.form {
+  margin-top: 0;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  color: rgba(156, 163, 175, 1);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  width: 90%; /* Ocupar todo el ancho */
+  border-radius: 0.5rem;
+  border: 1px solid rgba(55, 65, 81, 1);
+  outline: none;
+  background-color: rgba(17, 24, 39, 1);
+  padding: 1.1rem; /* Aumentar el padding para facilitar el toque */
+  color: rgba(243, 244, 246, 1);
+  font-size: 1rem;
+}
+
+.input-group input:focus {
+  border-color: rgba(167, 139, 250, 0.8);
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
+}
+
+.forgot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.forgot a {
+  color: rgba(167, 139, 250, 1);
+  text-decoration: none;
+  padding: 0.5rem; /* Añadir padding para facilitar el toque */
+}
+
+.forgot a:hover {
+  text-decoration: underline rgba(167, 139, 250, 0.8);
+}
+
+.sign {
+  display: block;
+  width: 100%;
+  background-color: rgba(167, 139, 250, 1); /* Color de acento */
+  color: rgba(17, 24, 39, 1);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1.1rem; /* Aumentar el padding del botón */
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sign:hover:not(:disabled) {
+  background-color: rgba(145, 118, 228, 1);
+}
+
+.sign:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background-color: rgba(254, 226, 226, 0.8); /* Fondo suave del error */
+  color: rgba(153, 27, 27, 1);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Ocultar la sección de redes sociales para un diseño más enfocado en el login */
+.social-message,
+.social-icons,
+.line {
+  display: none;
+}
+
+.signup {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: rgba(156, 163, 175, 1);
+}
+
+.signup a {
+  color: rgba(167, 139, 250, 1);
+  text-decoration: none;
+  padding: 0.5rem; /* Añadir padding para facilitar el toque */
+}
+
+.signup a:hover {
+  text-decoration: underline rgba(167, 139, 250, 0.8);
+}

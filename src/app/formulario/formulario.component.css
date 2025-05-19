@@ -26,8 +26,7 @@ label {
   margin-bottom: 0.3rem;
 }
 
-input[type="text"],
-input[type="date"] {
+input, select{
   padding: 0.5rem 0.8rem;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -36,9 +35,10 @@ input[type="date"] {
   transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus,
-input[type="date"]:focus {
+input:focus,
+select:focus {
   border-color: #0d47a1;
+  box-shadow: 0 0 5px rgba(13, 72, 161, 0.753);
 }
 
 .btn-c {
@@ -54,4 +54,38 @@ input[type="date"]:focus {
 
 .btn-c:hover {
   background-color: #08316c;
+}
+
+@media (min-width: 768px) {
+  .formulario-container {
+    max-width: 110dvh;
+    padding: 3rem;
+  }
+  form.dos-columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .columna-completa {
+    grid-column: span 2;
+  }
+}
+
+.detalles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  flex-direction: row;
 }
