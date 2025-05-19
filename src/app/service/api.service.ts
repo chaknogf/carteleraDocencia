@@ -6,7 +6,7 @@ import { Actividad, Usuarios } from '../interface/interfaces';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  public readonly baseUrl = 'http://192.88.1.135:8002';
+  public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
   public token: string | null = null;
 
   constructor(
