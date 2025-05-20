@@ -8,7 +8,7 @@
   <div class="grid-eventos">
     <div class="evento" *ngFor="let evento of eventos">
       <h3 class="evento-titulo">{{ evento.tema }}</h3>
-      <p><strong>🧪 Actividad:</strong> {{ evento.actividad }}</p>
+      <p><strong>🧪 Actividad:</strong> {{ evento.actividad | actividad }}</p>
       <p><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
      <div *ngIf="isResponsableValido(evento.persona_responsable)">
   <strong>👩‍⚕️ Responsable(s):</strong>

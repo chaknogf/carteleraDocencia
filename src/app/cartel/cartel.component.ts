@@ -5,6 +5,7 @@ import { LoginComponent } from '../login/login.component';
 import { Actividad } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
+import { EnumActividadPipe } from '../pipe/tuberias.pipe';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { FechaLargaPipe } from '../pipe/fechas.pipe';
   templateUrl: './cartel.component.html',
   styleUrls: ['./cartel.component.css'],
   standalone: true,
-  imports: [CommonModule, LoginComponent, FechaLargaPipe]
+  imports: [CommonModule, LoginComponent, FechaLargaPipe, EnumActividadPipe]
 })
 
 
@@ -32,8 +33,8 @@ export class CartelComponent {
         this.eventos = data;
 
 
-        console.log('✅ Actividades cargadas:', this.eventos);
-        console.table(this.eventos);
+        console.log('✅ Actividades cargadas');
+        //console.table(this.eventos);
       })
       .catch((error) => {
         console.error('❌ Error al cargar actividades:', error);
