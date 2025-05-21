@@ -8,6 +8,14 @@ export interface Usuarios {
   estado: string;
 }
 
+export interface Currentuser {
+  id: number;
+  username: string;
+  role: string;
+  nombre?: string;
+  email?: string;
+}
+
 export interface PersonaResponsable {
   nombre: string;
   puesto: string;

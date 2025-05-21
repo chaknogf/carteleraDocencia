@@ -1,0 +1,73 @@
+<div class="tabla-container">
+  <h1>Gestor de Usuarios</h1>
+  <div class="filtrar"> <button class="btn-c" (click)="volver()">Salir</button>
+  <button class="btn-c" (click)="agregarUsuario()">Agregar Usuario</button>
+  <div class="buscar">
+    <button class="btn-c" (click)="open()">Filtrar</button>
+    <button class="btn-c" (click)="limpiarFiltros()">limpiar</button>
+  </div>
+</div>
+
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+
+    </tr>
+    <tr *ngFor="let usr of usuarios">
+      <td>{{ usr.id }}</td>
+      <td>{{ usr.username }}</td>
+      <td>{{ usr.nombre }}</td>
+      <td>{{usr.email}}</td>
+      <td>{{usr.role}}</td>
+      <td>{{usr.estado}}</td>
+
+      <td>
+        <button class="btn-c" (click)="editarUsuario(usr.id)">Editar</button>
+        <button class="btn-c" (click)="eliminarUsuario(usr.id)">Eliminar</button>
+      </td>
+    </tr>
+  </table>
+  <div *ngIf="!usuarios.length" class="no-usuarios">
+    <p>No hay datos para mostrar.</p>
+  </div>
+  <div class="paginacion">
+  <button [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
+  <span>Página {{ paginaActual + 1 }}</span>
+  <button (click)="skipPlus()">Siguiente</button>
+</div>
+
+
+</div>
+
+
+<div *ngIf="visible()" class="modal-backdrop">
+  <div class="modal-content">
+    <button class="close-button" (click)="close()">×</button>
+
+    <form (ngSubmit)="listarUsers()" #usrForm="ngForm">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" [(ngModel)]="buscarNombre" />
+
+      <label for="username">username:</label>
+     <input type="text" id="username" name="username" [(ngModel)]="buscarUsername">
+
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" [(ngModel)]="buscarEmail">
+
+      <label for="rol">Rol:</label>
+      <input type="text" id="rol" name="rol" [(ngModel)]="buscarRol">
+
+      <label for="estado">Estado:</label>
+      <input type="text" id="estado" name="estado" [(ngModel)]="buscarEstado">
+
+      <button type="submit" (click)="listarUsers()" >Buscar..</button>
+    </form>
+  </div>
+</div>

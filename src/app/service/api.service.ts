@@ -8,6 +8,8 @@ export class ApiService {
   private api: AxiosInstance;
   public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
   public token: string | null = null;
+  public username: string | null = null;
+  public role: string | null = null;
 
   constructor(
     private router: Router,
@@ -26,6 +28,7 @@ export class ApiService {
     this.api.interceptors.request.use(
       config => {
         const token = localStorage.getItem('access_token');
+
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -49,6 +52,7 @@ export class ApiService {
     const token = response.data.access_token;
     if (token) {
       localStorage.setItem('access_token', token);
+      this.getCurrentUser();
     } else {
       throw new Error('No se recibió el token.');
     }
@@ -59,25 +63,43 @@ export class ApiService {
    */
   async getCurrentUser(): Promise<any> {
     const token = localStorage.getItem('access_token');
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
 
     if (!token) {
       throw new Error('🔒 No estás autenticado.');
     }
 
     try {
-      const response = await axios.get('/auth/me', {
+      const response = await this.api.get('/auth/me', {
         headers: {
-
-          usuario: localStorage.getItem('username'),
-          rol: localStorage.getItem('role')
+          usuario: username || '',
+          rol: role || ''
         }
       });
 
+      const { username: nombreUsuario, role: rolUsuario } = response.data;
+
+      localStorage.setItem('username', nombreUsuario);
+      localStorage.setItem('role', rolUsuario);
+      //window.location.reload();
+
+      console.log('✅ Usuario autenticado:', response.data);
       return response.data;
+
     } catch (error) {
       console.error('❌ Error al obtener usuario actual:', error);
       throw error;
     }
+  }
+
+  logOut() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+    window.location.reload();
+
+
   }
 
   // ======= USERS =======
@@ -89,9 +111,23 @@ export class ApiService {
       const response = await this.api.get<Usuarios[]>('/user/', {
         params: filtros
       });
+      console.log('👤 Usuarios obtenidos correctamente', response);
       return response.data;
+
     } catch (error) {
       console.error('❌ Error al obtener usuarios:', error);
+      throw error;
+    }
+  }
+
+  async getUser(id: number): Promise<any> {
+    try {
+      const response = await this.api.get<Usuarios[]>(`/user/?id=${id}&skip=0&limit=1`);
+      console.log('👤 Usuarios obtenidos correctamente', response);
+      return response.data;
+
+    } catch (error) {
+      console.error('❌ Error al obtener usuarios:', error)
       throw error;
     }
   }

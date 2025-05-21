@@ -1,0 +1,48 @@
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.usuario-info-box {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.95rem;
+  animation: fade-in 0.6s ease-in-out;
+  z-index: 1000;
+  min-width: 220px;
+}
+
+.usuario-info-box .emoji {
+  font-size: 1.8rem;
+}
+
+.usuario-info-box .user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.nombre-usuario {
+  font-weight: 600;
+}
+
+.rol-usuario {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}

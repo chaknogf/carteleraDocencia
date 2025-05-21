@@ -1,3 +1,5 @@
+ <!-- Mostrar componente solo si hay token -->
+<app-usuarioActual  />
 <div class="tabla-container">
   <h1>Tabla Docencia</h1>
   <div class="filtrar"> <button class="btn-c" (click)="volver()">Volver a Cartelera</button>
@@ -6,7 +8,11 @@
     <button class="btn-c" (click)="open()">Filtrar</button>
     <button class="btn-c" (click)="limpiarFiltros()">limpiar</button>
   </div>
+  <div class="buscar" *ngIf="role === 'admin' ">
+    <button class="btn-c" (click)="usuarios()">Usuarios</button>
+  </div>
 </div>
+
 
 
   <table>

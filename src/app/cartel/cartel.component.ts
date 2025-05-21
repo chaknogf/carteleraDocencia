@@ -28,6 +28,9 @@ export class CartelComponent {
   ) { }
 
   ngOnInit(): void {
+
+
+
     this.api.carteleraDelMes()
       .then((data) => {
         this.eventos = data;
@@ -43,6 +46,7 @@ export class CartelComponent {
 
   acceso() {
     this.router.navigate(['tabla']);
+
   }
 
   visible = signal(false);

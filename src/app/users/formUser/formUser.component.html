@@ -1,0 +1,73 @@
+<div class="formulario-container">
+  <button class="btn-c" (click)="volver()">Volver</button>
+  <h1>Formulario</h1>
+  <form class="dos-columnas" (ngSubmit)="guardar()">
+
+    <div class="form-group">
+       <label for="username">Username:</label>
+    <input
+    type="text"
+    id="username"
+    name="username"
+    [(ngModel)]="usuario.username">
+
+    </div>
+
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input
+      type="text"
+      id="nombre"
+      name="nombre"
+      [(ngModel)]="usuario.nombre">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+      type="text"
+      id="email"
+      name="email"
+      [(ngModel)]="usuario.email">
+    </div>
+
+
+
+<div class="form-group">
+  <label for="tiempoAproximado">Rol:</label>
+    <select id="tiempoAproximado" name="tiempoAproximado" [(ngModel)]="usuario.role">
+      <option value=""></option>
+      <option value="admin">Administrador</option>
+      <option value="estandar">Estandar</option>
+    </select>
+
+</div>
+
+<div class="form-group">
+  <label for="Estado">Modalidad:</label>
+    <select
+      id="Estado"
+      name="Estado"
+      [(ngModel)]="usuario.estado">
+      <option value=""></option>
+      <option value="A">Activo</option>
+      <option value="I">Inactivo</option>
+    </select>
+
+</div>
+
+<div class="form-group">
+  <label for="Password">Password:</label>
+    <input
+      type="text"
+      id="Password"
+      name="Password"
+      [(ngModel)]="usuario.password">
+</div>
+
+
+    <button class="btn-c" type="submit">Guardar</button>
+  </form>
+
+
+</div>

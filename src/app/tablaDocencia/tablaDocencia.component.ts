@@ -2,12 +2,13 @@ import { estado } from './../interface/enum';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actividad } from '../interface/interfaces';
+import { Actividad, Currentuser } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from "../pipe/tuberias.pipe";
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { FormsModule } from '@angular/forms';
 import { Meses, Modalidad, ActividadTipo, Estado, actividad, modalidad, mes } from '../interface/enum';
+import { UsuarioActualComponent } from "../users/usuarioActual/usuarioActual.component";
 
 
 @Component({
@@ -15,12 +16,13 @@ import { Meses, Modalidad, ActividadTipo, Estado, actividad, modalidad, mes } fr
   templateUrl: './tablaDocencia.component.html',
   styleUrls: ['./tablaDocencia.component.css'],
   standalone: true,
-  imports: [CommonModule, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe, EnumActividadPipe, FechaLargaPipe, FormsModule]
+  imports: [CommonModule, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe, EnumActividadPipe, FechaLargaPipe, FormsModule, UsuarioActualComponent]
 })
 export class TablaDocenciaComponent implements OnInit {
 
   public actividades: Actividad[] = [];
   mensajeEliminado: boolean = false;
+  role: string = '';
 
   meses: Meses[] = []
   modalidades: Modalidad[] = []
@@ -39,12 +41,17 @@ export class TablaDocenciaComponent implements OnInit {
   buscarMes: string = '';
   buscarFecha: string = '';
 
+
+
   constructor(
     private router: Router,
     private api: ApiService
   ) { }
 
   ngOnInit() {
+
+    this.role = localStorage.getItem('role') || '';
+    console.log('Rol del usuario:', this.role);
     this.listarActividades();
     this.meses = mes;
     this.modalidades = modalidad
@@ -53,6 +60,8 @@ export class TablaDocenciaComponent implements OnInit {
 
 
   }
+
+
 
   async listarActividades() {
     const filtros = {
@@ -124,7 +133,7 @@ export class TablaDocenciaComponent implements OnInit {
   }
 
   volver() {
-    // Lógica para volver al menú principal
+    // this.api.logOut();
     this.router.navigate(['eventos']);
   }
 
@@ -160,6 +169,10 @@ export class TablaDocenciaComponent implements OnInit {
   filtrar() {
     console.log('Filtrando actividades...');
 
+  }
+
+  usuarios() {
+    this.router.navigate(['tablaUsers']);
   }
 
 
