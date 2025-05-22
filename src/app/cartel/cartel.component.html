@@ -3,7 +3,7 @@
   <div class="varsider">
     <button class="btn-c" (click)="open()">Acceder</button>
   </div>
-  <h2 class="titulo-seccion">🗓️ Charlas y Capacitaciones del Mes de Mayo 2025</h2>
+  <h2 class="titulo-seccion">🗓️ Charlas y Capacitaciones del Mes de {{ mes | mes }} {{anio}}</h2>
   <h3 class="titulo-seccion">Hospital General Tipo I de Tecpán Guatemala</h3>
   <div class="grid-eventos">
     <div class="evento" *ngFor="let evento of eventos">
@@ -19,10 +19,12 @@
       </ng-container>
     </li>
   </ul>
-</div>
+     </div>
       <p><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
       <p class="evento-fecha"><strong>📅 Fecha:</strong> {{ evento.fechas_a_desarrollar | fechaLarga }}</p>
-      <p><strong>💻 Modalidad:</strong> {{ evento.modalidad }}</p>
+      <p><strong *ngIf="evento.modalidad === 'V'">💻 Modalidad:</strong> <strong *ngIf="evento.modalidad === 'P'"> 👩🏻‍🏫 Modalidad:</strong> {{ evento.modalidad | modalidad }}</p>
+      <p *ngIf="evento.detalles.link"><strong >🔗 Link:</strong>  {{ evento.detalles.link }} </p>
+      <p><strong>🌟 Estado:</strong> {{ evento.estado | estado }}</p>
     </div>
   </div>
 </div>
