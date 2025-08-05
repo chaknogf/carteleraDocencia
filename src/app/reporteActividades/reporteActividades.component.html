@@ -1,0 +1,140 @@
+<div class="bg-info rounded py-3 px-4 mt-3 shadow-sm w-auto no-imprimir" >
+  <form class="row gy-2 gx-3 align-items-end w-auto" (submit)="generarReporte()">
+    <div class="col-sm-6 col-md-3 w-auto">
+      <label for="anio" class="form-label h5">Año</label>
+      <input
+        type="number"
+        id="anio"
+        class="form-control w-auto"
+        [(ngModel)]="buscarAnio"
+        name="anio"
+        min="2024"
+        max="2100"
+      />
+    </div>
+    <div class="col-sm-6 col-md-3 w-auto">
+      <label for="mes" class="form-label h5">Mes</label>
+      <input
+        type="number"
+        id="mes"
+        class="form-control w-auto"
+        [(ngModel)]="buscarMes"
+        name="mes"
+        min="1"
+        max="12"
+      />
+    </div>
+    <div class="col-sm-12 col-md-3 w-auto">
+      <button
+        type="button"
+        class="btn btn-primary w-auto mt-2"
+        (click)="generarReporte()"
+      >
+        Generar Reporte
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary w-auto mt-2"
+        (click)="volver()"
+      >
+        volver
+      </button>
+
+    </div>
+  </form>
+</div>
+
+<div class="card shadow-sm mt-4 ">
+  <div class="card-header bg-info text-white py-2">
+    <h5 class="mb-0">📊 Reporte de Actividades de Docencia</h5>
+    <h5>Hospital General Tipo I de Tecpán Guatemala</h5>
+    <h5>Año {{ buscarAnio }} - Mes {{ buscarMes | mesNombre }}</h5>
+  </div>
+
+  <div class="container-fluid  p-4 rounded shadow-sm mt-4 ">
+  <h5 class="mb-3 ">📈 Ejecución de Actividades del Año {{ anio }}</h5>
+
+  <div class="mb-4">
+    <p class="h6 mb-1 text-success">Completado ({{ porcentajeCompletado }}%)</p>
+    <div class="progress">
+      <div
+        class="progress-bar bg-success"
+        role="progressbar"
+        [style.width.%]="porcentajeCompletado"
+        [attr.aria-valuenow]="porcentajeCompletado"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+    </div>
+  </div>
+
+
+</div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table
+        class="table table-sm  table-hover table-striped mb-0 align-middle w-100"
+      >
+        <thead class="table-light sticky-top">
+          <tr>
+            <th class="fw-bolder bg-primary text-white">#</th>
+            <th class="fw-bolder bg-primary text-white">Fecha a Desarrollar</th>
+            <th class="fw-bolder bg-primary text-white">Estado</th>
+            <th class="fw-bolder bg-primary text-white">Año</th>
+            <th class="fw-bolder bg-primary text-white">Mes</th>
+            <th class="fw-bolder bg-primary text-white">Tema</th>
+            <th class="fw-bolder bg-primary text-white">Nota</th>
+            <th class="fw-bolder bg-primary text-white">Actividad</th>
+            <th class="fw-bolder bg-primary text-white">Servicio Encargado</th>
+            <th class="fw-bolder bg-primary text-white">Modalidad</th>
+            <th class="fw-bolder bg-primary text-white">Entrega Informe</th>
+          </tr>
+        </thead>
+        <tbody class="table-info w-auto">
+          <tr *ngFor="let item of actividades; index as i" >
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.fechas_a_desarrollar | date: 'dd/MM/yy' }}</td>
+            <td>
+              <ng-container *ngIf="item.estado === 'P'">
+                <p>Programada</p>
+              </ng-container>
+              <ng-container *ngIf="item.estado === 'C'">
+                <p>Completada</p>
+              </ng-container>
+              <ng-container *ngIf="item.estado === 'R'">
+                <p>Reprogramada</p>
+              </ng-container>
+              <ng-container *ngIf="item.estado === 'S'">
+                <p>Suspendida</p>
+              </ng-container>
+            </td>
+            <td>{{ item.anio }}</td>
+            <td>{{ item.mes }}</td>
+            <td>{{ item.tema }}</td>
+            <td>{{ item.nota }}</td>
+            <td>
+              <ng-container *ngIf="item.actividad === 1"><p>Capacitación</p></ng-container>
+              <ng-container *ngIf="item.actividad === 2"><p>Charla</p></ng-container>
+
+            <td>{{ item.servicio_encargado }}</td>
+            <td>
+              <ng-container *ngIf="item.modalidad === 'P'"><p>Presencial</p></ng-container>
+              <ng-container *ngIf="item.modalidad === 'V'"><p>Virtual</p></ng-container>
+            </td>
+            <td>{{ item.fecha_entrega_informe | date: 'dd/MM/yy' }}</td>
+          </tr>
+          <tr *ngIf="actividades.length === 0">
+            <td colspan="10" class="text-center text-muted py-3">
+              No hay actividades registradas para este mes y año.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</div>
+
+

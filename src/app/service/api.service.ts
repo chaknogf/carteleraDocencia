@@ -257,6 +257,42 @@ export class ApiService {
     }
   }
 
+  async getReporteActividades(mes: number, anio: number): Promise<any> {
+    try {
+      const response = await this.api.get(`/reporte/vista?mes=${mes}&anio=${anio}`);
+      console.log('📊 Reporte de actividades obtenido correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener reporte de actividades:', error);
+      throw error;
+    }
+  }
+
+
+  async getEjecucionServicios(anio: number): Promise<any> {
+    try {
+      const response = await this.api.get('ejecucion_servicio?anio=' + anio);
+      console.log('📊 Reporte de actividades obtenido correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener ejecución de actividades:', error);
+      throw error;
+    }
+  }
+
+  async getEjecucion(anio: number): Promise<any> {
+    try {
+      const response = await this.api.get('ejecucion?anio=' + anio);
+      console.log('📊 Reporte de actividades obtenido correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener ejecución de actividades:', error);
+      throw error;
+    }
+  }
+
+
+
 
   // ======= TOKEN (opcional) =======
 

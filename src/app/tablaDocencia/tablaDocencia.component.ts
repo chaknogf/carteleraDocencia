@@ -1,3 +1,4 @@
+import { Reportes } from './../interface/interfaces';
 import { estado } from './../interface/enum';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
@@ -175,5 +176,8 @@ export class TablaDocenciaComponent implements OnInit {
     this.router.navigate(['tablaUsers']);
   }
 
+  reporte() {
+    this.router.navigate(['reporteActividades']);
+  }
 
 }

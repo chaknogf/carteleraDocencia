@@ -1,38 +1,66 @@
 <!-- src/app/cartel/cartel.component.html -->
-<div class="cartel-container">
-  <div class="varsider">
-    <button class="btn-c" (click)="open()">Acceder</button>
+<div class="cartel-container fondo-escolar" data-bs-theme="light">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" (click)="open()">Acceder</button>
   </div>
-  <h2 class="titulo-seccion">🗓️ Charlas y Capacitaciones del Mes de {{ mes | mes }} {{anio}}</h2>
-  <h3 class="titulo-seccion">Hospital General Tipo I de Tecpán Guatemala</h3>
-  <div class="grid-eventos">
-    <div class="evento" *ngFor="let evento of eventos">
-      <h3 class="evento-titulo">{{ evento.tema }}</h3>
-      <p><strong>🧪 Actividad:</strong> {{ evento.actividad | actividad }}</p>
-      <p><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
-     <div *ngIf="isResponsableValido(evento.persona_responsable)">
-  <strong>👩‍⚕️ Responsable(s):</strong>
-  <ul>
-    <li *ngFor="let r of evento.persona_responsable | keyvalue">
-      <ng-container *ngIf="r.value.nombre">
-        {{ r.value.nombre }} - {{ r.value.puesto }}
-      </ng-container>
-    </li>
-  </ul>
-     </div>
-      <p><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
-      <p class="evento-fecha"><strong>📅 Fecha:</strong> {{ evento.fechas_a_desarrollar | fechaLarga }}</p>
-      <p><strong *ngIf="evento.modalidad === 'V'">💻 Modalidad:</strong> <strong *ngIf="evento.modalidad === 'P'"> 👩🏻‍🏫 Modalidad:</strong> {{ evento.modalidad | modalidad }}</p>
-      <p *ngIf="evento.detalles.link"><strong >🔗 Link:</strong>  {{ evento.detalles.link }} </p>
-      <p><strong>🌟 Estado:</strong> {{ evento.estado | estado }}</p>
+
+  <h2 class="h3 fw-bold text-center mb-2 bg-light rounded">
+    🗓️ Charlas y Capacitaciones del Mes de {{ mes | mes }} {{ anio }}
+  </h2>
+  <h3 class="h3 text-center bg-light rounded mb-4">
+    Hospital General Tipo I de Tecpán Guatemala
+  </h3>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4 " >
+    <div class="col" *ngFor="let evento of eventos">
+      <div class="card shadow-sm h-100" >
+        <div class="card-body rounded " [ngClass]="{'card-hoy': evento.fechas_a_desarrollar === hoy}">
+          <h5 class="card-title fw-bold">{{ evento.tema }}</h5>
+
+          <p class="mb-1"><strong>🧪 Actividad:</strong> {{ evento.actividad | actividad }}</p>
+          <p class="mb-1"><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
+
+          <div *ngIf="isResponsableValido(evento.persona_responsable)">
+            <p class="mb-1 fw-bold">👩‍⚕️ Responsable(s):</p>
+            <ul class="mb-2">
+              <li *ngFor="let r of evento.persona_responsable | keyvalue">
+                <ng-container *ngIf="r.value.nombre">
+                  {{ r.value.nombre }} - {{ r.value.puesto }}
+                </ng-container>
+              </li>
+            </ul>
+          </div>
+
+          <p class="mb-1"><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
+          <p class="mb-1"><strong>📅 Fecha:</strong> {{ evento.fechas_a_desarrollar | fechaLarga }}</p>
+          <p class="mb-1">
+            <strong *ngIf="evento.modalidad === 'V'">💻 Modalidad:</strong>
+            <strong *ngIf="evento.modalidad === 'P'">👩🏻‍🏫 Modalidad:</strong>
+            {{ evento.modalidad | modalidad }}
+          </p>
+          <p *ngIf="evento.detalles.link" class="mb-1"><strong>🔗 Link:</strong> {{ evento.detalles.link }}</p>
+          <p class="mb-0"><strong>🌟 Estado:</strong> {{ evento.estado | estado }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-
-<div class="modal-backdrop" *ngIf="visible()">
-  <div class="modal-content">
-    <button class="close-button" (click)="close()">×</button>
-    <app-login></app-login>
+<!-- Modal -->
+<div class="modal-backdrop " *ngIf="visible()">
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content position-relative">
+        <button
+          type="button"
+          class="btn-close position-absolute top-0 end-0 m-2"
+          aria-label="Cerrar"
+          (click)="close()">
+        </button>
+        <div class="modal-body">
+          <app-login></app-login>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

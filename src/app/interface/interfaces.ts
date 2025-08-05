@@ -1,3 +1,4 @@
+import { estado, actividad } from './enum';
 export interface Usuarios {
   id: number;
   nombre: string;
@@ -35,6 +36,7 @@ export interface Detalles {
   deficiente: number | null;
   fecha_entrega_informe: string | null;
   mes: number;
+  nota?: string | null;
 }
 
 export interface Metadatos {
@@ -54,4 +56,35 @@ export interface Actividad {
   estado: string;
   detalles: Detalles;
   metadatos: Metadatos;
+}
+
+export interface Reportes {
+  id: number;
+  fechas_a_desarrollar: string;
+  estado: string;
+  anio: number;
+  tema: string;
+  actividad: number;
+  servicio_encargado: string;
+  modalidad: string;
+  mes: number;
+  fecha_entrega_informe: string;
+  nota: string;
+
+}
+
+export interface Ejecucion {
+  estado: string;
+  total_estado: number;
+  anio: number;
+  porcentaje: number;
+}
+
+export interface EServicios {
+  estado: string;
+  anio: number;
+  total_estado: number;
+  porcentaje: number;
+  servicio_encargado: string;
+
 }

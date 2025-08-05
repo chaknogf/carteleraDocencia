@@ -35,6 +35,7 @@ export const estado: Estado[] = [
   { value: 'P', label: 'Programada' },
   { value: 'C', label: 'Completada' },
   { value: 'S', label: 'Suspendida' },
+  { value: 'R', label: 'Reprogramada' },
 ]
 
 export interface ActividadTipo {

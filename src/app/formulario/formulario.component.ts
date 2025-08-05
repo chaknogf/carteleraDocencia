@@ -31,7 +31,8 @@ export class FormularioComponent implements OnInit {
     regular: 0,
     deficiente: 0,
     fecha_entrega_informe: '',
-    mes: 0
+    mes: 0,
+    nota: ''
   };
 
   metadato: Metadatos = {

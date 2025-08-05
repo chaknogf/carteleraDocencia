@@ -23,3 +23,20 @@ export class FechaLargaPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: 'mesNombre',
+  standalone: true
+})
+export class MesNombrePipe implements PipeTransform {
+  private meses = [
+    'Enero', 'Febrero', 'Marzo', 'Abril',
+    'Mayo', 'Junio', 'Julio', 'Agosto',
+    'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+
+  transform(valor: number): string {
+    const index = valor - 1;
+    return this.meses[index] || 'Mes inválido';
+  }
+}

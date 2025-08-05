@@ -1,109 +1,141 @@
- <!-- Mostrar componente solo si hay token -->
-<app-usuarioActual  />
-<div class="tabla-container">
-  <h1>Tabla Docencia</h1>
-  <div class="filtrar"> <button class="btn-c" (click)="volver()">Volver a Cartelera</button>
-  <button class="btn-c" (click)="agregarDocencia()">Agregar Capacitacion</button>
-  <div class="buscar">
-    <button class="btn-c" (click)="open()">Filtrar</button>
-    <button class="btn-c" (click)="limpiarFiltros()">limpiar</button>
+<app-usuarioActual />
+
+<div class="container-fluid my-4">
+
+  <h2 class="mb-4 fw-bold text-primary bg-info rounded p-2">📋 Tabla de Docencia</h2>
+
+  <!-- Botones de acciones -->
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button class="btn btn-outline-secondary" (click)="volver()">Volver a Cartelera</button>
+    <button class="btn btn-success" (click)="agregarDocencia()">Agregar Capacitación</button>
+    <button class="btn btn-primary" (click)="open()">Filtrar</button>
+    <button class="btn btn-warning text-white" (click)="limpiarFiltros()">Limpiar</button>
+    <button class="btn btn-info text-white" *ngIf="role === 'admin'" (click)="usuarios()">Usuarios</button>
+    <button class="btn btn-dark" (click)="reporte()">Reporte de Actividades</button>
   </div>
-  <div class="buscar" *ngIf="role === 'admin' ">
-    <button class="btn-c" (click)="usuarios()">Usuarios</button>
+
+  <!-- Tabla -->
+  <div  class="w-100 card-body p-0">
+    <div class="table-responsive">
+    <table class="table table-sm  table-hover table-striped mb-0 align-middle w-100">
+      <thead class="table-light sticky-top">
+        <tr>
+          <th class="fw-bolder bg-primary text-white">ID</th>
+          <th class="fw-bolder bg-primary text-white">Mes</th>
+          <th class="fw-bolder bg-primary text-white">Tema</th>
+          <th class="fw-bolder bg-primary text-white">Encargado</th>
+          <th class="fw-bolder bg-primary text-white">Actividad</th>
+          <th class="fw-bolder bg-primary text-white">Modalidad</th>
+          <th class="fw-bolder bg-primary text-white">Fecha</th>
+          <th class="fw-bolder bg-primary text-white">Estado</th>
+          <th class="fw-bolder bg-primary text-white">Entrega Informe</th>
+          <th class="fw-bolder bg-primary text-white">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-info w-auto">
+        <tr *ngFor="let docencia of actividades">
+          <td>{{ docencia.id }}</td>
+          <td>{{ docencia.detalles.mes | mes }}</td>
+          <td>{{ docencia.tema }}</td>
+          <td>
+            {{ docencia.servicio_encargado }}
+            <div *ngIf="isResponsableValido(docencia.persona_responsable)">
+              <strong>👩‍⚕️ Responsable(s):</strong>
+              <ul class="mb-0">
+                <li *ngFor="let r of docencia.persona_responsable | keyvalue" class="small">
+                  <ng-container *ngIf="r.value.nombre">
+                    {{ r.value.nombre }} - {{ r.value.puesto }}
+                  </ng-container>
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td>{{ docencia.actividad | actividad }}</td>
+          <td>{{ docencia.modalidad | modalidad }}</td>
+          <td>{{ docencia.fechas_a_desarrollar | fechaLarga }}</td>
+          <td>{{ docencia.estado | estado }}</td>
+          <td>{{ docencia.detalles.fecha_entrega_informe }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-1 badge rounded-pill bg-primary" (click)="editarDocencia(docencia)">Editar</button>
+            <button class="btn btn-sm btn-danger badge rounded-pill" (click)="eliminarDocencia(docencia.id)">Eliminar</button>
+          </td>
+        </tr>
+        <tr *ngIf="!actividades.length">
+          <td colspan="10" class="text-center text-muted py-3">No hay actividades para mostrar.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
   </div>
-</div>
 
 
-
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Mes</th>
-      <th>Tema</th>
-      <th>Encargado</th>
-      <th>Actividad</th>
-      <th>Modalidad</th>
-      <th>Fecha</th>
-      <th>Estado de la actividad</th>
-      <th>Entrega de informe</th>
-      <th>Acciones</th>
-    </tr>
-    <tr *ngFor="let docencia of actividades">
-      <td>{{ docencia.id }}</td>
-      <td>{{ docencia.detalles.mes | mes }}</td>
-      <td>{{ docencia.tema }}</td>
-      <td>
-  {{ docencia.servicio_encargado }}
- <div *ngIf="isResponsableValido(docencia.persona_responsable)">
-  <strong>👩‍⚕️ Responsable(s):</strong>
-  <ul>
-    <li *ngFor="let r of docencia.persona_responsable | keyvalue">
-      <ng-container *ngIf="r.value.nombre">
-        {{ r.value.nombre }} - {{ r.value.puesto }}
-      </ng-container>
-    </li>
-  </ul>
-</div>
-</td>
-      <td>{{ docencia.actividad | actividad }}</td>
-      <td>{{ docencia.modalidad | modalidad }}</td>
-      <td>{{ docencia.fechas_a_desarrollar | fechaLarga }}</td>
-      <td>{{ docencia.estado | estado }}</td>
-      <td>{{ docencia.detalles.fecha_entrega_informe }}</td>
-      <td>
-        <button class="btn-c" (click)="editarDocencia(docencia)">Editar</button>
-        <button class="btn-c" (click)="eliminarDocencia(docencia.id)">Eliminar</button>
-      </td>
-    </tr>
-  </table>
-  <div *ngIf="!actividades.length" class="no-actividades">
-    <p>No hay actividades para mostrar.</p>
+  <!-- Paginación -->
+  <div class="d-flex justify-content-center align-items-center mt-3 gap-3">
+    <button class="btn btn-outline-secondary" [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
+    <span class="fw-bold">Página {{ paginaActual + 1 }}</span>
+    <button class="btn btn-outline-secondary" (click)="skipPlus()">Siguiente</button>
   </div>
-  <div class="paginacion">
-  <button [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
-  <span>Página {{ paginaActual + 1 }}</span>
-  <button (click)="skipPlus()">Siguiente</button>
-</div>
-
 
 </div>
 
+<!-- Modal de Filtros -->
+<div *ngIf="visible()" class="modal-backdrop d-flex align-items-center justify-content-center">
+  <div class="bg-white p-4 rounded shadow-lg w-100" style="max-width: 600px;">
+    <div class="text-end">
+      <button class="btn-close" (click)="close()"></button>
+    </div>
 
-<div *ngIf="visible()" class="modal-backdrop">
-  <div class="modal-content">
-    <button class="close-button" (click)="close()">×</button>
+    <h5 class="mb-4 fw-bold text-primary">Filtrar Actividades</h5>
 
-    <form (ngSubmit)="listarActividades()" #docenciaForm="ngForm">
-      <label for="tema">Tema:</label>
-      <input type="text" id="tema" name="tema" [(ngModel)]="buscarTema" />
+    <form (ngSubmit)="listarActividades()" #docenciaForm="ngForm" class="row g-3">
 
-      <label for="mes">Mes:</label>
-      <select id="mes" name="mes" [(ngModel)]="buscarMes">
-        <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
-      </select>
+      <div class="col-md-6">
+        <label for="tema" class="form-label fw-semibold">Tema</label>
+        <input type="text" id="tema" class="form-control" name="tema" [(ngModel)]="buscarTema" />
+      </div>
 
-      <label for="actividad">Actividad:</label>
-      <select id="actividad" name="actividad" [(ngModel)]="buscarActividad">
-        <option *ngFor="let actividad of actividadesTipo" [value]="actividad.value">{{ actividad.label }}</option>
-      </select>
+      <div class="col-md-6">
+        <label for="mes" class="form-label fw-semibold">Mes</label>
+        <select id="mes" class="form-select" name="mes" [(ngModel)]="buscarMes">
+          <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
+        </select>
+      </div>
 
-      <label for="modalidad">Modalidad:</label>
-      <select id="modalidad" name="modalidad" [(ngModel)]="buscarModalidad">
-        <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">{{ modalidad.label }}</option>
-      </select>
+      <div class="col-md-6">
+        <label for="actividad" class="form-label fw-semibold">Actividad</label>
+        <select id="actividad" class="form-select" name="actividad" [(ngModel)]="buscarActividad">
+          <option *ngFor="let actividad of actividadesTipo" [value]="actividad.value">{{ actividad.label }}</option>
+        </select>
+      </div>
 
-      <label for="fecha">Fecha:</label>
-      <input type="date" id="fecha" name="fecha" [(ngModel)]="buscarFecha" />
+      <div class="col-md-6">
+        <label for="modalidad" class="form-label fw-semibold">Modalidad</label>
+        <select id="modalidad" class="form-select" name="modalidad" [(ngModel)]="buscarModalidad">
+          <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">{{ modalidad.label }}</option>
+        </select>
+      </div>
 
-      <label for="estado">Estado:</label>
-      <select id="estado" name="estado" [(ngModel)]="buscarEstado">
-        <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
-      </select>
+      <div class="col-md-6">
+        <label for="fecha" class="form-label fw-semibold">Fecha</label>
+        <input type="date" id="fecha" class="form-control" name="fecha" [(ngModel)]="buscarFecha" />
+      </div>
 
-      <label for="persona_responsable">Responsable:</label>
-      <input type="text" id="persona_responsable" name="persona_responsable" [(ngModel)]="buscarPersona" />
+      <div class="col-md-6">
+        <label for="estado" class="form-label fw-semibold">Estado</label>
+        <select id="estado" class="form-select" name="estado" [(ngModel)]="buscarEstado">
+          <option *ngFor="let estado of estados" [value]="estado.value">{{ estado.label }}</option>
+        </select>
+      </div>
 
-      <button type="submit" (click)="listarActividades()" >Buscar..</button>
+      <div class="col-12">
+        <label for="persona_responsable" class="form-label fw-semibold">Responsable</label>
+        <input type="text" id="persona_responsable" class="form-control" name="persona_responsable" [(ngModel)]="buscarPersona" />
+      </div>
+
+      <div class="col-12 text-end">
+        <button type="submit" class="btn btn-primary mt-3">Buscar</button>
+      </div>
+
     </form>
   </div>
 </div>

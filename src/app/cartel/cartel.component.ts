@@ -7,6 +7,7 @@ import { Actividad } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
+import { HydrationFeatureKind } from '@angular/platform-browser';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class CartelComponent {
   public eventos: Actividad[] = [];
   public mes: number = 0;
   public anio: number = 0;
+  public hoy: string = '';
 
   constructor(
     private router: Router,
@@ -32,6 +34,8 @@ export class CartelComponent {
 
   ngOnInit(): void {
     this.fechaActual();
+
+    this.hoy = new Date().toISOString().split('T')[0];
 
 
     this.api.carteleraDelMes()
@@ -82,6 +86,7 @@ export class CartelComponent {
     return `${dia} de ${mes[mesActual]} de ${anio}`;
 
   }
+
 
 
 

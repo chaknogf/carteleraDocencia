@@ -89,3 +89,18 @@ select:focus {
   border-radius: 8px;
   flex-direction: row;
 }
+
+.label-grande {
+  font-weight: bolder !important;
+  color: black !important;
+  font-size: 1.1rem; /* Puedes ajustar este valor: 1.25rem para h5, 1.5rem para h4, etc. */
+}
+
+
+.bg-container {
+  background: antiquewhite;
+}
+.form-label {
+  color: black !important;
+  font-weight: bolder !important;
+}

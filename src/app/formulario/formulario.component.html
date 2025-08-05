@@ -1,173 +1,144 @@
-<div class="formulario-container">
-  <button class="btn-c" (click)="volver()">Volver</button>
-  <h1>Formulario</h1>
-  <form class="dos-columnas" (ngSubmit)="guardar()">
-
-    <div class="form-group">
-       <label for="tema">Tema:</label>
-    <input
-    type="text"
-    id="tema"
-    name="tema"
-    [(ngModel)]="actividad.tema">
-
-    </div>
-
-    <div class="form-group">
-      <label for="tipoActividad">Tipo de Actividad:</label>
-      <select
-        id="tipoActividad"
-        name="tipoActividad"
-        [(ngModel)]="actividad.actividad">
-        <option value=""></option>
-        <option value="1">Capacitación</option>
-        <option value="2">Charla</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="servicioEncargado">Servicio Encargado:</label>
-      <input
-      type="text"
-      id="servicioEncargado"
-      name="servicioEncargado"
-      [(ngModel)]="actividad.servicio_encargado">
-
-    </div>
-
-
-   <div class="form-group">
-  <label>Responsables:</label>
-  <div *ngFor="let responsable of actividad.persona_responsable | keyvalue">
-    <div>
-      <label for="nombre{{responsable.key}}">Nombre:</label>
-      <input type="text" id="nombre{{responsable.key}}" name="nombre" [(ngModel)]="responsable.value.nombre">
-    </div>
-    <div>
-      <label for="puesto{{responsable.key}}">Puesto:</label>
-      <input type="text" id="puesto{{responsable.key}}" name="puesto" [(ngModel)]="responsable.value.puesto">
-    </div>
-    <button class="btn-c"
-      type="button"
-      *ngIf="(actividad.persona_responsable | keyvalue).length > 1"
-      (click)="removerResponsable(responsable.key)"
-    >-</button>
+<div class="container-fluid mt-4 p-4 bg-container text-dark rounded shadow" data-bs-theme="light">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">📋 Formulario de Actividad</h3>
+    <button class="btn btn-secondary" (click)="volver()">Volver</button>
   </div>
-  <button class="btn-c" type="button" (click)="agregarResponsable()">+</button>
+
+  <form (ngSubmit)="guardar()">
+    <div class="row g-3">
+ <div class="container py-4">
+  <div class="row g-4">
+
+    <!-- TEMA -->
+    <div class="col-md-6">
+      <label for="tema" class="form-label fw-bold fs-5">Tema</label>
+      <input type="text" id="tema" class="form-control" [(ngModel)]="actividad.tema" name="tema">
+    </div>
+
+    <!-- SERVICIO ENCARGADO -->
+    <div class="col-md-6">
+      <label for="servicioEncargado" class="form-label fw-bold fs-5">Servicio Encargado</label>
+      <input type="text" id="servicioEncargado" class="form-control" [(ngModel)]="actividad.servicio_encargado" name="servicioEncargado">
+    </div>
+
+    <!-- TIEMPO APROXIMADO -->
+    <div class="col-md-6">
+      <label for="tiempoAproximado" class="form-label fw-bold fs-5">Tiempo Aproximado</label>
+      <input type="text" id="tiempoAproximado" class="form-control" [(ngModel)]="actividad.tiempo_aproximado" name="tiempoAproximado">
+    </div>
+
+    <!-- FECHA -->
+    <div class="col-md-6">
+      <label for="fecha" class="form-label fw-bold fs-5">Fecha</label>
+      <input type="date" id="fecha" class="form-control" [(ngModel)]="actividad.fechas_a_desarrollar" name="fecha">
+    </div>
+
+    <!-- TIPO DE ACTIVIDAD -->
+    <div class="col-12 bg-dark-subtle p-3 rounded">
+      <label class="form-label fw-bold fs-5 text-black">Tipo de Actividad</label>
+      <div class="btn-group w-100 flex-wrap" role="group">
+        <button type="button" class="btn border-3 "
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.actividad === 1, 'btn-outline-dark text-black': actividad.actividad !== 1}"
+          (click)="actividad.actividad = 1">
+          Capacitación
+        </button>
+        <button type="button" class="btn border-3"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.actividad === 2, 'btn-outline-dark text-dark text-black': actividad.actividad !== 2}"
+          (click)="actividad.actividad = 2">
+          Charla
+        </button>
+      </div>
+    </div>
+
+    <!-- MODALIDAD -->
+    <div class="col-12 bg-dark-subtle p-3 rounded">
+      <label class="form-label fw-bold fs-5 text-black">Modalidad</label>
+      <div class="btn-group w-100 flex-wrap" role="group">
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.modalidad === 'P', 'btn-outline-dark text-black': actividad.modalidad !== 'P'}"
+          (click)="actividad.modalidad = 'P'">
+          Presencial
+        </button>
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.modalidad === 'V', 'btn-outline-dark text-black': actividad.modalidad !== 'V'}"
+          (click)="actividad.modalidad = 'V'">
+          Virtual
+        </button>
+      </div>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-12 bg-dark-subtle p-3 rounded">
+      <label class="form-label fw-bold fs-5 text-black">Estado</label>
+      <div class="btn-group w-100 flex-wrap" role="group">
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'P', 'btn-outline-dark text-black': actividad.estado !== 'P'}"
+          (click)="actividad.estado = 'P'">
+          Programada
+        </button>
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'R', 'btn-outline-dark text-black': actividad.estado !== 'R'}"
+          (click)="actividad.estado = 'R'">
+          Reprogramada
+        </button>
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'C', 'btn-outline-dark text-black': actividad.estado !== 'C'}"
+          (click)="actividad.estado = 'C'">
+          Completada
+        </button>
+        <button type="button" class="btn border-3 text-black"
+          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'S', 'btn-outline-dark text-black': actividad.estado !== 'S'}"
+          (click)="actividad.estado = 'S'">
+          Suspendida
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTA -->
+    <div class="col-12" *ngIf="actividad.estado === 'S' || actividad.estado === 'R'">
+      <label for="nota" class="form-label fw-bold fs-5">Nota</label>
+      <textarea id="nota" class="form-control" [(ngModel)]="detalle.nota" name="nota" rows="3"></textarea>
+    </div>
+
+    <!-- RESPONSABLES -->
+    <div class="col-12 justify-content-center">
+      <label class="form-label fw-bold fs-5">Responsables</label>
+      <div *ngFor="let responsable of actividad.persona_responsable | keyvalue" class="row g-2 mb-2 align-items-center">
+        <div class="col-md-5">
+          <input type="text" class="form-control" placeholder="Nombre"
+                 [(ngModel)]="responsable.value.nombre"
+                 name="nombre{{responsable.key}}" id="nombre{{responsable.key}}">
+        </div>
+        <div class="col-md-5">
+          <input type="text" class="form-control" placeholder="Puesto"
+                 [(ngModel)]="responsable.value.puesto"
+                 name="puesto{{responsable.key}}" id="puesto{{responsable.key}}">
+        </div>
+        <div class="col-md-2 text-end">
+          <button type="button" class="btn btn-danger btn-sm"
+                  *ngIf="(actividad.persona_responsable | keyvalue).length > 1"
+                  (click)="removerResponsable(responsable.key)">−</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-dark bg-dark btn-sm mt-2" (click)="agregarResponsable()">+ Agregar Responsable</button>
+    </div>
+
+  </div>
 </div>
 
-<div class="form-group">
-  <label for="tiempoAproximado">Tiempo Aproximado:</label>
-    <input
-      type="text"
-      id="tiempoAproximado"
-      name="tiempoAproximado"
-      [(ngModel)]="actividad.tiempo_aproximado">
+      <hr class="my-4">
 
-</div>
+      <h4 class="text-primary">📝 Detalles</h4>
+      <!-- FECHA ENTREGA INFORME -->
+    <div class="col-md-6">
+      <label for="fechaEntregaInforme" class="form-label fw-bold fs-5">Fecha Entrega Informe</label>
+      <input type="date" id="fechaEntregaInforme" class="form-control" [(ngModel)]="detalle.fecha_entrega_informe" name="fechaEntregaInforme">
+    </div>
 
-<div class="form-group">
-  <label for="modalidad">Modalidad:</label>
-    <select
-      id="modalidad"
-      name="modalidad"
-      [(ngModel)]="actividad.modalidad">
-      <option value=""></option>
-      <option value="P">Presencial</option>
-      <option value="V">Virtual</option>
-    </select>
-
-</div>
-
-<div class="form-group">
-  <label for="fecha">Fecha:</label>
-    <input
-      type="date"
-      id="fecha"
-      name="fecha"
-      [(ngModel)]="actividad.fechas_a_desarrollar" >
-
-</div>
-
-<div class="form-group">
-  <label for="estado">Estado:</label>
-    <select
-      id="estado"
-      name="estado"
-      [(ngModel)]="actividad.estado">
-      <option value=""></option>
-      <option value="P">Programada</option>
-      <option value="C">Completada</option>
-    </select>
-
-</div>
-<h2 class="detalles">Detalles:</h2>
-
-<div class="form-group"></div>
-<div class="form-group">
-   <label for="link">Link</label>
-      <input type="text" id="link" name="link" [(ngModel)]="detalle.link">
-</div>
-<div class="form-group">
-  <label for="duracion">Duración</label>
-  <input type="text" id="duracion" name="duracion" [(ngModel)]="detalle.duracion">
-
-</div>
-
-<div class="form-group">
-  <label for="grupoDirigido">Grupo Dirigido</label>
-  <input type="text" id="grupoDirigido" name="grupoDirigido" [(ngModel)]="detalle.grupo_dirigido">
-</div>
-
-<div class="form-group">
-  <label for="lugar">Lugar</label>
-  <input type="text" id="lugar" name="lugar" [(ngModel)]="detalle.lugar">
-
-</div>
-
-<div class="form-group">
-  <label for="contenido">Contenido</label>
-  <input type="text" id="contenido" name="contenido" [(ngModel)]="detalle.contenido">
-</div>
-
-<div class="form-group">
-   <label for="asistencia">Asistencia</label>
-   <input type="number" id="asistencia" name="asistencia" [(ngModel)]="detalle.asistencia">
-</div>
-
-<div class="form-group">
-  <label for="inasistencia">Inasistencia</label>
-  <input type="number" id="inasistencia" name="inasistencia" [(ngModel)]="detalle.inasistencia">
-</div>
-
-<div class="form-group">
-  <label for="excelente">Excelente</label>
-  <input type="number" id="excelente" name="excelente" [(ngModel)]="detalle.excelente">
-</div>
-
-<div class="form-group">
-  <label for="bueno">Bueno</label>
-  <input type="number" id="bueno" name="bueno" [(ngModel)]="detalle.bueno">
-</div>
-
-<div class="form-group">
-  <label for="regular">Regular</label>
-  <input type="number" id="regular" name="regular" [(ngModel)]="detalle.regular">
-</div>
-
-<div class="form-group">
-  <label for="deficiente">Deficiente</label>
-  <input type="number" id="deficiente" name="deficiente" [(ngModel)]="detalle.deficiente">
-</div>
-
-<div class="form-group">
-  <label for="fechaEntregaInforme">Fecha Entrega Informe</label>
-  <input type="date" id="fechaEntregaInforme" name="fechaEntregaInforme" [(ngModel)]="detalle.fecha_entrega_informe">
-</div>
-
-<div class="form-group">
-  <label for="mes">Mes</label>
-    <select id="mes" name="mes" [(ngModel)]="detalle.mes" (ngModelChange)="actualizarMes($event)">
+    <!-- MES -->
+    <div class="col-md-6">
+      <label for="mes" class="form-label fw-bold fs-5">Mes</label>
+      <select id="mes" class="form-select" [(ngModel)]="detalle.mes" name="mes" (ngModelChange)="actualizarMes($event)">
         <option value="1">Enero</option>
         <option value="2">Febrero</option>
         <option value="3">Marzo</option>
@@ -180,11 +151,84 @@
         <option value="10">Octubre</option>
         <option value="11">Noviembre</option>
         <option value="12">Diciembre</option>
-    </select>
-</div>
+      </select>
+    </div>
 
-    <button class="btn-c" type="submit">Guardar</button>
+      <!-- LINK -->
+    <div class="col-md-6">
+      <label for="link" class="form-label fw-bold fs-5">Link</label>
+      <input type="text" id="link" class="form-control" [(ngModel)]="detalle.link" name="link">
+    </div>
+
+    <!-- LUGAR -->
+    <div class="col-md-6">
+      <label for="lugar" class="form-label fw-bold fs-5">Lugar</label>
+      <input type="text" id="lugar" class="form-control" [(ngModel)]="detalle.lugar" name="lugar">
+    </div>
+
+    <!-- DURACIÓN -->
+    <div class="col-md-6">
+      <label for="duracion" class="form-label fw-bold fs-5">Duración</label>
+      <input type="text" id="duracion" class="form-control" [(ngModel)]="detalle.duracion" name="duracion">
+    </div>
+
+    <!-- GRUPO DIRIGIDO -->
+    <div class="col-md-6">
+      <label for="grupoDirigido" class="form-label fw-bold fs-5">Grupo Dirigido</label>
+      <input type="text" id="grupoDirigido" class="form-control" [(ngModel)]="detalle.grupo_dirigido" name="grupoDirigido">
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="col-12">
+      <label for="contenido" class="form-label fw-bold fs-5">Contenido</label>
+      <input type="text" id="contenido" class="form-control" [(ngModel)]="detalle.contenido" name="contenido">
+    </div>
+    <!-- Asistencia -->
+     <div class="col-12">
+      <label class="form-label fw-bold fs-5">Asistencias</label>
+      <div class="row">
+        <div class="col-md-6" >
+          <label  class="form-label">Asistencia</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.asistencia">
+        </div>
+        <div class="col-md-6" >
+          <label  class="form-label">Inasistencia</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.inasistencia">
+        </div>
+      </div>
+    </div>
+
+    <!-- EVALUACIONES -->
+     <div class="col-12">
+      <label class="form-label fw-bold fs-5">Evaluaciones</label>
+      <div class="row">
+        <div class="col-md-3" >
+          <label  class="form-label">Excelente</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.excelente">
+        </div>
+        <div class="col-md-3" >
+          <label  class="form-label">Bueno</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.bueno">
+        </div>
+        <div class="col-md-3" >
+          <label  class="form-label">Regular</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.deficiente">
+        </div>
+        <div class="col-md-3" >
+          <label  class="form-label">Malo</label>
+          <input type="number" class="form-control"  [(ngModel)]="detalle.deficiente">
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- BOTÓN GUARDAR -->
+    <div class="col-12 text-end mt-4">
+      <button type="submit" class="btn btn-dark bg-dark px-4 py-2">
+        💾 Guardar
+      </button>
+    </div>
+  </div>
   </form>
-
-
 </div>
