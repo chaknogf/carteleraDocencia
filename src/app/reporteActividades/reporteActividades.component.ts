@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { MesNombrePipe } from '../pipe/fechas.pipe';
 import { Ejecucion, EServicios, Reportes } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 import {
   ChartComponent,
@@ -198,5 +200,22 @@ export class ReporteActividadesComponent implements OnInit {
     noImprimirElements.forEach(element => {
       element.classList.add('d-none');
     });
+  }
+
+  exportarActividadesExcel(): void {
+    if (!this.actividades || this.actividades.length === 0) {
+      alert('No hay datos para exportar.');
+      return;
+    }
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.actividades);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Actividades': worksheet },
+      SheetNames: ['Actividades']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    FileSaver.saveAs(blob, `reporte_actividades_${this.buscarMes}_${this.buscarAnio}.xlsx`);
   }
 }
