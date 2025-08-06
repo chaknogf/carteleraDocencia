@@ -75,11 +75,13 @@ export class FormularioComponent implements OnInit {
         this.api.getActividad(id)
           .then((data) => {
             this.actividad = data;
+            this.actividad.detalles = this.actividad.detalles || {};
+            this.actividad.detalles.nota = this.actividad.detalles.nota || '';
             this.detalle = this.actividad.detalles;
-            this.metadato = this.actividad.metadatos;
 
             this.enEdicion = true;
             console.log('✅ Actividad cargada para edición');
+            console.log('Actividad a editar:', this.actividad.detalles.nota);
           })
           .catch((error) => {
             console.error('❌ Error al cargar actividad para edición:', error);
@@ -166,3 +168,4 @@ export class FormularioComponent implements OnInit {
     this.detalle.mes = fecha.getMonth() + 1;
   }
 }
+

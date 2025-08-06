@@ -36,7 +36,7 @@ export interface Detalles {
   deficiente: number | null;
   fecha_entrega_informe: string | null;
   mes: number;
-  nota?: string | null;
+  nota: any | null;
 }
 
 export interface Metadatos {
@@ -81,9 +81,12 @@ export interface Ejecucion {
 }
 
 export interface EServicios {
-  estado: string;
+  nota: string;
   anio: number;
-  total_estado: number;
+  total: number;
+  completado: number;
+  reprogramado: number;
+  anulado: number;
   porcentaje: number;
   servicio_encargado: string;
 

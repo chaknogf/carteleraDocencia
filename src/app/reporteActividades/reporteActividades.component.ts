@@ -1,43 +1,111 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MesNombrePipe } from '../pipe/fechas.pipe';
 import { Ejecucion, EServicios, Reportes } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { MesNombrePipe } from '../pipe/fechas.pipe';
 
+import {
+  ChartComponent,
+  NgApexchartsModule,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexYAxis,
+  ApexFill,
+  ApexTooltip,
+  ApexMarkers,
+  ApexPlotOptions
+} from 'ng-apexcharts';
 
-
+export type ChartOptions = {
+  series?: ApexAxisChartSeries;
+  chart?: ApexChart;
+  xaxis?: ApexXAxis;
+  yaxis?: ApexYAxis | ApexYAxis[];
+  labels?: string[];
+  stroke?: any;
+  markers?: ApexMarkers;
+  plotOptions?: ApexPlotOptions;
+  fill?: ApexFill;
+  tooltip?: ApexTooltip;
+  colors?: string[];
+  dataLabels?: any;
+  title?: any;
+  responsive?: any;
+};
 
 @Component({
   selector: 'app-reporteActividades',
   templateUrl: './reporteActividades.component.html',
   styleUrls: ['./reporteActividades.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MesNombrePipe]
+  imports: [CommonModule, FormsModule, MesNombrePipe, NgApexchartsModule, ChartComponent,
+    NgApexchartsModule,
+    NgApexchartsModule]
 })
 export class ReporteActividadesComponent implements OnInit {
 
   public actividades: Reportes[] = [];
   public actividadesEjecucion: Ejecucion[] = [];
   public servicios: EServicios[] = [];
+
   public añoActual: number = new Date().getFullYear();
-  public mesActual: number = new Date().getMonth() + 1; // Los meses
+  public mesActual: number = new Date().getMonth() + 1;
+
   public buscarMes: number = 0;
   public buscarAnio: number = 0;
   public anio: number = new Date().getFullYear();
   public completado: number = 0;
   public programado: number = 0;
   public porcentajeCompletado: number = 0;
+  public chartSeries: ApexAxisChartSeries = [];
 
+  public chartOptions: Partial<ChartOptions> = {};
 
 
 
   constructor(
     private api: ApiService,
     private router: Router
+  ) {
+    this.chartOptions = {
+      series: this.chartSeries,
+      chart: {
+        type: 'line',
+        width: '1000',
 
-  ) { }
+      },
+      stroke: {
+        width: [2, 2],
+        curve: 'smooth'
+      },
+      xaxis: {
+        categories: []
+      },
+      yaxis: {
+        title: {
+          text: 'Porcentaje'
+        }
+      },
+      tooltip: {
+        shared: true,
+        intersect: false
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      dataLabels: {
+        enabled: true
+      }
+    };
+  }
 
   ngOnInit() {
     this.buscarMes = this.mesActual;
@@ -69,11 +137,9 @@ export class ReporteActividadesComponent implements OnInit {
       console.log('📊 Ejecución:', data);
       this.actividadesEjecucion = data;
 
-      // Obtener el porcentaje de actividades completadas (estado 'C')
       interface EjecucionItem {
         estado: string;
         porcentaje: number;
-        // Agrega otras propiedades si existen en los objetos de data
       }
 
       const completado: EjecucionItem | undefined = (data as EjecucionItem[]).find((item: EjecucionItem) => item.estado === 'C');
@@ -85,21 +151,45 @@ export class ReporteActividadesComponent implements OnInit {
     }
   }
 
-  // Método para obtener graficos de servicios|
   async obtenerServicios() {
     try {
       const data = await this.api.getEjecucionServicios(this.anio);
-      console.log('📊 Servicios:', data);
       this.servicios = data;
+      console.table(this.servicios);
+
+      const categorias = this.servicios.map(s => s.servicio_encargado);
+      const porcentajes = this.servicios.map(s => Number(s.porcentaje));
+      const total = this.servicios.map(s => Number(s.total));
+      const completados = this.servicios.map(s => Number(s.completado));
+      const reprogramados = this.servicios.map(s => Number(s.reprogramado));
+      const anulados = this.servicios.map(s => Number(s.anulado));
+
+      // 🔧 Asigna los datos a chartSeries
+      this.chartSeries = [
+
+        {
+          name: "Completados",
+          type: "column",
+          data: completados
+        },
+        {
+          name: "Total",
+          type: "area",
+          data: total
+        },
+      ];
+
+      // 🔧 Actualiza las categorías del eje X
+      this.chartOptions.xaxis = {
+        categories: categorias
+      };
+
     } catch (error) {
       console.error('❌ Error al cargar servicios:', error);
     }
   }
 
-
-
   volver() {
-
     this.router.navigate(['/tabla']);
   }
 
@@ -109,5 +199,4 @@ export class ReporteActividadesComponent implements OnInit {
       element.classList.add('d-none');
     });
   }
-
 }

@@ -137,7 +137,28 @@
 
 </div>
 
-<div>
+<div class="container mt-4 d-flex flex-column align-items-center justify-content-center text-center">
+  <h3 class="mb-3">📊 Servicios Completados en {{ anio }}</h3>
 
+<!-- grafica-servicios.component.html -->
+<div class="p-4 bg-gradient-animated rounded shadow-sm w-auto">
+  <h2 class="text-lg font-semibold mb-4 text-center">Porcentaje de Servicios</h2>
+  <apx-chart
+  [series]="chartSeries"
+  [stroke]="chartOptions.stroke!"
+  [chart]="chartOptions.chart!"
+  [xaxis]="chartOptions.xaxis!"
+  [plotOptions]="chartOptions.plotOptions!"
+  [dataLabels]="chartOptions.dataLabels!"
+  [tooltip]="chartOptions.tooltip!"
+  [title]="chartOptions.title"
 
+>
+</apx-chart>
+</div>
+  <div *ngIf="servicios.length === 0" class="text-muted mt-3">
+    No hay servicios completados para mostrar.
+  </div>
+
+  <button class="btn btn-dark mt-4" (click)="volver()">← Volver</button>
 </div>

@@ -3,3 +3,28 @@
     display: none !important;
   }
 }
+
+.bg-gradient-animated {
+  background: linear-gradient(
+    135deg,
+
+    #08ace3,
+    #076477,
+    #48cae4,
+    #cb9864
+  );
+  background-size: 1800% 1800%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

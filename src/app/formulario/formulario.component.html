@@ -94,10 +94,14 @@
       </div>
     </div>
 
+
+
+
     <!-- NOTA -->
-    <div class="col-12" *ngIf="actividad.estado === 'S' || actividad.estado === 'R'">
+    <div class="col-12" >
       <label for="nota" class="form-label fw-bold fs-5">Nota</label>
-      <textarea id="nota" class="form-control" [(ngModel)]="detalle.nota" name="nota" rows="3"></textarea>
+      <textarea [(ngModel)]="actividad.detalles.nota" name="nota" class="form-control" rows="3"></textarea>
+
     </div>
 
     <!-- RESPONSABLES -->
