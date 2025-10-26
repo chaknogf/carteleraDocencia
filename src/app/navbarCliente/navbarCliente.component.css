@@ -210,7 +210,8 @@
 }
 
 .modal-content {
-  background-color: #f9fbff;
+
+  background: radial-gradient(circle at top left, #b8ccf4, #2c5ab6);
   padding: 2rem;
   border-radius: 10px;
   width: 100%;
