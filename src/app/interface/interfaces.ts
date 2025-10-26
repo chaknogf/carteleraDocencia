@@ -158,10 +158,9 @@ export interface Reportes {
 
 export interface Ejecucion {
   subdireccion_id: number;
+  subdireccion: string
   servicio_id: number;
   servicio_encargado: string;
-  mes_id: number;
-  mes: string;
   anio: number;
   completa: number;
   programada: number;
@@ -170,16 +169,11 @@ export interface Ejecucion {
   total: number;
 }
 
-
-
-export interface EServicios {
-  nota: string;
+export interface ResumenAnual {
   anio: number;
+  programadas: number;
+  reprogramadas: number;
+  completadas: number;
+  anuladas: number;
   total: number;
-  completado: number;
-  reprogramado: number;
-  anulado: number;
-  porcentaje: number;
-  servicio_encargado: string;
-
 }

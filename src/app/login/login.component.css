@@ -1,12 +1,12 @@
 .form-container {
-  background-color: rgba(31, 41, 55, 1); /* Fondo oscuro y elegante */
-  color: rgba(243, 244, 246, 1);
+  background: radial-gradient(circle at top left, #b8ccf4, #2c5ab6);
   border-radius: 0.75rem;
   padding: 2rem;
-  margin: 0.9rem auto; /* Centrar el formulario y añadir márgenes */
-  max-width: 500px; /* Ancho máximo para pantallas más grandes */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil */
-
+  margin: 1rem auto;
+  max-width: 420px;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .title {
@@ -27,7 +27,7 @@
 
 .input-group label {
   display: block;
-  color: rgba(156, 163, 175, 1);
+  color: rgb(9, 25, 53);
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
@@ -48,6 +48,11 @@
   box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
 }
 
+.input-group input::placeholder {
+  color: rgb(235, 241, 252);
+  text-align: center;
+}
+
 .forgot {
   display: flex;
   justify-content: flex-end;
@@ -57,20 +62,20 @@
 }
 
 .forgot a {
-  color: rgba(167, 139, 250, 1);
+  color: rgb(21, 1, 84);
   text-decoration: none;
   padding: 0.5rem; /* Añadir padding para facilitar el toque */
 }
 
 .forgot a:hover {
-  text-decoration: underline rgba(167, 139, 250, 0.8);
+  text-decoration: underline rgb(21, 1, 84);
 }
 
 .sign {
   display: block;
   width: 100%;
-  background-color: rgba(167, 139, 250, 1); /* Color de acento */
-  color: rgba(17, 24, 39, 1);
+  background-color: rgb(21, 1, 84);
+  color: rgb(240, 242, 245);
   border: none;
   border-radius: 0.5rem;
   padding: 1.1rem; /* Aumentar el padding del botón */
@@ -81,7 +86,7 @@
 }
 
 .sign:hover:not(:disabled) {
-  background-color: rgba(145, 118, 228, 1);
+  background-color: rgb(21, 1, 84);
 }
 
 .sign:disabled {
@@ -114,12 +119,66 @@
 }
 
 .signup a {
-  color: rgba(167, 139, 250, 1);
+  color: rgb(50, 8, 176);
   text-decoration: none;
   padding: 0.5rem; /* Añadir padding para facilitar el toque */
 }
 
 .signup a:hover {
-  text-decoration: underline rgba(167, 139, 250, 0.8);
+  text-decoration: underline rgba(46, 5, 169, 0.8);
 }
 
+/* 🔄 Overlay de carga */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.574);
+  backdrop-filter: blur(23px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.loader {
+  text-align: center;
+  color: rgb(244, 245, 244);
+}
+
+.loader p {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* 🌀 Spinner circular */
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(171, 238, 124, 0.3);
+  border-top-color: rgb(212, 255, 0);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 🧭 Ajuste para el botón durante carga */
+.sign {
+  position: relative;
+}
+
+.sign .spinner {
+  width: 1.2rem;
+  height: 1.2rem;
+ border: 3px solid rgba(171, 238, 124, 0.3);
+  border-top-color: rgb(212, 255, 0);
+  margin-right: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}

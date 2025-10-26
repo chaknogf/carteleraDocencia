@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Router } from '@angular/router';
-import { Actividades, ActividadesVista, Estados, Modalidades, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
+import { Actividades, ActividadesVista, Estados, Modalidades, ResumenAnual, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -314,17 +314,17 @@ export class ApiService {
     }
   }
 
-  async carteleraDelMes(): Promise<any> {
-    try {
-      const mesActual = new Date().getMonth() + 1;
-      const response = await this.api.get(`/cartelera/${mesActual}`);
-      // console.log('📝 Cartelera del mes obtenida correctamente');
-      return response.data;
-    } catch (error) {
-      console.error('❌ Error al obtener cartelera del mes:', error);
-      throw error;
-    }
-  }
+  // async carteleraDelMes(): Promise<any> {
+  //   try {
+  //     const mesActual = new Date().getMonth() + 1;
+  //     const response = await this.api.get(`/cartelera/${mesActual}`);
+  //     // console.log('📝 Cartelera del mes obtenida correctamente');
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('❌ Error al obtener cartelera del mes:', error);
+  //     throw error;
+  //   }
+  // }
 
   async getReporteActividades(mes: number, anio: number): Promise<any> {
     try {
@@ -383,9 +383,14 @@ export class ApiService {
   }
 
 
-  async getEjecucionServicios(anio: number): Promise<any> {
+  // Reportes
+
+  async getEjecucion(filtros: any): Promise<any> {
     try {
-      const response = await this.api.get('ejecucion_servicio?anio=' + anio);
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get('/reporte/ejecucion', {
+        params: filtrosLimpiados
+      });
       // console.log('📊 Reporte de actividades obtenido correctamente');
       return response.data;
     } catch (error) {
@@ -394,18 +399,22 @@ export class ApiService {
     }
   }
 
-  async getEjecucion(anio: number): Promise<any> {
+
+  async getResumenAnual(filtros: any): Promise<any> {
     try {
-      const response = await this.api.get('ejecucion?anio=' + anio);
-      // console.log('📊 Reporte de actividades obtenido correctamente');
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<ResumenAnual[]>('/reporte/resumen-anual'
+        , {
+          params: filtrosLimpiados
+        });
+
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ejecución de actividades:', error);
       throw error;
     }
   }
-
-
 
 
   // ======= TOKEN (opcional) =======

@@ -68,7 +68,7 @@ export class FormularioComponent implements OnInit, OnChanges {
     servicio_id: 0,
     subdireccion_id: 0,
     modalidad_id: 0,
-    estado_id: 0,
+    estado_id: 1,
     mes_id: 0,
     persona_responsable: {
       r0: this.persona_responsable

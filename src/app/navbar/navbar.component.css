@@ -7,6 +7,10 @@
   color: #fff;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border-top: none;
+  padding-top: 0;
+  font-family: 'Altivo', sans-serif;
+
 }
 
 /* Contenedor flex */
@@ -119,4 +123,26 @@
 .fab-center:hover {
   transform: translate(-50%, -50%) scale(1.08);
   background: #66d8ff;
+}
+
+.cinta-titulo {
+ background: #1e1e2f;
+ display: flex;
+ justify-content: center;
+ flex-direction: column;
+ align-items: center;
+ border: none;
+ padding-top: 0.3rem;
+
+}
+
+.cinta-titulo span {
+  font-weight: 600;
+  margin: 0;
+  line-height: 0.9rem;
+  color: #fff;
+}
+.cinta-titulo .title2 {
+  font-size: 0.9rem;
+  color: #48c6ff;
 }

@@ -42,7 +42,7 @@ export class LoginComponent {
       .then(() => {
         this.loading = false;
         // Redirigir tras autenticación exitosa (ajuste la ruta según corresponda)
-        this.router.navigate(['/tabla']);
+        this.router.navigate(['/reporteActividades']);
       })
       .catch((error) => {
         this.loading = false;

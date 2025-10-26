@@ -1,5 +1,5 @@
 import { mes } from './../interface/enum';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
@@ -8,6 +8,7 @@ import { ApiService } from '../service/api.service';
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
 import { HydrationFeatureKind } from '@angular/platform-browser';
+import { NavbarClienteComponent } from "../navbarCliente/navbarCliente.component";
 
 
 @Component({
@@ -15,7 +16,7 @@ import { HydrationFeatureKind } from '@angular/platform-browser';
   templateUrl: './cartel.component.html',
   styleUrls: ['./cartel.component.css'],
   standalone: true,
-  imports: [CommonModule, LoginComponent, FechaLargaPipe, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe]
+  imports: [CommonModule, EnumMesPipe, NavbarClienteComponent]
 })
 
 
@@ -26,6 +27,7 @@ export class CartelComponent {
   public mes: number = 0;
   public anio: number = 0;
   public hoy: string = '';
+  public mesActual = new Date().getMonth() + 1
 
   constructor(
     private router: Router,
@@ -34,37 +36,21 @@ export class CartelComponent {
 
   ngOnInit(): void {
     this.fechaActual();
-
     this.hoy = new Date().toISOString().split('T')[0];
-
-
-    this.api.carteleraDelMes()
-      .then((data) => {
-        this.eventos = data;
-
-
-        console.log('✅ Actividades cargadas');
-        //console.table(this.eventos);
-      })
-      .catch((error) => {
-        console.error('❌ Error al cargar actividades:', error);
-      });
+    this.datosCartel();
   }
 
-  acceso() {
-    this.router.navigate(['tabla']);
 
+  async datosCartel() {
+    try {
+      this.eventos = await this.api.getActividades({ mes: this.mesActual });
+      // console.log(this.eventos)
+    } catch (error) {
+      console.error('❌ Error al obtener actividades:', error);
+      throw error;
+    }
   }
 
-  visible = signal(false);
-
-  open() {
-    this.visible.set(true);
-  }
-
-  close() {
-    this.visible.set(false);
-  }
   isResponsableValido(responsable: any): boolean {
     if (typeof responsable !== 'object' || !responsable) return false;
 
@@ -72,7 +58,6 @@ export class CartelComponent {
       r?.nombre && typeof r.nombre === 'string' && r.nombre.trim() !== ''
     );
   }
-
 
   fechaActual() {
     const fecha = new Date();
@@ -86,6 +71,7 @@ export class CartelComponent {
     return `${dia} de ${mes[mesActual]} de ${anio}`;
 
   }
+
 
 
 

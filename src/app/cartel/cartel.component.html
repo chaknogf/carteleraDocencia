@@ -1,66 +1,52 @@
-<!-- src/app/cartel/cartel.component.html -->
-<div class="cartel-container fondo-escolar" data-bs-theme="light">
-  <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" (click)="open()">Acceder</button>
-  </div>
+<app-navbarCliente></app-navbarCliente>
 
-  <h2 class="h3 fw-bold text-center mb-2 bg-light rounded">
-    🗓️ Charlas y Capacitaciones del Mes de {{ mes | mes }} {{ anio }}
-  </h2>
-  <h3 class="h3 text-center bg-light rounded mb-4">
-    Hospital General Tipo I de Tecpán Guatemala
-  </h3>
+<section class="cartelera">
+  <header class="cartelera-header">
+    <h2 class="titulo">🗓️ Calendario de Actividades de Docencia</h2>
+    <p class="subtitulo">Mes de {{ mes | mes }} {{ anio }} — Hospital General Tipo I de Tecpán Guatemala</p>
+  </header>
 
-  <div class="row row-cols-1 row-cols-md-2 g-4 " >
-    <div class="col" *ngFor="let evento of eventos">
-      <div class="card shadow-sm h-100" >
-        <div class="card-body rounded " [ngClass]="{'card-hoy': evento.fecha_programada === hoy}">
-          <h5 class="card-title fw-bold">{{ evento.tema }}</h5>
+  <div class="eventos-lista">
+    <div class="evento-card" *ngFor="let evento of eventos" [class.hoy]="evento.fecha_programada === hoy">
+      <div class="fecha">
+        <span class="dia">{{ evento.fecha_programada | date: 'dd' }}</span>
+        <span class="mes">{{ evento.fecha_programada | date: 'MMM' }}</span>
+      </div>
 
-          <p class="mb-1"><strong>🧪 Actividad:</strong> {{ evento.actividad  }}</p>
-          <p class="mb-1"><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
+      <div class="contenido">
+        <h3 class="tema">{{ evento.tema }}</h3>
+        <p class="label-info">🧪 Tipo de Actividad:</p>
+        <p class="data-info">{{ evento.actividad }}</p>
+        <p class="label-info"> Servicio Encargado:</p>
+        <p class="data-info">🏥 {{ evento.servicio_encargado }}</p>
 
-          <div *ngIf="isResponsableValido(evento.persona_responsable)">
-            <p class="mb-1 fw-bold">👩‍⚕️ Responsable(s):</p>
-            <ul class="mb-2">
-              <li *ngFor="let r of evento.persona_responsable | keyvalue">
-                <ng-container *ngIf="r.value.nombre">
-                  {{ r.value.nombre }} - {{ r.value.puesto }}
-                </ng-container>
-              </li>
-            </ul>
-          </div>
+        <div *ngIf="isResponsableValido(evento.persona_responsable)" class="capacitadores">
+          <p class="label-info" >😎 Capacitador</p>
+          <ul>
+            <li *ngFor="let r of evento.persona_responsable | keyvalue">
+              <ng-container *ngIf="r.value.nombre">
+                <p class="data-info">{{ r.value.nombre }} — {{ r.value.puesto }}</p>
+              </ng-container>
+            </li>
+          </ul>
+        </div>
+        <p class="label-info">⏳ Duración</p>
+          <p class="data-info">{{ evento.tiempo_aproximado }}</p>
+          <p class="label-info">Modalidad:</p>
+            <ng-container [ngSwitch]="evento.modalidad">
 
-          <p class="mb-1"><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
-          <p class="mb-1"><strong>📅 Fecha:</strong> {{ evento.fecha_programada | fechaLarga }}</p>
-          <p class="mb-1">
-            <strong *ngIf="evento.modalidad === 'V'">💻 Modalidad:</strong>
-            <strong *ngIf="evento.modalidad === 'P'">👩🏻‍🏫 Modalidad:</strong>
-            {{ evento.modalidad | modalidad }}
-          </p>
-          <p *ngIf="evento.detalles.link" class="mb-1"><strong>🔗 Link:</strong> {{ evento.detalles.link }}</p>
-          <p class="mb-0"><strong>🌟 Estado:</strong> {{ evento.estado | estado }}</p>
+             <p class="data-info" *ngSwitchCase="'Virtual'">💻 {{evento.modalidad}} </p>
+              <p class="data-info" *ngSwitchCase="'Presencial'">👩🏻‍🏫 {{evento.modalidad}}</p>
+              <p class="data-info" *ngSwitchCase="'Híbrida'">💻👩🏻‍🏫 {{evento.modalidad}}</p>
+
+
+            </ng-container>
+
+        <div class="detalles">
+          <p *ngIf="evento.detalles.link" class="label-info">🔗 <a [href]="evento.detalles.link" target="_blank">{{ evento.detalles.link }}</a></p>
+          <p class="estado label-info">📄   {{ evento.estado }}</p>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Modal -->
-<div class="modal-backdrop " *ngIf="visible()">
-  <div class="modal d-block" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content position-relative">
-        <button
-          type="button"
-          class="btn-close position-absolute top-0 end-0 m-2"
-          aria-label="Cerrar"
-          (click)="close()">
-        </button>
-        <div class="modal-body">
-          <app-login></app-login>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</section>

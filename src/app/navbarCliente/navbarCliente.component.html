@@ -1,0 +1,44 @@
+
+
+  <nav class="navbar navbar-container">
+    <div class="logo">
+      <span>DocenciaApp</span>
+      <div class="cinta-titulo justify-content-center">
+  <span class="title1">Ministerio de Salud Pública y Asistencia Social</span>
+  <span class="title2">Hospital General Tipo I de Tecpán Guatemala</span>
+</div>
+    </div>
+
+    <div class="menu-toggle" (click)="toggleMenu()">
+      &#9776;
+    </div>
+
+   <ul class="nav-links" [class.active]="mostrarMenu">
+    <li>
+      <a class="btn nav-btn login-btn fa-right-to-bracket" (click)="open()"> Ingresar</a>
+    </li>
+    <li>
+      <a class="btn nav-btn register-btn">Registrarse</a>
+    </li>
+  </ul>
+  </nav>
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal-backdrop " *ngIf="visible()">
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content position-relative">
+        <button class="btn close-button" aria-label="Cerrar" (click)="close()">X</button>
+        <div class="modal-body">
+          <app-login></app-login>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

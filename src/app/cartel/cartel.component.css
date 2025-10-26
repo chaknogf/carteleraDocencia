@@ -1,189 +1,194 @@
-.cartel-container {
-  max-width: 94dvw ;
-  margin: 2rem auto;
+.cartelera {
   padding: 1.5rem;
-  background-color: #c5ccd2;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.titulo-seccion {
-  text-align: center;
-  font-size: 1.8rem;
-  color: #08294e;
-  margin-bottom: 1.5rem;
-}
-
-.grid-eventos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.2rem;
-}
-
-.evento {
-  background-color: #ffffff;
-  border-left: 6px solid #08294e;
-  padding: 1rem;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.evento:hover {
-  transform: translateY(-5px);
-}
-
-.evento-titulo {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #08294e;
-}
-
-.evento-fecha {
-  font-style: italic;
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-
-.evento-descripcion {
-  color: #333;
-}
-
-.varsider {
+  min-height: 100dvh;
+  /* background: linear-gradient(to bottom right, #fdfcfb, #e2d1c3); */
   display: flex;
-  justify-content: flex-end; /* Esto alinea a la derecha */
-  padding: 1rem 0; /* Opcional para separación */
-}
-
-.access {
-  padding: 0.6rem 1.2rem;
-  background-color: #0d47a1;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100dvw;
-  height: 100dvh;
-  background-color: rgba(1, 0, 4, 0.95);
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  z-index: 1000;
-
+  font-family: 'Altivo', 'Segoe UI', sans-serif;
 
 }
 
-.modal-content {
-  background: rgba(255, 255, 255, 0.671);
-  border-radius: 12px;
-  padding: 0.5rem;
-  border: rgb(110, 55, 239) 4px solid;
-  position: relative;
-  min-width: 420px;
-  max-width: 80px;
-  backdrop-filter: blur(4px); /* Agrega el efecto de desenfoque */
-}
-
-.close-button {
-  color: orangered;
-  position: absolute;
-  top: 30px;
-  right: 12px;
-  font-size: 48px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* Estilo general para fondo con degradado azulado escolar */
-.cartel-container {
-  background: linear-gradient(to right, #0963a3, #66ace6);
-  padding: 2rem;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-  color: #090e4d;
-}
-
-/* Encabezados con estilo académico amigable */
-.titulo-seccion {
-  font-size: 1.75rem;
-  font-weight: 600;
+/* --- Encabezado --- */
+.cartelera-header {
   text-align: center;
   margin-bottom: 1rem;
-  color: #002244;
 }
 
-/* Estilo de cada evento */
-.evento {
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid #cce0f5;
-  border-left: 5px solid #3399ff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
-}
-
-.evento:hover {
-  transform: translateY(-3px);
-}
-
-/* Botón de acceso */
-.btn-c {
-  background-color: #3399ff;
-  color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 5px;
-  font-weight: 500;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.btn-c:hover {
-  background-color: #1a75d1;
-}
-
-/* Modal amigable */
-.modal-backdrop {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 51, 102, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: #f9fbff;
-  padding: 2rem;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
-
-/* Botón cerrar modal */
-.close-button {
-  background: transparent;
-  border: none;
+.titulo {
   font-size: 1.5rem;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  cursor: pointer;
-  color: #003366;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #222;
 }
 
-.card-hoy {
-  background-color: #ff964082;
+.subtitulo {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.data-info {
+  /* Estilo base, como una entrada de información */
+  display: block; /* Ocupa todo el ancho disponible */
+  background: transparent;
+  color: #111; /* Color muy oscuro para el contraste */
+  font-weight: 600; /* Importancia */
+  font-size: 0.95rem; /* Mejor legibilidad */
+  padding: 2px 0; /* Un poco de espacio vertical */
+  border-bottom: 2px solid #f0f0f0; /* Línea de separación sutil, como de cuaderno */
+  margin-bottom: 0;
+  letter-spacing: 0;
+  user-select: text;
+  transition: color 0.2s ease;
+}
+
+/* Rediseño para los elementos <ul> dentro de .capacitadores */
+.capacitadores .data-info {
+    font-size: 0.9rem; /* Ligeramente más pequeño para listas */
+    font-weight: 500;
+    border-bottom: none; /* Las listas no necesitan la línea */
+}
+
+.data-info:hover {
+  /* Interacción más sutil */
+  color: #4a90e2; /* Un toque de color azul al pasar el ratón */
+  /* transform: none; /* Desactivamos el movimiento */
+  /* box-shadow: none; /* Desactivamos la sombra */
+}
+.label-info {
+  /* Estilo base, discreto */
+  display: block;
+  font-size: 0.8rem; /* Más pequeño y sutil */
+  font-weight: 500; /* Ligero, como una nota */
+  color: #7b7b7b; /* Gris suave */
+  margin-bottom: 3px;
+  margin-top: 10px; /* Separación de la data anterior */
+  text-transform: uppercase; /* Para un look más estructurado/formulario */
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* Opcional: Agregar un toque "escolar" como un subrayado punteado sutil */
+.label-info::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(to right, #e0e0e0 33%, rgba(255, 255, 255, 0) 0%);
+  background-position: bottom;
+  background-size: 3px 1px;
+  background-repeat: repeat-x;
+  margin-top: 2px;
+}
+
+
+/* --- Lista de eventos --- */
+.eventos-lista {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  /* max-width: 800px; */
+}
+
+@media (min-width: 900px) {
+  .eventos-lista {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --- Tarjeta individual --- */
+.evento-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-left: 5px solid #4a90e2;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+
+
+.evento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.evento-card.hoy {
+  border-left-color: #ff9800;
+  background: rgba(236, 252, 208, 0.219);
+   backdrop-filter: blur(2px);
+}
+
+
+/* --- Bloque fecha --- */
+.fecha {
+  text-align: center;
+  min-width: 60px;
+  margin-right: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: #4a91e27d 0px 0px 2px 2px inset, #4a91e250 0px 0px 3px 1px;
+}
+
+.dia {
+  font-size: 1.4rem;
+  font-weight: bold;
+  display: block;
+  color: rgb(5, 5, 75);
+}
+
+.mes {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* --- Contenido del evento --- */
+.contenido {
+  flex: 1;
+}
+
+.tema {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.4rem;
+  text-decoration: solid underline #4a90e2;
+  word-wrap: break-word;
+}
+
+.servicio, .actividad, .detalles p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.capacitadores ul {
+  margin: 0.3rem 0;
+  padding-left: 1rem;
+  list-style-type: "✏️ ";
+  color: black;
+}
+
+.capacitadores li {
+  font-size: 0.85rem;
+}
+
+.estado {
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+a:hover {
+  text-decoration: underline;
 }
