@@ -1,0 +1,24 @@
+<nav class="navbar bg-secundary">
+  <div class="navbar-container">
+    <div class="logo">
+      <span>DocenciaApp</span>
+    </div>
+
+    <div class="menu-toggle" (click)="toggleMenu()">
+      &#9776;
+    </div>
+
+    <ul class="nav-links" [class.active]="mostrarMenu">
+      <li><a (click)="irCartelera()">Cartelera</a></li>
+      <li><a (click)="irActividades()">Actividades</a></li>
+      <li><a (click)="reporte()">Reportes</a></li>
+      <li><a (click)="usuarios()">Usuarios</a></li>
+    </ul>
+  </div>
+
+
+
+  <div class="data-user">
+    <app-usuarioActual></app-usuarioActual>
+  </div>
+</nav>

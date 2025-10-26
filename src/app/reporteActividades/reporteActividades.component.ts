@@ -20,6 +20,7 @@ import {
   ApexMarkers,
   ApexPlotOptions
 } from 'ng-apexcharts';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -43,9 +44,9 @@ export type ChartOptions = {
   templateUrl: './reporteActividades.component.html',
   styleUrls: ['./reporteActividades.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, MesNombrePipe, NgApexchartsModule, ChartComponent,
+  imports: [CommonModule, NavbarComponent, FormsModule, MesNombrePipe, NgApexchartsModule, ChartComponent,
     NgApexchartsModule,
-    NgApexchartsModule]
+    NgApexchartsModule, NavbarComponent]
 })
 export class ReporteActividadesComponent implements OnInit {
 

@@ -1,22 +1,38 @@
-import { mes } from './../interface/enum';
-import { Component, OnInit } from '@angular/core';
+import { mes, actividad, Estado, Meses } from './../interface/enum';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
-import { Actividad, Detalles, Metadatos, PersonaResponsable } from './../interface/interfaces';
+import { Actividades, ActividadesVista, Detalles, Estados, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad } from './../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-formulario',
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NavbarComponent]
 })
-export class FormularioComponent implements OnInit {
+export class FormularioComponent implements OnInit, OnChanges {
 
   public enEdicion: boolean = false;
   public mesActividad: number = 0;
+  public subdirecciones: SubdirecionPertenece[] = [];
+  public serviciosResponsables: ServicioResponsables[] = [];
+  public subRH: ServicioResponsables[] = [];
+  public subGerencia: ServicioResponsables[] = [];
+  public subMedica: ServicioResponsables[] = [];
+  public subTecnica: ServicioResponsables[] = [];
+  public subEnfermeria: ServicioResponsables[] = [];
+  public direccion: ServicioResponsables[] = [];
+  public modalidades: Modalidades[] = [];
+  public estados: Estados[] = [];
+  public tipoActividades: TipoActividad[] = [];
+  encargado: string = '';
+  jefe: string = '';
+
+  meses: Meses[] = mes;
 
   detalle: Detalles = {
     link: '',
@@ -45,27 +61,59 @@ export class FormularioComponent implements OnInit {
     puesto: ''
   };
 
-  actividad: Actividad = {
+  actividad: Actividades = {
     id: 0,
     tema: '',
-    actividad: 0,
-    servicio_encargado: '',
+    actividad_id: 0,
+    servicio_id: 0,
+    subdireccion_id: 0,
+    modalidad_id: 0,
+    estado_id: 0,
+    mes_id: 0,
     persona_responsable: {
       r0: this.persona_responsable
     },
-    tiempo_aproximado: '',
-    fechas_a_desarrollar: '',
-    modalidad: '',
-    estado: '',
     detalles: this.detalle,
-    metadatos: this.metadato
+    metadatos: this.metadato,
+    tiempo_aproximado: '',
+    fecha_programada: ''
   };
+
+  // actividadVista: ActividadesVista = {
+  //   id: 0,
+  //   tema: '',
+  //   actividad: '',
+  //   actividad_id: 0,
+  //   descripcion_actividad: '',
+  //   subdireccion: '',
+  //   subdireccion_id: 0,
+  //   servicio_encargado: '',
+  //   servicio_id: 0,
+  //   persona_responsable: {
+  //     r0: this.persona_responsable
+  //   },
+  //   tiempo_aproximado: '',
+  //   fecha_programada: '',
+  //   mes: '',
+  //   mes_id: 0,
+  //   anio: 0,
+  //   modalidad: '',
+  //   modalidad_id: 0,
+  //   estado: '',
+  //   estado_id: 0,
+  //   detalles: this.detalle,
+  //   metadatos: this.metadato,
+
+  // };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService
   ) { }
+  ngOnChanges(): void {
+    this.onServicioSeleccionado()
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -80,8 +128,8 @@ export class FormularioComponent implements OnInit {
             this.detalle = this.actividad.detalles;
 
             this.enEdicion = true;
-            console.log('✅ Actividad cargada para edición');
-            console.log('Actividad a editar:', this.actividad.detalles.nota);
+            // console.log('✅ Actividad cargada para edición');
+            // console.log('Actividad a editar:', this.actividad.detalles.nota);
           })
           .catch((error) => {
             console.error('❌ Error al cargar actividad para edición:', error);
@@ -94,50 +142,88 @@ export class FormularioComponent implements OnInit {
       this.actividad.detalles = this.detalle;
       this.actividad.metadatos = this.metadato;
     }
+    this.listarSubdirecciones();
+    this.listarServicios();
+    this.listarTipoActividad();
+    this.listarModalidades();
+    this.listarEstados();
   }
 
+
+
+  prepararActividadPayload(actividad: any, esActualizacion = false): any {
+    const detallesObj = {
+      asistencia: actividad.detalles?.asistencia ?? 0,
+      inasistencia: actividad.detalles?.inasistencia ?? 0,
+      excelente: actividad.detalles?.excelente ?? 0,
+      bueno: actividad.detalles?.bueno ?? 0,
+      regular: actividad.detalles?.regular ?? 0,
+      deficiente: actividad.detalles?.deficiente ?? 0,
+      mes: actividad.detalles?.mes ?? actividad.mes_id ?? 0,
+      nota: actividad.detalles?.nota ?? '',
+    };
+
+    const metadatosObj = {
+      user: actividad.metadatos?.user || 'sistema',
+      registro: actividad.metadatos?.registro || new Date().toISOString(),
+    };
+
+    const payload: any = {
+      tema: actividad.tema?.trim() || '',
+      actividad_id: actividad.actividad_id,
+      servicio_id: actividad.servicio_id,
+      subdireccion_id: actividad.subdireccion_id,
+      modalidad_id: actividad.modalidad_id,
+      estado_id: actividad.estado_id,
+      mes_id: actividad.mes_id,
+      persona_responsable: actividad.persona_responsable || {},
+      tiempo_aproximado: actividad.tiempo_aproximado || '',
+      fecha_programada: actividad.fecha_programada || '',
+      // 👇 enviar como objeto, NO string
+      detalles: detallesObj,
+      metadatos: metadatosObj,
+    };
+
+    if (esActualizacion && actividad.id) {
+      payload.id = actividad.id;
+    }
+
+    return payload;
+  }
   volver(): void {
     this.router.navigate(['tabla']);
   }
 
-  agregar(): void {
-    this.actividad.detalles = this.detalle;
-    this.actividad.metadatos = this.metadato;
 
-    this.api.createActividad(this.actividad)
+
+  agregar(): void {
+    // Serializamos correctamente el payload
+    const payload = this.prepararActividadPayload(this.actividad);
+
+    this.api.createActividad(payload)
       .then(() => {
-        console.log('✅ Actividad creada correctamente');
+        // console.log('✅ Actividad creada correctamente');
         this.router.navigate(['tabla']);
       })
       .catch((error) => {
-        console.error('❌ Error al crear actividad:', error, this.actividad);
+        console.error('❌ Error al crear actividad:', error, payload);
       });
   }
 
   async actualizar(): Promise<void> {
-    this.actividad.detalles = this.detalle;
-    this.actividad.metadatos = this.metadato;
-
-
+    const payload = this.prepararActividadPayload(this.actividad, true);
 
     try {
-      await this.api.updateActividad(this.actividad.id, this.actividad);
-      console.log('✅ Actividad actualizada correctamente');
-      console.table(this.actividad.detalles);
-
+      await this.api.updateActividad(this.actividad.id, payload);
       this.router.navigate(['tabla']);
     } catch (error) {
       console.error('❌ Error al actualizar actividad:', error);
-      console.log('Actividad a actualizar:', this.actividad);
-
+      // console.log('Payload enviado:', payload);
     }
   }
 
   guardar(): void {
-    if (this.actividad.fechas_a_desarrollar) {
-      const fecha = new Date(this.actividad.fechas_a_desarrollar);
-      this.detalle.mes = fecha.getMonth() + 1;
-    }
+    // console.log('Datos a guardar:', this.actividad);
     this.enEdicion ? this.actualizar() : this.agregar();
   }
 
@@ -167,5 +253,94 @@ export class FormularioComponent implements OnInit {
     const fecha = new Date(fechaStr);
     this.detalle.mes = fecha.getMonth() + 1;
   }
-}
 
+  ngAfterViewInit() {
+    document.addEventListener('mousemove', (e) => {
+      document.body.style.setProperty('--mouse-x', e.clientX + 'px');
+      document.body.style.setProperty('--mouse-y', e.clientY + 'px');
+    });
+  }
+
+
+  async listarSubdirecciones(): Promise<void> {
+    const filt = { limit: 30, skip: 0 };
+    try {
+      this.subdirecciones = await this.api.getSubdirecciones(filt);
+      // console.log('Subdirecciones cargadas:', this.subdirecciones);
+    } catch (error) {
+      console.error('Error al listar subdirecciones:', error);
+    }
+  }
+
+  // Función que se llama al cambiar la subdirección
+
+  async listarServicios(): Promise<void> {
+    try {
+      this.serviciosResponsables = await this.api.getServiciosResponsables({});
+      this.subRH = await this.api.getServiciosResponsables({ sub: 6 });
+      this.subGerencia = await this.api.getServiciosResponsables({ sub: 5 });
+      this.subTecnica = await this.api.getServiciosResponsables({ sub: 4 });
+      this.subMedica = await this.api.getServiciosResponsables({ sub: 3 });
+      this.subEnfermeria = await this.api.getServiciosResponsables({ sub: 2 });
+      this.direccion = await this.api.getServiciosResponsables({ sub: 1 });
+
+
+    } catch (error) {
+      console.error('Error al listar servicios:', error);
+    }
+  }
+
+  async listarTipoActividad(): Promise<void> {
+    try {
+      this.tipoActividades = await this.api.getTipoActividad({});
+    } catch (error) {
+      console.error('Error al listar tipos de actividad:', error);
+    }
+  }
+
+  async listarEstados(): Promise<void> {
+    try {
+      this.estados = await this.api.getEstados({});
+    } catch (error) {
+      console.error('Error al listar estados:', error);
+    }
+  }
+
+  async listarModalidades(): Promise<void> {
+    try {
+      this.modalidades = await this.api.getModalidades({});
+    } catch (error) {
+      console.error('Error al listar modalidades:', error);
+    }
+  }
+
+  onSubdireccionChange(subId: number): void {
+    this.actividad.servicio_id = 0; // reinicia selección de servicio
+  }
+
+
+  onServicioSeleccionado(): void {
+    const servicio = this.subTecnica.find(ser => ser.id === this.actividad.servicio_id);
+    this.encargado = servicio ? servicio.encargado_servicio : '';
+    this.jefe = servicio ? servicio.jefe_inmediato : '';
+    // console.log('Encargado seleccionado:', this.encargado);
+  }
+
+
+  mostrarServicios = false;
+  mostrarActividad = false;
+  mostrarDetalle = false;
+
+  toggleServicios(): void {
+    this.mostrarServicios = !this.mostrarServicios;
+  }
+
+  toggleActividad(): void {
+    this.mostrarActividad = !this.mostrarActividad;
+  }
+
+  toggleDetalle(): void {
+    this.mostrarDetalle = !this.mostrarDetalle;
+  }
+
+}

@@ -3,13 +3,18 @@ import { estado } from './../interface/enum';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actividad, Currentuser } from '../interface/interfaces';
+import { ActividadesVista, Currentuser } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from "../pipe/tuberias.pipe";
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { FormsModule } from '@angular/forms';
 import { Meses, Modalidad, ActividadTipo, Estado, actividad, modalidad, mes } from '../interface/enum';
 import { UsuarioActualComponent } from "../users/usuarioActual/usuarioActual.component";
+import { NavbarComponent } from '../navbar/navbar.component';
+import { IconService } from '../service/icon.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { filter } from '../shared/icons/icons';
+import { NavbarPlusComponent } from '../navbarPlus/navbarPlus.component';
 
 
 @Component({
@@ -17,11 +22,11 @@ import { UsuarioActualComponent } from "../users/usuarioActual/usuarioActual.com
   templateUrl: './tablaDocencia.component.html',
   styleUrls: ['./tablaDocencia.component.css'],
   standalone: true,
-  imports: [CommonModule, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe, EnumActividadPipe, FechaLargaPipe, FormsModule, UsuarioActualComponent]
+  imports: [CommonModule, FormsModule, NavbarPlusComponent]
 })
 export class TablaDocenciaComponent implements OnInit {
 
-  public actividades: Actividad[] = [];
+  public actividades: ActividadesVista[] = [];
   mensajeEliminado: boolean = false;
   role: string = '';
 
@@ -33,7 +38,6 @@ export class TablaDocenciaComponent implements OnInit {
   totalActividades: number = 0;
   paginaActual: number = 0;
   actividadesPorPagina: number = 10;
-
   buscarTema: string = '';
   buscarActividad: string = '';
   buscarModalidad: string = '';
@@ -42,12 +46,27 @@ export class TablaDocenciaComponent implements OnInit {
   buscarMes: string = '';
   buscarFecha: string = '';
 
+  options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
+  private sanitizarSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+  // iconos
+  icons: { [key: string]: any } = {};
+
+  filter: SafeHtml = filter;
 
   constructor(
     private router: Router,
-    private api: ApiService
-  ) { }
+    private api: ApiService,
+    private iconService: IconService,
+    private sanitizer: DomSanitizer,
+  ) {
+    this.icons = {
+      filter: this.sanitizarSvg(filter),
+    }
+
+  }
 
   ngOnInit() {
 

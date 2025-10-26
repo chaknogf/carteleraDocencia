@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Router } from '@angular/router';
-import { Actividad, Usuarios } from '../interface/interfaces';
+import { Actividades, ActividadesVista, Estados, Modalidades, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -13,6 +13,7 @@ export class ApiService {
 
   constructor(
     private router: Router,
+
   ) {
 
 
@@ -111,7 +112,7 @@ export class ApiService {
       const response = await this.api.get<Usuarios[]>('/user/', {
         params: filtros
       });
-      console.log('👤 Usuarios obtenidos correctamente', response);
+      // console.log('👤 Usuarios obtenidos correctamente', response);
       return response.data;
 
     } catch (error) {
@@ -123,7 +124,7 @@ export class ApiService {
   async getUser(id: number): Promise<any> {
     try {
       const response = await this.api.get<Usuarios[]>(`/user/?id=${id}&skip=0&limit=1`);
-      console.log('👤 Usuarios obtenidos correctamente', response);
+      // console.log('👤 Usuarios obtenidos correctamente', response);
       return response.data;
 
     } catch (error) {
@@ -135,7 +136,7 @@ export class ApiService {
   async createUser(user: any): Promise<any> {
     try {
       const response = await this.api.post('/user/crear', user);
-      console.log('👤 Usuario creado correctamente');
+      // console.log('👤 Usuario creado correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al crear usuario:', error);
@@ -146,7 +147,7 @@ export class ApiService {
   async updateUser(userId: number | string, user: any): Promise<any> {
     try {
       const response = await this.api.put(`/user/actualizar/${userId}`, user);
-      console.log('👤 Usuario actualizado correctamente');
+      // console.log('👤 Usuario actualizado correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al actualizar usuario:', error);
@@ -157,7 +158,7 @@ export class ApiService {
   async deleteUser(userId: number | string): Promise<any> {
     try {
       const response = await this.api.delete(`/user/eliminar/${userId}`);
-      console.log('👤 Usuario eliminado correctamente');
+      // console.log('👤 Usuario eliminado correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al eliminar usuario:', error);
@@ -166,16 +167,84 @@ export class ApiService {
   }
 
 
+  // ======= SERVICIOS RESPONSABLES =======
+
+  async getServiciosResponsables(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<ServicioResponsables[]>('/servicios_responsables/', {
+        params: filtrosLimpiados
+      });
+      // console.log('📝 Valores Obtenidos');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  async createServicioResponsable(data: any): Promise<any> {
+    try {
+      const response = await this.api.post(
+        '/servicios_responsables/crear/', data,
+        {
+          headers: {
+            'Content-Type': 'application/json', // 👈 Muy importante
+          },
+        }
+      );
+      // console.log('📝 creado correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al crear :', error);
+      throw error;
+    }
+  }
+
+  async updateServicioResponsable(dataId: number | string, data: any): Promise<any> {
+    try {
+      const response = await this.api.put(
+        `/servicios_responsables/actualizar/${dataId}`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json', // 👈 Muy importante
+          },
+        }
+      );
+      // console.log('📝 Actualización correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al actualizar:', error);
+      throw error;
+    }
+  }
+
+  // ======= SUBDIRECCIONES =======
+  async getSubdirecciones(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<SubdirecionPertenece[]>('/subdireccion/', {
+        params: filtrosLimpiados
+      });
+      // console.log('📝 Valores Obtenidos');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
 
   // ======= ACTIVIDADES =======
+
 
   async getActividades(filtros: any): Promise<any> {
     try {
       const filtrosLimpiados = limpiarParametros(filtros);
-      const response = await this.api.get<Actividad[]>('/actividades/', {
+      const response = await this.api.get<ActividadesVista[]>('/actividades/', {
         params: filtrosLimpiados
       });
-      console.log('📝 Actividades obtenidas correctamente');
+      // console.log('📝 Actividades obtenidas correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener actividades:', error);
@@ -183,10 +252,10 @@ export class ApiService {
     }
   }
 
-  async getActividad(id: number): Promise<Actividad> {
+  async getActividad(id: number): Promise<ActividadesVista> {
     try {
-      const response = await this.api.get<Actividad[]>(`/actividades/?id=${id}`);
-      console.log('📝 Actividad obtenida correctamente:', response.data[0]);
+      const response = await this.api.get<ActividadesVista[]>(`/actividades/?id=${id}`);
+      // console.log('📝 Actividad obtenida correctamente:', response.data[0]);
       return response.data[0]; // porque es una lista filtrada por id
     } catch (error) {
       console.error('❌ Error al obtener actividad:', error);
@@ -205,7 +274,7 @@ export class ApiService {
           },
         }
       );
-      console.log('📝 Actividad creada correctamente');
+      // console.log('📝 Actividad creada correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al crear actividad:', error);
@@ -225,7 +294,7 @@ export class ApiService {
           },
         }
       );
-      console.log('📝 Actividad actualizada correctamente');
+      // console.log('📝 Actividad actualizada correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al actualizar actividad:', error);
@@ -237,7 +306,7 @@ export class ApiService {
   async deleteActividad(actividadId: number | string): Promise<any> {
     try {
       const response = await this.api.delete(`/actividad/eliminar/${actividadId}`);
-      console.log('📝 Actividad eliminada correctamente');
+      // console.log('📝 Actividad eliminada correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al eliminar actividad:', error);
@@ -249,7 +318,7 @@ export class ApiService {
     try {
       const mesActual = new Date().getMonth() + 1;
       const response = await this.api.get(`/cartelera/${mesActual}`);
-      console.log('📝 Cartelera del mes obtenida correctamente');
+      // console.log('📝 Cartelera del mes obtenida correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener cartelera del mes:', error);
@@ -260,10 +329,55 @@ export class ApiService {
   async getReporteActividades(mes: number, anio: number): Promise<any> {
     try {
       const response = await this.api.get(`/reporte/vista?mes=${mes}&anio=${anio}`);
-      console.log('📊 Reporte de actividades obtenido correctamente');
+      // console.log('📊 Reporte de actividades obtenido correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener reporte de actividades:', error);
+      throw error;
+    }
+  }
+
+  // api tipo actividades
+  async getTipoActividad(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<TipoActividad[]>('/tipos_actividad/', {
+        params: filtrosLimpiados
+      });
+      // console.log('📝 Datos obtenidos correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  // api estados
+  async getModalidades(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<Modalidades[]>('/modalidades/', {
+        params: filtrosLimpiados
+      });
+      // console.log('📝 Datos obtenidos correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  // api modalidades
+  async getEstados(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<Estados[]>('/estados/', {
+        params: filtrosLimpiados
+      });
+      // console.log('📝 Datos obtenidos correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
       throw error;
     }
   }
@@ -272,7 +386,7 @@ export class ApiService {
   async getEjecucionServicios(anio: number): Promise<any> {
     try {
       const response = await this.api.get('ejecucion_servicio?anio=' + anio);
-      console.log('📊 Reporte de actividades obtenido correctamente');
+      // console.log('📊 Reporte de actividades obtenido correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ejecución de actividades:', error);
@@ -283,7 +397,7 @@ export class ApiService {
   async getEjecucion(anio: number): Promise<any> {
     try {
       const response = await this.api.get('ejecucion?anio=' + anio);
-      console.log('📊 Reporte de actividades obtenido correctamente');
+      // console.log('📊 Reporte de actividades obtenido correctamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ejecución de actividades:', error);

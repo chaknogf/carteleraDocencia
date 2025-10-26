@@ -1,4 +1,4 @@
-import { estado, actividad } from './enum';
+import { estado, actividad, modalidad, mes } from './enum';
 export interface Usuarios {
   id: number;
   nombre: string;
@@ -22,6 +22,54 @@ export interface PersonaResponsable {
   puesto: string;
 }
 
+export interface SubdirecionPertenece {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: boolean;
+}
+
+export interface ServicioResponsables {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  encargado_servicio: string;
+  jefe_inmediato: string;
+  activo: boolean;
+  subdireccion_id: number;
+  subdireccion: { id: number; nombre: string };
+}
+
+export interface TipoActividad {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: boolean;
+}
+
+export interface Modalidades {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: boolean;
+}
+
+export interface Estados {
+  id: number;
+  codigo: string;
+  nombre: string;
+
+}
+
+export interface meses {
+  id: number;
+  nombre: string;
+
+}
+
+
+
+
 export interface Detalles {
   link: string | null;
   duracion: string | null;
@@ -44,41 +92,85 @@ export interface Metadatos {
   registro: string;
 }
 
-export interface Actividad {
+export interface Actividades {
   id: number;
   tema: string;
-  actividad: number;
-  servicio_encargado: string;
+  actividad_id: number;
+  servicio_id: number;
+  subdireccion_id: number;
+  modalidad_id: number;
+  estado_id: number;
+  mes_id: number;
   persona_responsable: { [key: string]: PersonaResponsable };
-  tiempo_aproximado: string;
-  fechas_a_desarrollar: string;
-  modalidad: string;
-  estado: string;
   detalles: Detalles;
   metadatos: Metadatos;
+  tiempo_aproximado: string;
+  fecha_programada: string;
 }
+
+
+
+export interface ActividadesVista {
+  id: number;
+  tema: string;
+  actividad: string;
+  actividad_id: number;
+  descripcion_actividad: string;
+  subdireccion: string;
+  subdireccion_id: number;
+  servicio_encargado: string;
+  servicio_id: number;
+  persona_responsable: { [key: string]: PersonaResponsable };
+  tiempo_aproximado: string;
+  fecha_programada: string;
+  mes: string;
+  mes_id: number;
+  anio: number;
+  modalidad: string;
+  modalidad_id: number;
+  estado: string;
+  estado_id: number;
+  detalles: Detalles;
+  metadatos: Metadatos;
+
+}
+
+
 
 export interface Reportes {
   id: number;
-  fechas_a_desarrollar: string;
-  estado: string;
-  anio: number;
   tema: string;
-  actividad: number;
+  actividad: string;
   servicio_encargado: string;
+  subdireccion: string;
+  fecha_programada: string;
+  mes: string;
+  mes_id: number;
+  anio: number;
   modalidad: string;
-  mes: number;
-  fecha_entrega_informe: string;
+  estado: string;
   nota: string;
-
+  jefe_inmediato: string;
+  encargado_servicio: string;
 }
+
+
 
 export interface Ejecucion {
-  estado: string;
-  total_estado: number;
+  subdireccion_id: number;
+  servicio_id: number;
+  servicio_encargado: string;
+  mes_id: number;
+  mes: string;
   anio: number;
-  porcentaje: number;
+  completa: number;
+  programada: number;
+  reprogramada: number;
+  anulada: number;
+  total: number;
 }
+
+
 
 export interface EServicios {
   nota: string;

@@ -1,238 +1,327 @@
-<div class="container-fluid mt-4 p-4 bg-container text-dark rounded shadow" data-bs-theme="light">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0">📋 Formulario de Actividad</h3>
-    <button class="btn btn-secondary" (click)="volver()">Volver</button>
+<app-navbar></app-navbar>
+<div class="notebook-container">
+  <div class="header">
+    <h3>📘 Formulario de Actividad</h3>
+    <button class="btn-glass" (click)="volver()">Volver</button>
   </div>
 
-  <form (ngSubmit)="guardar()">
-    <div class="row g-3">
- <div class="container py-4">
-  <div class="row g-4">
+  <form (ngSubmit)="guardar()" class="glass-form">
 
-    <!-- TEMA -->
-    <div class="col-md-6">
-      <label for="tema" class="form-label fw-bold fs-5">Tema</label>
-      <input type="text" id="tema" class="form-control" [(ngModel)]="actividad.tema" name="tema">
-    </div>
+    <fieldset class="fieldset-glass">
+      <legend (click)="toggleServicios()">Datos del Servicio Responsable
+      <span class="arrow" [class.open]="mostrarServicios">▾</span>
+    </legend>
 
-    <!-- SERVICIO ENCARGADO -->
-    <div class="col-md-6">
-      <label for="servicioEncargado" class="form-label fw-bold fs-5">Servicio Encargado</label>
-      <input type="text" id="servicioEncargado" class="form-control" [(ngModel)]="actividad.servicio_encargado" name="servicioEncargado">
-    </div>
+    <div class="form-grid" id="servicios" [class.open]="mostrarServicios">
 
-    <!-- TIEMPO APROXIMADO -->
-    <div class="col-md-6">
-      <label for="tiempoAproximado" class="form-label fw-bold fs-5">Tiempo Aproximado</label>
-      <input type="text" id="tiempoAproximado" class="form-control" [(ngModel)]="actividad.tiempo_aproximado" name="tiempoAproximado">
-    </div>
-
-    <!-- FECHA -->
-    <div class="col-md-6">
-      <label for="fecha" class="form-label fw-bold fs-5">Fecha</label>
-      <input type="date" id="fecha" class="form-control" [(ngModel)]="actividad.fechas_a_desarrollar" name="fecha">
-    </div>
-
-    <!-- TIPO DE ACTIVIDAD -->
-    <div class="col-12 bg-dark-subtle p-3 rounded">
-      <label class="form-label fw-bold fs-5 text-black">Tipo de Actividad</label>
-      <div class="btn-group w-100 flex-wrap" role="group">
-        <button type="button" class="btn border-3 "
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.actividad === 1, 'btn-outline-dark text-black': actividad.actividad !== 1}"
-          (click)="actividad.actividad = 1">
-          Capacitación
-        </button>
-        <button type="button" class="btn border-3"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.actividad === 2, 'btn-outline-dark text-dark text-black': actividad.actividad !== 2}"
-          (click)="actividad.actividad = 2">
-          Charla
-        </button>
-      </div>
-    </div>
-
-    <!-- MODALIDAD -->
-    <div class="col-12 bg-dark-subtle p-3 rounded">
-      <label class="form-label fw-bold fs-5 text-black">Modalidad</label>
-      <div class="btn-group w-100 flex-wrap" role="group">
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.modalidad === 'P', 'btn-outline-dark text-black': actividad.modalidad !== 'P'}"
-          (click)="actividad.modalidad = 'P'">
-          Presencial
-        </button>
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.modalidad === 'V', 'btn-outline-dark text-black': actividad.modalidad !== 'V'}"
-          (click)="actividad.modalidad = 'V'">
-          Virtual
-        </button>
-      </div>
-    </div>
-
-    <!-- ESTADO -->
-    <div class="col-12 bg-dark-subtle p-3 rounded">
-      <label class="form-label fw-bold fs-5 text-black">Estado</label>
-      <div class="btn-group w-100 flex-wrap" role="group">
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'P', 'btn-outline-dark text-black': actividad.estado !== 'P'}"
-          (click)="actividad.estado = 'P'">
-          Programada
-        </button>
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'R', 'btn-outline-dark text-black': actividad.estado !== 'R'}"
-          (click)="actividad.estado = 'R'">
-          Reprogramada
-        </button>
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'C', 'btn-outline-dark text-black': actividad.estado !== 'C'}"
-          (click)="actividad.estado = 'C'">
-          Completada
-        </button>
-        <button type="button" class="btn border-3 text-black"
-          [ngClass]="{'btn-dark text-light bg-black fs-5': actividad.estado === 'S', 'btn-outline-dark text-black': actividad.estado !== 'S'}"
-          (click)="actividad.estado = 'S'">
-          Suspendida
-        </button>
-      </div>
-    </div>
-
-
-
-
-    <!-- NOTA -->
-    <div class="col-12" >
-      <label for="nota" class="form-label fw-bold fs-5">Nota</label>
-      <textarea [(ngModel)]="actividad.detalles.nota" name="nota" class="form-control" rows="3"></textarea>
-
-    </div>
-
-    <!-- RESPONSABLES -->
-    <div class="col-12 justify-content-center">
-      <label class="form-label fw-bold fs-5">Responsables</label>
-      <div *ngFor="let responsable of actividad.persona_responsable | keyvalue" class="row g-2 mb-2 align-items-center">
-        <div class="col-md-5">
-          <input type="text" class="form-control" placeholder="Nombre"
-                 [(ngModel)]="responsable.value.nombre"
-                 name="nombre{{responsable.key}}" id="nombre{{responsable.key}}">
-        </div>
-        <div class="col-md-5">
-          <input type="text" class="form-control" placeholder="Puesto"
-                 [(ngModel)]="responsable.value.puesto"
-                 name="puesto{{responsable.key}}" id="puesto{{responsable.key}}">
-        </div>
-        <div class="col-md-2 text-end">
-          <button type="button" class="btn btn-danger btn-sm"
-                  *ngIf="(actividad.persona_responsable | keyvalue).length > 1"
-                  (click)="removerResponsable(responsable.key)">−</button>
+  <!-- SUBDIRECCIONES -->
+      <div class="form-group rations">
+        <label class="">Seleccione Dirección o Subdirección Perteneciente</label>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let sub of subdirecciones">
+            <input
+              type="radio"
+              name="subdireccion"
+              [value]="sub.id"
+              [(ngModel)]="actividad.subdireccion_id"
+              />
+            <span>{{ sub.nombre }}</span>
+          </label>
         </div>
       </div>
-      <button type="button" class="btn btn-outline-dark bg-dark btn-sm mt-2" (click)="agregarResponsable()">+ Agregar Responsable</button>
-    </div>
 
-  </div>
-</div>
+  <!-- SERVICIOS DEPENDIENDO DE SUBDIRECCIÓN -->
+      <div class="form-group rations" *ngIf="actividad.subdireccion_id">
+        <label class="">Seleccione el Servicio</label>
 
-      <hr class="my-4">
-
-      <h4 class="text-primary">📝 Detalles</h4>
-      <!-- FECHA ENTREGA INFORME -->
-    <div class="col-md-6">
-      <label for="fechaEntregaInforme" class="form-label fw-bold fs-5">Fecha Entrega Informe</label>
-      <input type="date" id="fechaEntregaInforme" class="form-control" [(ngModel)]="detalle.fecha_entrega_informe" name="fechaEntregaInforme">
-    </div>
-
-    <!-- MES -->
-    <div class="col-md-6">
-      <label for="mes" class="form-label fw-bold fs-5">Mes</label>
-      <select id="mes" class="form-select" [(ngModel)]="detalle.mes" name="mes" (ngModelChange)="actualizarMes($event)">
-        <option value="1">Enero</option>
-        <option value="2">Febrero</option>
-        <option value="3">Marzo</option>
-        <option value="4">Abril</option>
-        <option value="5">Mayo</option>
-        <option value="6">Junio</option>
-        <option value="7">Julio</option>
-        <option value="8">Agosto</option>
-        <option value="9">Septiembre</option>
-        <option value="10">Octubre</option>
-        <option value="11">Noviembre</option>
-        <option value="12">Diciembre</option>
-      </select>
-    </div>
-
-      <!-- LINK -->
-    <div class="col-md-6">
-      <label for="link" class="form-label fw-bold fs-5">Link</label>
-      <input type="text" id="link" class="form-control" [(ngModel)]="detalle.link" name="link">
-    </div>
-
-    <!-- LUGAR -->
-    <div class="col-md-6">
-      <label for="lugar" class="form-label fw-bold fs-5">Lugar</label>
-      <input type="text" id="lugar" class="form-control" [(ngModel)]="detalle.lugar" name="lugar">
-    </div>
-
-    <!-- DURACIÓN -->
-    <div class="col-md-6">
-      <label for="duracion" class="form-label fw-bold fs-5">Duración</label>
-      <input type="text" id="duracion" class="form-control" [(ngModel)]="detalle.duracion" name="duracion">
-    </div>
-
-    <!-- GRUPO DIRIGIDO -->
-    <div class="col-md-6">
-      <label for="grupoDirigido" class="form-label fw-bold fs-5">Grupo Dirigido</label>
-      <input type="text" id="grupoDirigido" class="form-control" [(ngModel)]="detalle.grupo_dirigido" name="grupoDirigido">
-    </div>
-
-    <!-- CONTENIDO -->
-    <div class="col-12">
-      <label for="contenido" class="form-label fw-bold fs-5">Contenido</label>
-      <input type="text" id="contenido" class="form-control" [(ngModel)]="detalle.contenido" name="contenido">
-    </div>
-    <!-- Asistencia -->
-     <div class="col-12">
-      <label class="form-label fw-bold fs-5">Asistencias</label>
-      <div class="row">
-        <div class="col-md-6" >
-          <label  class="form-label">Asistencia</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.asistencia">
+        <!-- Recursos Humanos -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 6">
+          <label class="option-glass" *ngFor="let ser of subRH">
+            <input
+              type="radio"
+              name="servicio"
+              [value]="ser.id"
+              [(ngModel)]="actividad.servicio_id"
+               />
+            <span>{{ ser.nombre }}</span>
+          </label>
         </div>
-        <div class="col-md-6" >
-          <label  class="form-label">Inasistencia</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.inasistencia">
+
+        <!-- Subgerencia -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 5">
+          <label class="option-glass" *ngFor="let ser of subGerencia">
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <span>{{ ser.nombre }}</span>
+          </label>
+        </div>
+
+       <!-- Técnica -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 4">
+          <label
+            class="option-glass"
+            *ngFor="let ser of subTecnica"
+            [class.inactivo]="ser.id !== actividad.servicio_id">
+
+            <input
+              type="radio"
+              name="servicio"
+              [value]="ser.id"
+              [(ngModel)]="actividad.servicio_id"
+              (change)="onServicioSeleccionado()"
+            />
+            <span>{{ ser.nombre }}</span>
+          </label>
+        </div>
+
+        <!-- Médica -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 3">
+          <label class="option-glass" *ngFor="let ser of subMedica">
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <span>{{ ser.nombre }}</span>
+          </label>
+        </div>
+
+        <!-- Enfermería -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 2">
+          <label class="option-glass" *ngFor="let ser of subEnfermeria">
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <span>{{ ser.nombre }}</span>
+          </label>
+        </div>
+
+        <!-- Dirección -->
+        <div class="options-grid" *ngIf="actividad.subdireccion_id === 1">
+          <label class="option-glass" *ngFor="let ser of direccion">
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <span>{{ ser.nombre }}</span>
+          </label>
         </div>
       </div>
-    </div>
 
-    <!-- EVALUACIONES -->
-     <div class="col-12">
-      <label class="form-label fw-bold fs-5">Evaluaciones</label>
-      <div class="row">
-        <div class="col-md-3" >
-          <label  class="form-label">Excelente</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.excelente">
+       <div class="form-group full">
+          <label class="">Responsables de Servicios</label>
+
+          <div class="responsables-container">
+            <div class="encargado-display" *ngIf="encargado">
+              <span class="icon">👤</span>
+              <div class="info">
+                <strong>Jefe o Encargado:</strong>
+                <p>{{ encargado }}</p>
+              </div>
+            </div>
+
+            <div class="encargado-display" *ngIf="jefe">
+              <span class="icon">✅</span>
+              <div class="info">
+                <strong>Visto Bueno:</strong>
+                <p>{{ jefe }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-3" >
-          <label  class="form-label">Bueno</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.bueno">
-        </div>
-        <div class="col-md-3" >
-          <label  class="form-label">Regular</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.deficiente">
-        </div>
-        <div class="col-md-3" >
-          <label  class="form-label">Malo</label>
-          <input type="number" class="form-control"  [(ngModel)]="detalle.deficiente">
+    </div>
+    </fieldset>
+
+
+
+    <fieldset class="fieldset-glass">
+      <legend (click)="toggleActividad()" >Información de la Actividad de Docencia
+        <span class="arrow" [class.open]="mostrarActividad">▾</span>
+      </legend>
+
+    <div class="form-grid" id="actividad" [class.open]="mostrarActividad">
+      <!-- Tema -->
+      <div class="form-group full">
+        <label for="tema">Tema</label>
+        <textarea type="text" id="tema" [(ngModel)]="actividad.tema" name="tema" ></textarea>
+      </div>
+
+      <!-- Tipo Actividad -->
+      <div class="form-group row-3">
+        <label for="actividad">Tipo de Actividad</label>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let act of tipoActividades">
+            <input
+              type="radio"
+              name="tipoActividad_id"
+              [value]="act.id"
+              [(ngModel)]="actividad.actividad_id"
+               />
+            <span>{{ act.nombre }}</span>
+          </label>
         </div>
       </div>
+
+      <!-- Modalidad -->
+      <div class="form-group row-3">
+        <label for="modalidad">Modalidad de la Actividad</label>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let mod of modalidades">
+            <input
+              type="radio"
+              name="modalidad_id"
+              [value]="mod.id"
+              [(ngModel)]="actividad.modalidad_id"
+               />
+            <span>{{ mod.nombre }}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Estados -->
+      <div class="form-group row-3" *ngIf="enEdicion">
+        <label for="estados">Estado de la Actividad </label>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let e of estados">
+            <input
+              type="radio"
+              name="Estado_id"
+              [value]="e.id"
+              [(ngModel)]="actividad.estado_id"
+               />
+            <span>{{ e.nombre }}</span>
+          </label>
+        </div>
+      </div>
+
+       <!-- Fecha -->
+      <div class="form-group row-3">
+        <label for="fecha">Fecha a Desarrollar</label>
+        <input type="date" id="fecha" [(ngModel)]="actividad.fecha_programada" name="fecha"  />
+      </div>
+
+        <!-- Fecha -->
+      <div class="form-group row-3">
+        <label for="fecha">Mes a Desarrollar</label>
+       <select [(ngModel)]="actividad.mes_id" name="mes_id">
+          <option *ngFor="let m of meses" [value]="m.value">
+            {{ m.label }}
+          </option>
+        </select>
+      </div>
+
+
+      <!-- Tiempo -->
+      <div class="form-group row-3">
+        <label for="tiempo">Tiempo Aproximado</label>
+        <input type="text" id="tiempo" [(ngModel)]="actividad.tiempo_aproximado" name="tiempo" />
+      </div>
+
+        <!-- link -->
+      <div class="form-group row-3" *ngIf="actividad.modalidad_id != 1">
+        <label for="link">Link de la Actividad</label>
+        <input type="text" id="tiempo" [(ngModel)]="actividad.detalles.link" name="link" />
+      </div>
+
+        <!-- Grupo Dirigido -->
+      <div class="form-group row-3" >
+        <label for="link">Grupo o Personal Dirigido</label>
+        <input type="text" id="grupo" [(ngModel)]="actividad.detalles.grupo_dirigido" name="grupo_dirigido" />
+      </div>
+
+      <!-- Responsables -->
+      <div class="form-group full">
+        <label>Capacitador o Educador</label>
+        <div *ngFor="let responsable of actividad.persona_responsable | keyvalue" class="responsables-container">
+          <input type="text" placeholder="Nombre" [(ngModel)]="responsable.value.nombre" name="nombre{{responsable.key}}" />
+          <input type="text" placeholder="Puesto" [(ngModel)]="responsable.value.puesto" name="puesto{{responsable.key}}" />
+          <button type="button" class="btn-remove" (click)="removerResponsable(responsable.key)">−</button>
+        </div>
+        <button type="button" class="btn-glass small" (click)="agregarResponsable()">+ Agregar Responsable</button>
+      </div>
+
+      <!-- Nota -->
+      <div class="form-group full">
+        <label for="nota">Nota</label>
+        <textarea id="nota" rows="3" [(ngModel)]="actividad.detalles.nota" name="nota"></textarea>
+      </div>
+
+
+
+
+    </div>
+    </fieldset>
+
+
+    <fieldset class="fieldset-glass">
+       <legend (click)="toggleDetalle()" *ngIf="enEdicion">Detalles Extras de la Actividad
+        <span class="arrow" [class.open]="mostrarDetalle">▾</span>
+       </legend>
+    <div class="form-grid" *ngIf="enEdicion" id="detalle" [class.open]="mostrarDetalle">
+
+        <!-- Contenido -->
+      <div class="form-group full" >
+        <label for="link">Contenido</label>
+        <textarea type="text" id="contenido" [(ngModel)]="actividad.detalles.contenido" name="contenido" ></textarea>
+      </div>
+
+
+        <!-- Duración -->
+      <div class="form-group row-3" >
+        <label for="duracion">Duración</label>
+        <input type="text" id="duracion" [(ngModel)]="actividad.detalles.duracion" name="duracion" />
+      </div>
+
+        <!-- Lugar -->
+      <div class="form-group row-3" >
+        <label for="lugar">Lugar</label>
+        <input type="text" id="lugar" [(ngModel)]="actividad.detalles.lugar" name="lugar" />
+      </div>
+
+
+        <!-- Asistencia -->
+      <div class="form-group row-3" >
+        <label for="asistencia">Total de Asistencia</label>
+        <input type="number" id="asistencia" [(ngModel)]="actividad.detalles.asistencia" name="asistencia" />
+      </div>
+
+       <!-- Inasistencia -->
+      <div class="form-group row-3" >
+        <label for="inasistencia">Total de Asistencia</label>
+        <input type="number" id="inasistencia" [(ngModel)]="actividad.detalles.inasistencia" name="inasistencia" />
+      </div>
+
+       <!-- Notas Exelentes -->
+      <div class="form-group row-3" >
+        <label for="excelente">Total de Notas Exelentes</label>
+        <input type="number" id="exelente" [(ngModel)]="actividad.detalles.excelente" name="excelente" />
+      </div>
+
+       <!-- Notas Buenas -->
+      <div class="form-group row-3" >
+        <label for="bueno">Total de Notas Buenas</label>
+        <input type="number" id="bueno" [(ngModel)]="actividad.detalles.bueno" name="bueno" />
+      </div>
+
+       <!-- Notas Regular -->
+      <div class="form-group row-3" >
+        <label for="regular">Total de Notas Regular</label>
+        <input type="number" id="regular" [(ngModel)]="actividad.detalles.regular" name="regular" />
+      </div>
+
+       <!-- Notas Deficiente -->
+      <div class="form-group row-3" >
+        <label for="deficiente">Total de Asistencia</label>
+        <input type="number" id="deficiente" [(ngModel)]="actividad.detalles.deficiente" name="deficiente" />
+      </div>
+
+       <!-- Asistencia -->
+      <div class="form-group row-3" >
+        <label for="informe_fecha">Fecha de Informe</label>
+        <input type="date" id="informe_fecha" [(ngModel)]="actividad.detalles.fecha_entrega_informe" name="informe_fecha" />
+      </div>
+
+
+
     </div>
 
+    </fieldset>
 
 
-    <!-- BOTÓN GUARDAR -->
-    <div class="col-12 text-end mt-4">
-      <button type="submit" class="btn btn-dark bg-dark px-4 py-2">
-        💾 Guardar
-      </button>
-    </div>
-  </div>
+
+    <!-- Guardar -->
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">💾 Guardar</button>
+      </div>
   </form>
 </div>

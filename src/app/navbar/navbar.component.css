@@ -1,0 +1,122 @@
+/* Navbar general */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #1e1e2f;
+  color: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Contenedor flex */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+/* Logo */
+.logo span {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+/* Menú hamburguesa (solo visible en móvil) */
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Lista de enlaces */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+}
+
+/* Enlaces */
+.nav-links li a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.nav-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #1e1e2f;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+    gap: 0;
+    padding: 0.5rem 0;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+    margin: 0.25rem 0;
+  }
+}
+
+.data-user {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 0.5rem;
+  margin: 0.4rem 2rem;
+  padding: 0.4rem;
+  border-radius: 50%;
+}
+
+
+/* FAB central */
+.fab-center {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: #48c6ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 1100;
+  box-shadow:
+  0 4px 12px rgba(255, 255, 255, 0.15),        /* sombra exterior suave */
+  inset 0 2px 8px rgba(255, 255, 255, 0.25);   /* brillo interior sutil */
+}
+
+.fab-center:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: #66d8ff;
+}

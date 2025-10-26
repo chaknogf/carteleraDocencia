@@ -14,10 +14,10 @@
   <div class="row row-cols-1 row-cols-md-2 g-4 " >
     <div class="col" *ngFor="let evento of eventos">
       <div class="card shadow-sm h-100" >
-        <div class="card-body rounded " [ngClass]="{'card-hoy': evento.fechas_a_desarrollar === hoy}">
+        <div class="card-body rounded " [ngClass]="{'card-hoy': evento.fecha_programada === hoy}">
           <h5 class="card-title fw-bold">{{ evento.tema }}</h5>
 
-          <p class="mb-1"><strong>🧪 Actividad:</strong> {{ evento.actividad | actividad }}</p>
+          <p class="mb-1"><strong>🧪 Actividad:</strong> {{ evento.actividad  }}</p>
           <p class="mb-1"><strong>🏥 Departamento:</strong> {{ evento.servicio_encargado }}</p>
 
           <div *ngIf="isResponsableValido(evento.persona_responsable)">
@@ -32,7 +32,7 @@
           </div>
 
           <p class="mb-1"><strong>⏳ Duración:</strong> {{ evento.tiempo_aproximado }}</p>
-          <p class="mb-1"><strong>📅 Fecha:</strong> {{ evento.fechas_a_desarrollar | fechaLarga }}</p>
+          <p class="mb-1"><strong>📅 Fecha:</strong> {{ evento.fecha_programada | fechaLarga }}</p>
           <p class="mb-1">
             <strong *ngIf="evento.modalidad === 'V'">💻 Modalidad:</strong>
             <strong *ngIf="evento.modalidad === 'P'">👩🏻‍🏫 Modalidad:</strong>

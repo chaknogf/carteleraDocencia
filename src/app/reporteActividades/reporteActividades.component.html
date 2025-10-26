@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="bg-info rounded py-3 px-4 mt-3 shadow-sm w-auto no-imprimir" >
   <form class="row gy-2 gx-3 align-items-end w-auto" (submit)="generarReporte()">
     <div class="col-sm-6 col-md-3 w-auto">
@@ -98,18 +99,18 @@
         <tbody class="table-info w-auto">
           <tr *ngFor="let item of actividades; index as i" >
             <td>{{ i + 1 }}</td>
-            <td>{{ item.fechas_a_desarrollar | date: 'dd/MM/yy' }}</td>
+            <td>{{ item.fecha_programada | date: 'dd/MM/yy' }}</td>
             <td>
-              <ng-container *ngIf="item.estado === 'P'">
+              <ng-container *ngIf="item.estado === 'Programado'">
                 <p>Programada</p>
               </ng-container>
-              <ng-container *ngIf="item.estado === 'C'">
+              <ng-container *ngIf="item.estado === 'Completada'">
                 <p>Completada</p>
               </ng-container>
-              <ng-container *ngIf="item.estado === 'R'">
+              <ng-container *ngIf="item.estado === 'Reprogramada'">
                 <p>Reprogramada</p>
               </ng-container>
-              <ng-container *ngIf="item.estado === 'S'">
+              <ng-container *ngIf="item.estado === 'Suspendida'">
                 <p>Suspendida</p>
               </ng-container>
             </td>
@@ -118,15 +119,15 @@
             <td>{{ item.tema }}</td>
             <td>{{ item.nota }}</td>
             <td>
-              <ng-container *ngIf="item.actividad === 1"><p>Capacitación</p></ng-container>
-              <ng-container *ngIf="item.actividad === 2"><p>Charla</p></ng-container>
+              <ng-container *ngIf="item.actividad === 'Capacitación'"><p>Capacitación</p></ng-container>
+              <ng-container *ngIf="item.actividad === 'Charla'"><p>Charla</p></ng-container>
 
             <td>{{ item.servicio_encargado }}</td>
             <td>
               <ng-container *ngIf="item.modalidad === 'P'"><p>Presencial</p></ng-container>
               <ng-container *ngIf="item.modalidad === 'V'"><p>Virtual</p></ng-container>
             </td>
-            <td>{{ item.fecha_entrega_informe | date: 'dd/MM/yy' }}</td>
+            <td>{{ item.fecha_programada | date: 'dd/MM/yy' }}</td>
           </tr>
           <tr *ngIf="actividades.length === 0">
             <td colspan="10" class="text-center text-muted py-3">

@@ -3,7 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
-import { Actividad } from '../interface/interfaces';
+import { ActividadesVista } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
@@ -15,14 +15,14 @@ import { HydrationFeatureKind } from '@angular/platform-browser';
   templateUrl: './cartel.component.html',
   styleUrls: ['./cartel.component.css'],
   standalone: true,
-  imports: [CommonModule, LoginComponent, FechaLargaPipe, EnumActividadPipe, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe]
+  imports: [CommonModule, LoginComponent, FechaLargaPipe, EnumMesPipe, EnumModalidadPipe, EnumEstadoPipe]
 })
 
 
 
 export class CartelComponent {
 
-  public eventos: Actividad[] = [];
+  public eventos: ActividadesVista[] = [];
   public mes: number = 0;
   public anio: number = 0;
   public hoy: string = '';
