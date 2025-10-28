@@ -8,7 +8,7 @@ import { ReporteActividadesComponent } from './reporteActividades/reporteActivid
 import { SignupComponent } from '../signup/signup.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'eventos', pathMatch: 'full' },
+  { path: '', component: CartelComponent, pathMatch: 'full' },
   { path: 'eventos', component: CartelComponent },
   { path: 'tabla', component: TablaDocenciaComponent },
   { path: 'formulario', component: FormularioComponent },
@@ -17,6 +17,7 @@ export const routes: Routes = [
   { path: 'formularioUsers', component: FormUserComponent },
   { path: 'editarUser/:id', component: FormUserComponent },
   { path: 'reporteActividades', component: ReporteActividadesComponent },
-  { path: 'signup', component: SignupComponent }
+  { path: 'signup', component: SignupComponent },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 
 ];
