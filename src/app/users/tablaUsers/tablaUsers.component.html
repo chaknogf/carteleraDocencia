@@ -1,73 +1,86 @@
-<div class="tabla-container">
-  <h1>Gestor de Usuarios</h1>
-  <div class="filtrar"> <button class="btn-c" (click)="volver()">Salir</button>
-  <button class="btn-c" (click)="agregarUsuario()">Agregar Usuario</button>
-  <div class="buscar">
-    <button class="btn-c" (click)="open()">Filtrar</button>
-    <button class="btn-c" (click)="limpiarFiltros()">limpiar</button>
+<app-navbar></app-navbar>
+
+<div class="usuarios-container">
+  <h1 class="titulo">👥 Gestor de Usuarios</h1>
+
+  <div class="acciones-superiores">
+    <button class="btn-c salir" (click)="volver()">Salir</button>
+    <button class="btn-c agregar" (click)="agregarUsuario()">➕ Agregar Usuario</button>
+    <div class="buscar">
+      <button class="btn-c" (click)="open()">🔍 Filtrar</button>
+      <button class="btn-c limpiar" (click)="limpiarFiltros()">🧹 Limpiar</button>
+    </div>
   </div>
-</div>
 
+  <!-- CONTENEDOR DE TARJETAS -->
+  <div class="container-actividad">
+    <div class="usuario-card" *ngFor="let usr of usuarios">
+      <div class="usuario-info">
+        <div class="avatar">
+          <span>{{ usr.nombre.charAt(0) | uppercase }}</span>
+        </div>
 
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Estado</th>
-      <th>Acciones</th>
+        <div class="usuario-detalles">
+          <h3>{{ usr.nombre }}</h3>
+          <p class="username">@{{ usr.username }}</p>
+          <p class="email">{{ usr.email }}</p>
+          <p class="rol">Rol: <strong>{{ usr.role }}</strong></p>
+          <p class="estado">Estado:
+            <span [ngClass]="{
+              'estado-activo': usr.estado === 'Activo',
+              'estado-inactivo': usr.estado === 'Inactivo'
+            }">
+            <ng-container >
+              <span *ngIf="usr.estado === 'A'">Activo</span>
+              <span *ngIf="usr.estado === 'I'">Inactivo</span>
+              </ng-container>
 
-    </tr>
-    <tr *ngFor="let usr of usuarios">
-      <td>{{ usr.id }}</td>
-      <td>{{ usr.username }}</td>
-      <td>{{ usr.nombre }}</td>
-      <td>{{usr.email}}</td>
-      <td>{{usr.role}}</td>
-      <td>{{usr.estado}}</td>
+          </span>
+          </p>
+          <p>id: {{ usr.id }}</p>
+        </div>
+      </div>
 
-      <td>
-        <button class="btn-c" (click)="editarUsuario(usr.id)">Editar</button>
-        <button class="btn-c" (click)="eliminarUsuario(usr.id)">Eliminar</button>
-      </td>
-    </tr>
-  </table>
+      <div class="acciones">
+        <button class="btn-c editar" (click)="editar(usr.id)">✏️ Editar</button>
+        <!-- <button class="btn-c eliminar" (click)="eliminarUsuario(usr.id)">🗑️ Eliminar</button> -->
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="!usuarios.length" class="no-usuarios">
-    <p>No hay datos para mostrar.</p>
+    <p>No hay usuarios para mostrar.</p>
   </div>
+
   <div class="paginacion">
-  <button [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
-  <span>Página {{ paginaActual + 1 }}</span>
-  <button (click)="skipPlus()">Siguiente</button>
+    <button class="btn btn-primary text-dark" [disabled]="paginaActual === 0" (click)="skipMinus()">⬅️ Anterior</button>
+    <span class="fw-bold text-dark">Página {{ paginaActual + 1 }}</span>
+    <button class="btn btn-primary text-dark" (click)="skipPlus()">Siguiente ➡️</button>
+  </div>
 </div>
 
-
-</div>
-
-
+<!-- MODAL FILTROS -->
 <div *ngIf="visible()" class="modal-backdrop">
   <div class="modal-content">
     <button class="close-button" (click)="close()">×</button>
-
     <form (ngSubmit)="listarUsers()" #usrForm="ngForm">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" [(ngModel)]="buscarNombre" />
+      <h3 class="titulo-modal">🔍 Filtros de Búsqueda</h3>
+      <label>Nombre:</label>
+      <input type="text" [(ngModel)]="buscarNombre" name="nombre" />
 
-      <label for="username">username:</label>
-     <input type="text" id="username" name="username" [(ngModel)]="buscarUsername">
+      <label>Username:</label>
+      <input type="text" [(ngModel)]="buscarUsername" name="username" />
 
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email" [(ngModel)]="buscarEmail">
+      <label>Email:</label>
+      <input type="text" [(ngModel)]="buscarEmail" name="email" />
 
-      <label for="rol">Rol:</label>
-      <input type="text" id="rol" name="rol" [(ngModel)]="buscarRol">
+      <label>Rol:</label>
+      <input type="text" [(ngModel)]="buscarRol" name="rol" />
 
-      <label for="estado">Estado:</label>
-      <input type="text" id="estado" name="estado" [(ngModel)]="buscarEstado">
+      <label>Estado:</label>
+      <input type="text" [(ngModel)]="buscarEstado" name="estado" />
 
-      <button type="submit" (click)="listarUsers()" >Buscar..</button>
+      <button type="submit">Buscar</button>
     </form>
   </div>
 </div>

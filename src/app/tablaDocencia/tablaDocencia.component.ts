@@ -5,16 +5,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActividadesVista, Currentuser } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
-import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from "../pipe/tuberias.pipe";
-import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { FormsModule } from '@angular/forms';
 import { Meses, Modalidad, ActividadTipo, Estado, actividad, modalidad, mes } from '../interface/enum';
-import { UsuarioActualComponent } from "../users/usuarioActual/usuarioActual.component";
-import { NavbarComponent } from '../navbar/navbar.component';
 import { IconService } from '../service/icon.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { filter } from '../shared/icons/icons';
-import { NavbarPlusComponent } from '../navbarPlus/navbarPlus.component';
+import { NavbarPlusComponent } from '../navs/navbarPlus/navbarPlus.component';
 
 
 @Component({
@@ -29,6 +25,7 @@ export class TablaDocenciaComponent implements OnInit {
   public actividades: ActividadesVista[] = [];
   mensajeEliminado: boolean = false;
   role: string = '';
+  servId: number = 0;
 
   meses: Meses[] = []
   modalidades: Modalidad[] = []
@@ -69,9 +66,10 @@ export class TablaDocenciaComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.servId = Number(localStorage.getItem('servicio_id')) || 0;
     this.role = localStorage.getItem('role') || '';
-    console.log('Rol del usuario:', this.role);
+
+    // console.log('Rol del usuario:', this.role);
     this.listarActividades();
     this.meses = mes;
     this.modalidades = modalidad

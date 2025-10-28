@@ -145,3 +145,169 @@
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: 0.5rem;
 }
+
+
+/* charts o graficos */
+/* charts.component.css */
+
+/* Contenedor general */
+.chart-wrap {
+  max-width: 980px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  color: #eaf8ff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Header */
+.chart-header h4 {
+  margin: 0 0 0.2rem 0;
+  color: #bfefff;
+  font-size: 1.05rem;
+}
+.chart-header .subtitle {
+  margin: 0 0 1rem 0;
+  color: #9ecfe8;
+  font-size: 0.85rem;
+}
+
+/* Área de la gráfica (grid flexible) */
+.chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 1rem;
+  align-items: end;
+  padding: 1rem;
+  background: rgba(1, 11, 50, 0.824);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.35),
+    inset 0 2px 6px rgba(255,255,255,0.02);
+}
+
+/* Cada barra */
+.bar {
+  --value: 50%;
+  height: 220px;            /* altura visual del área de barra (ajustable) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+/* Fondo y contorno suave para cada columna (opcional) */
+.bar::before {
+  content: "";
+  position: absolute;
+  bottom: 28px; /* deja espacio para label */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  height: calc(100% - 28px);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Parte visible de la barra */
+.bar-inner {
+  width: 64%;
+  max-width: 45px;
+  border-radius: 999px; /* redondeo total tipo píldora */
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  /* Altura controlada por --value */
+  height: calc(var(--value));
+  /* animación de crecimiento */
+  transform-origin: bottom center;
+  transform: translateY(0) scaleY(0);
+  animation: grow 900ms cubic-bezier(.2,.9,.3,1) forwards;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.35),
+    inset 0 2px 10px rgba(255,255,255,0.06);
+}
+
+/* 🌈 Colores degradados para cada barra (1–20) */
+.bar:nth-child(1) .bar-inner  { background: linear-gradient(180deg,#ff8a65,#ff3d00); }
+.bar:nth-child(2) .bar-inner  { background: linear-gradient(180deg,#ffd166,#ff9f0d); }
+.bar:nth-child(3) .bar-inner  { background: linear-gradient(180deg,#6be5b1,#07c19a); }
+.bar:nth-child(4) .bar-inner  { background: linear-gradient(180deg,#7cc0ff,#0088ff); }
+.bar:nth-child(5) .bar-inner  { background: linear-gradient(180deg,#b39cff,#7a5cff); }
+.bar:nth-child(6) .bar-inner  { background: linear-gradient(180deg,#ff5fa3,#ff1f7a); }
+.bar:nth-child(7) .bar-inner  { background: linear-gradient(180deg,#9be7ff,#34c1ff); }
+.bar:nth-child(8) .bar-inner  { background: linear-gradient(180deg,#84fab0,#8fd3f4); }
+.bar:nth-child(9) .bar-inner  { background: linear-gradient(180deg,#f6d365,#fda085); }
+.bar:nth-child(10) .bar-inner { background: linear-gradient(180deg,#a1c4fd,#c2e9fb); }
+.bar:nth-child(11) .bar-inner { background: linear-gradient(180deg,#fccb90,#d57eeb); }
+.bar:nth-child(12) .bar-inner { background: linear-gradient(180deg,#f093fb,#f5576c); }
+.bar:nth-child(13) .bar-inner { background: linear-gradient(180deg,#43e97b,#38f9d7); }
+.bar:nth-child(14) .bar-inner { background: linear-gradient(180deg,#fa709a,#fee140); }
+.bar:nth-child(15) .bar-inner { background: linear-gradient(180deg,#30cfd0,#330867); }
+.bar:nth-child(16) .bar-inner { background: linear-gradient(180deg,#5ee7df,#b490ca); }
+.bar:nth-child(17) .bar-inner { background: linear-gradient(180deg,#a8edea,#fed6e3); }
+.bar:nth-child(18) .bar-inner { background: linear-gradient(180deg,#fbc2eb,#a6c1ee); }
+.bar:nth-child(19) .bar-inner { background: linear-gradient(180deg,#ffecd2,#fcb69f); }
+.bar:nth-child(20) .bar-inner { background: linear-gradient(180deg,#c2e59c,#64b3f4); }
+.bar:nth-child(21) .bar-inner { background: linear-gradient(180deg,#ff9a9e,#fad0c4); }
+.bar:nth-child(22) .bar-inner { background: linear-gradient(180deg,#a18cd1,#fbc2eb); }
+.bar:nth-child(23) .bar-inner { background: linear-gradient(180deg,#fbc2eb,#a6c1ee); }
+.bar:nth-child(24) .bar-inner { background: linear-gradient(180deg,#f6d365,#fda085); }
+.bar:nth-child(25) .bar-inner { background: linear-gradient(180deg,#84fab0,#8fd3f4); }
+.bar:nth-child(26) .bar-inner { background: linear-gradient(180deg,#cfd9df,#e2ebf0); }
+.bar:nth-child(27) .bar-inner { background: linear-gradient(180deg,#43e97b,#38f9d7); }
+.bar:nth-child(28) .bar-inner { background: linear-gradient(180deg,#fa709a,#fee140); }
+.bar:nth-child(29) .bar-inner { background: linear-gradient(180deg,#30cfd0,#330867); }
+.bar:nth-child(30) .bar-inner { background: linear-gradient(180deg,#5ee7df,#b490ca); }
+
+/* Valor visible dentro de la barra (opcional) */
+.bar-value {
+  font-weight: 700;
+  font-size: 0.86rem;
+  padding: 0.35rem 0.45rem;
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* Label inferior */
+.bar-label {
+  margin-top: 8px;
+  font-size: 0.88rem;
+  color: #cfeefc;
+  z-index: 3;
+}
+
+/* Tooltip simple al hacer hover/tap */
+.bar[title] {
+  cursor: pointer;
+}
+.bar:hover .bar-value,
+.bar:focus .bar-value {
+  transform: translateY(-6px);
+  transition: transform 180ms ease;
+}
+
+/* Animación de crecimiento (usa la variable --value para dar la altura final) */
+@keyframes grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* RESPONSIVE: ajusta tamaño y alturas en pantallas pequeñas */
+@media (max-width: 640px) {
+  .chart {
+    gap: 0.6rem;
+    padding: 0.6rem;
+  }
+  .bar { height: 160px; }
+  .bar-inner { width: 72%; }
+  .bar-label { font-size: 0.78rem; }
+  .bar-value { font-size: 0.78rem; }
+}

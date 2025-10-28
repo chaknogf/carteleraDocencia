@@ -1,7 +1,11 @@
-<div  class="">
+<div  class="d-flex">
 
   <div class="user-details">
     <div class="nombre-usuario">👤 {{ username }}</div>
     <div class="rol-usuario">🛡️ Rol: {{ roleUser }}</div>
+    <div class="small w-25" *ngIf="servicio"> {{servicio}}</div>
   </div>
+  <button class="btn" (click)="logout()">
+  <span [innerHTML]="icons['logoutIcon']"></span>
+</button>
 </div>

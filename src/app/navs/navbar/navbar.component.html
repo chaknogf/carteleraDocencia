@@ -4,28 +4,34 @@
 </div>
 <nav class="navbar bg-secundary">
   <div class="navbar-container">
-    <div class="logo">
-      <span>DocenciaApp</span>
-    </div>
 
-    <div class="menu-toggle" (click)="toggleMenu()">
+    <div class="menu-toggle" [class.active]="menuActivo" (click)="toggleMenu()">
       &#9776;
     </div>
-
+     <div class="logo" [class.active]="menuActivo" (click)="toggleMenu()">
+      <span>DocenciaApp</span>
+    </div>
     <ul class="nav-links" [class.active]="mostrarMenu">
       <li><a (click)="irCartelera()">Cartelera</a></li>
       <li><a (click)="irActividades()">Actividades</a></li>
       <li><a (click)="reporte()">Reportes</a></li>
       <li><a (click)="usuarios()">Usuarios</a></li>
+      <li class="oculto"><a (click)="logout()">Salir</a></li>
+
     </ul>
   </div>
 
-  <!-- Botón central flotante -->
-  <div class="fab-center" (click)=" agregarDocencia()">
-    <span>+</span>
-  </div>
+  <ul class="nav-links" [class.active]="mostrarMenu">
 
-  <div class="data-user">
-    <app-usuarioActual></app-usuarioActual>
-  </div>
+      <li>
+        <div class="data-user">
+          <app-usuarioActual></app-usuarioActual>
+        </div>
+      </li>
+    </ul>
+
+
+
+
 </nav>
+

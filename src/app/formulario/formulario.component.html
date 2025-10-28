@@ -2,7 +2,7 @@
 <div class="notebook-container">
   <div class="header">
     <h3>📘 Formulario de Actividad</h3>
-    <button class="btn-glass" (click)="volver()">Volver</button>
+    <button class="btn-volver" (click)="volver()">← Volver</button>
   </div>
 
   <form (ngSubmit)="guardar()" class="glass-form">
@@ -24,7 +24,8 @@
               name="subdireccion"
               [value]="sub.id"
               [(ngModel)]="actividad.subdireccion_id"
-              />
+              [disabled]="localServicioId > 2 && role ==='estandar'">
+
             <span>{{ sub.nombre }}</span>
           </label>
         </div>
@@ -42,7 +43,8 @@
               name="servicio"
               [value]="ser.id"
               [(ngModel)]="actividad.servicio_id"
-               />
+              [disabled]="localServicioId > 2 && role ==='estandar'">
+
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
@@ -50,7 +52,7 @@
         <!-- Subgerencia -->
         <div class="options-grid" *ngIf="actividad.subdireccion_id === 5">
           <label class="option-glass" *ngFor="let ser of subGerencia">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
@@ -60,7 +62,8 @@
           <label
             class="option-glass"
             *ngFor="let ser of subTecnica"
-            [class.inactivo]="ser.id !== actividad.servicio_id">
+            [class.inactivo]="ser.id !== actividad.servicio_id"
+            >
 
             <input
               type="radio"
@@ -68,7 +71,8 @@
               [value]="ser.id"
               [(ngModel)]="actividad.servicio_id"
               (change)="onServicioSeleccionado()"
-            />
+              [disabled]="localServicioId > 2 && role ==='estandar'">
+
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
@@ -76,7 +80,7 @@
         <!-- Médica -->
         <div class="options-grid" *ngIf="actividad.subdireccion_id === 3">
           <label class="option-glass" *ngFor="let ser of subMedica">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
@@ -84,15 +88,16 @@
         <!-- Enfermería -->
         <div class="options-grid" *ngIf="actividad.subdireccion_id === 2">
           <label class="option-glass" *ngFor="let ser of subEnfermeria">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
 
         <!-- Dirección -->
         <div class="options-grid" *ngIf="actividad.subdireccion_id === 1">
+
           <label class="option-glass" *ngFor="let ser of direccion">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" />
+            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
             <span>{{ ser.nombre }}</span>
           </label>
         </div>
@@ -209,18 +214,33 @@
 
         <!-- link -->
       <div class="form-group row-3" *ngIf="actividad.modalidad_id != 1">
+        <span
+        class="m-0 p-0"
+        [innerHTML]="icons['infoico']"
+        title="Si tiene el link de la reunion virtual de meet, teams, zoom agregalo acá"
+        ></span>
         <label for="link">Link de la Actividad</label>
         <input type="text" id="tiempo" [(ngModel)]="actividad.detalles.link" name="link" />
       </div>
 
         <!-- Grupo Dirigido -->
       <div class="form-group row-3" >
+        <span
+        class="m-0 p-0"
+        [innerHTML]="icons['infoico']"
+        title="Ejemplo: Auxiliares de Registros Médicos"
+        ></span>
         <label for="link">Grupo o Personal Dirigido</label>
         <input type="text" id="grupo" [(ngModel)]="actividad.detalles.grupo_dirigido" name="grupo_dirigido" />
       </div>
 
       <!-- Responsables -->
       <div class="form-group full">
+        <span
+        class="m-0 p-0"
+        [innerHTML]="icons['infoico']"
+        title="Persona que impartira la actividad puede ser el jefe de servicio, personal de otro servicio o es un expositor externo"
+        ></span>
         <label>Capacitador o Educador</label>
         <div *ngFor="let responsable of actividad.persona_responsable | keyvalue" class="responsables-container">
           <input type="text" placeholder="Nombre" [(ngModel)]="responsable.value.nombre" name="nombre{{responsable.key}}" />
@@ -232,6 +252,11 @@
 
       <!-- Nota -->
       <div class="form-group full">
+        <span
+        class="m-0 p-0"
+        [innerHTML]="icons['infoico']"
+        title="Información extra o relavante para la actividad u otros comentarios a tomar en cuenta. ejemplo: 'Traer Ropa Deportiva'"
+        ></span>
         <label for="nota">Nota</label>
         <textarea id="nota" rows="3" [(ngModel)]="actividad.detalles.nota" name="nota"></textarea>
       </div>

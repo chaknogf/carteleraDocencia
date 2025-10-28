@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UsuarioActualComponent } from "../../users/usuarioActual/usuarioActual.component";
 import { Router } from '@angular/router';
-import { ApiService } from '../service/api.service';
-import { LoginComponent } from '../login/login.component';
+import { ApiService } from '../../service/api.service';
 
 @Component({
-  selector: 'app-navbarCliente',
-  templateUrl: './navbarCliente.component.html',
-  styleUrls: ['./navbarCliente.component.css'],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
   standalone: true,
-  imports: [CommonModule, LoginComponent]
+  imports: [CommonModule, UsuarioActualComponent]
 })
-export class NavbarClienteComponent implements OnInit {
+export class NavbarComponent implements OnInit {
 
   constructor(
     private router: Router,
@@ -22,16 +22,18 @@ export class NavbarClienteComponent implements OnInit {
   }
 
   mostrarMenu = false;
+  menuActivo = false;
+
 
   toggleMenu() {
     this.mostrarMenu = !this.mostrarMenu;
+    this.menuActivo = !this.menuActivo;
   }
-
   usuarios() {
     this.router.navigate(['tablaUsers']);
   }
 
-  acceso() {
+  reporte() {
     this.router.navigate(['reporteActividades']);
   }
 
@@ -47,14 +49,9 @@ export class NavbarClienteComponent implements OnInit {
     this.router.navigate(['tabla']);
   }
 
-
-  visible = signal(false);
-  open() {
-    this.visible.set(true);
-  }
-
-  close() {
-    this.visible.set(false);
+  logout() {
+    ['username', 'role', 'servicio_id', 'subId'].forEach(key => localStorage.removeItem(key));
+    this.router.navigate(['eventos']);
   }
 
 }

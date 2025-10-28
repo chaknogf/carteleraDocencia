@@ -8,7 +8,7 @@ import { ApiService } from '../service/api.service';
 import { FechaLargaPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
 import { HydrationFeatureKind } from '@angular/platform-browser';
-import { NavbarClienteComponent } from "../navbarCliente/navbarCliente.component";
+import { NavbarClienteComponent } from "../navs/navbarCliente/navbarCliente.component";
 
 
 @Component({
@@ -38,6 +38,7 @@ export class CartelComponent {
     this.fechaActual();
     this.hoy = new Date().toISOString().split('T')[0];
     this.datosCartel();
+    // console.log(this.eventos);
   }
 
 

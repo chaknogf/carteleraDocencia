@@ -203,14 +203,14 @@
 
 @font-face {
   font-family: 'Altivo';
-  src: url('/assets/fonts/altivo-normal.ttf') format('truetype');
+  src: url('assets/fonts/altivo-normal.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Altivo';
-  src: url('/assets/fonts/altivo-negrita.ttf') format('truetype');
+  src: url('assets/fonts/altivo-negrita.otf') format('opentype');
   font-weight: bold;
   font-style: normal;
 }

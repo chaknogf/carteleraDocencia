@@ -4,13 +4,14 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from '../../navs/navbar/navbar.component';
 
 @Component({
   selector: 'app-tablaUsers',
   templateUrl: './tablaUsers.component.html',
   styleUrls: ['./tablaUsers.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NavbarComponent]
 })
 export class TablaUsersComponent implements OnInit {
 
@@ -48,7 +49,7 @@ export class TablaUsersComponent implements OnInit {
     try {
       const usuarios = await this.api.getUsers(filtros);
       this.usuarios = usuarios;
-      //console.log('👤 Usuarios obtenidos correctamente', this.usuarios);
+
     } catch (error) {
       console.error('Error al obtener usuarios:', error);
     }
@@ -76,8 +77,9 @@ export class TablaUsersComponent implements OnInit {
     this.paginaActual += direccion;
     this.listarUsers();
   }
-  editarUsuario(value: any) {
-    this.router.navigate(['editarUser', value.id]);
+  editar(value: number) {
+    this.router.navigate(['editarUser', value]);
+
   }
   eliminarUsuario(id: number) {
     // Lógica para eliminar la docencia

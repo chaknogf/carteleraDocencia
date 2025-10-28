@@ -68,4 +68,8 @@ export class LoginComponent {
         return 'Ocurrió un error inesperado.';
     }
   }
+
+  registrarse() {
+    this.router.navigate(['signup']);
+  }
 }

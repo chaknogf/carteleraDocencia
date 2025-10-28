@@ -7,9 +7,12 @@ import { Actividades, ActividadesVista, Estados, Modalidades, ResumenAnual, Serv
 export class ApiService {
   private api: AxiosInstance;
   public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
+  // public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
+  public servicioId: number | null = null;
+  public subId: any | null = null;
 
   constructor(
     private router: Router,
@@ -59,31 +62,28 @@ export class ApiService {
     }
   }
 
+
+
+
   /**
-   * Obtiene la información del usuario autenticado.
-   */
+ * Obtiene la información del usuario autenticado.
+ */
   async getCurrentUser(): Promise<any> {
     const token = localStorage.getItem('access_token');
-    const username = localStorage.getItem('username');
-    const role = localStorage.getItem('role');
-
-    if (!token) {
-      throw new Error('🔒 No estás autenticado.');
-    }
+    if (!token) throw new Error('🔒 No estás autenticado.');
 
     try {
-      const response = await this.api.get('/auth/me', {
-        headers: {
-          usuario: username || '',
-          rol: role || ''
-        }
-      });
+      const response = await this.api.get('/auth/me');
 
-      const { username: nombreUsuario, role: rolUsuario } = response.data;
+      const { username, role, servicio_id } = response.data;
 
-      localStorage.setItem('username', nombreUsuario);
-      localStorage.setItem('role', rolUsuario);
-      //window.location.reload();
+      // Guardamos valores en localStorage
+      localStorage.setItem('username', username);
+      localStorage.setItem('role', role);
+      localStorage.setItem('servicio_id', servicio_id.toString());
+
+      // 🔹 Obtenemos subdirección asociada al servicio
+      await this.getSub(servicio_id);
 
       console.log('✅ Usuario autenticado:', response.data);
       return response.data;
@@ -94,14 +94,33 @@ export class ApiService {
     }
   }
 
+  /**
+   * Obtiene la subdirección a partir del servicio_id
+   */
+  async getSub(servicio_id: number): Promise<void> {
+    try {
+      const data = await this.getServiciosResponsables({ id: servicio_id });
+      if (data && data.length > 0) {
+        this.subId = data[0].subdireccion_id;
+        localStorage.setItem('subId', this.subId);
+        // console.log('📦 Subdirección almacenada:', this.subId);
+      }
+    } catch (error) {
+      console.error('⚠️ Error obteniendo subdirección:', error);
+    }
+  }
+
   logOut() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
+    localStorage.removeItem('servicio_id');
     window.location.reload();
 
 
   }
+
+
 
   // ======= USERS =======
 
@@ -109,8 +128,9 @@ export class ApiService {
 
   async getUsers(filtros: any): Promise<any> {
     try {
+      const filtrosLimpiados = limpiarParametros(filtros);
       const response = await this.api.get<Usuarios[]>('/user/', {
-        params: filtros
+        params: filtrosLimpiados
       });
       // console.log('👤 Usuarios obtenidos correctamente', response);
       return response.data;
@@ -121,21 +141,15 @@ export class ApiService {
     }
   }
 
-  async getUser(id: number): Promise<any> {
-    try {
-      const response = await this.api.get<Usuarios[]>(`/user/?id=${id}&skip=0&limit=1`);
-      // console.log('👤 Usuarios obtenidos correctamente', response);
-      return response.data;
-
-    } catch (error) {
-      console.error('❌ Error al obtener usuarios:', error)
-      throw error;
-    }
-  }
-
   async createUser(user: any): Promise<any> {
     try {
-      const response = await this.api.post('/user/crear', user);
+      const response = await this.api.post('/user/crear', user,
+        {
+          headers: {
+            'Content-Type': 'application/json', //
+          },
+        }
+      );
       // console.log('👤 Usuario creado correctamente');
       return response.data;
     } catch (error) {
@@ -144,9 +158,34 @@ export class ApiService {
     }
   }
 
-  async updateUser(userId: number | string, user: any): Promise<any> {
+  async signup(user: any): Promise<any> {
     try {
-      const response = await this.api.put(`/user/actualizar/${userId}`, user);
+      const response = await this.api.post('/user/registro', user,
+        {
+          headers: {
+            'Content-Type': 'application/json', //
+          },
+        }
+      );
+      // console.log('👤 Usuario creado correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al crear usuario:', error);
+      throw error;
+    }
+  }
+
+  async updateUser(userId: number, user: any): Promise<any> {
+    try {
+      const response = await this.api.put(
+        `/user/actualizar/${userId}`,
+        user,
+        {
+          headers: {
+            'Content-Type': 'application/json', // 👈 Muy importante
+          },
+        }
+      );
       // console.log('👤 Usuario actualizado correctamente');
       return response.data;
     } catch (error) {
@@ -162,6 +201,25 @@ export class ApiService {
       return response.data;
     } catch (error) {
       console.error('❌ Error al eliminar usuario:', error);
+      throw error;
+    }
+  }
+
+  // api.service.ts
+  // ======= AuthGoogle =======
+  async authGoogle(id_token: string): Promise<any> {
+    try {
+      const response = await this.api.post(
+        '/auth/google',
+        { id_token },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al autenticar con Google:', error);
       throw error;
     }
   }
@@ -408,7 +466,7 @@ export class ApiService {
           params: filtrosLimpiados
         });
 
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ejecución de actividades:', error);

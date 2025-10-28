@@ -1,7 +1,7 @@
 <app-navbarPlus></app-navbarPlus>
 
 
-<div class="container-fluid my-4">
+<div class=" container-actividad my-4">
  <div class="docencia-card" *ngFor="let docencia of actividades">
   <!-- Encabezado -->
   <div class="card-header">
@@ -45,7 +45,12 @@
   </div>
 
   <!-- Acciones -->
-  <div class="card-actions">
+  <div class="card-actions" *ngIf="docencia.servicio_id === servId">
+    <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button>
+    <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
+  </div>
+
+  <div class="card-actions" *ngIf="role === 'admin'">
     <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button>
     <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
   </div>

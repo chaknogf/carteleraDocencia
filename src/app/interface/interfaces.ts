@@ -7,6 +7,9 @@ export interface Usuarios {
   email: string;
   role: string;
   estado: string;
+  servicio_id?: number | null;
+  google_id?: string;
+
 }
 
 export interface Currentuser {
@@ -15,6 +18,8 @@ export interface Currentuser {
   role: string;
   nombre?: string;
   email?: string;
+  servicio_id?: number;
+
 }
 
 export interface PersonaResponsable {
@@ -165,8 +170,9 @@ export interface Ejecucion {
   completa: number;
   programada: number;
   reprogramada: number;
-  anulada: number;
+  suspendida: number;
   total: number;
+  ejecutado: number;
 }
 
 export interface ResumenAnual {

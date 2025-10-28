@@ -5,7 +5,11 @@ import { ApiService } from '../service/api.service';
 import { Actividades, ActividadesVista, Detalles, Estados, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad } from './../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavbarComponent } from "../navbar/navbar.component";
+import { NavbarComponent } from "../navs/navbar/navbar.component";
+import { IconService } from '../service/icon.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { info } from 'console';
+import { infoIcons } from '../shared/icons/icons';
 
 @Component({
   selector: 'app-formulario',
@@ -31,6 +35,9 @@ export class FormularioComponent implements OnInit, OnChanges {
   public tipoActividades: TipoActividad[] = [];
   encargado: string = '';
   jefe: string = '';
+  localServicioId: number = 0;
+  localSub = 0;
+  role: string = '';
 
   meses: Meses[] = mes;
 
@@ -65,8 +72,8 @@ export class FormularioComponent implements OnInit, OnChanges {
     id: 0,
     tema: '',
     actividad_id: 0,
-    servicio_id: 0,
-    subdireccion_id: 0,
+    servicio_id: this.localServicioId,
+    subdireccion_id: this.localSub,
     modalidad_id: 0,
     estado_id: 1,
     mes_id: 0,
@@ -79,43 +86,43 @@ export class FormularioComponent implements OnInit, OnChanges {
     fecha_programada: ''
   };
 
-  // actividadVista: ActividadesVista = {
-  //   id: 0,
-  //   tema: '',
-  //   actividad: '',
-  //   actividad_id: 0,
-  //   descripcion_actividad: '',
-  //   subdireccion: '',
-  //   subdireccion_id: 0,
-  //   servicio_encargado: '',
-  //   servicio_id: 0,
-  //   persona_responsable: {
-  //     r0: this.persona_responsable
-  //   },
-  //   tiempo_aproximado: '',
-  //   fecha_programada: '',
-  //   mes: '',
-  //   mes_id: 0,
-  //   anio: 0,
-  //   modalidad: '',
-  //   modalidad_id: 0,
-  //   estado: '',
-  //   estado_id: 0,
-  //   detalles: this.detalle,
-  //   metadatos: this.metadato,
+  options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
-  // };
+  private sanitizarSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+  // iconos
+  icons: { [key: string]: any } = {};
+
+  infoIcons: SafeHtml = infoIcons;
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private api: ApiService
-  ) { }
+    private api: ApiService,
+    private iconService: IconService,
+    private sanitizer: DomSanitizer,
+  ) {
+    this.icons = {
+      infoico: this.sanitizarSvg(infoIcons)
+    }
+  }
+
+
   ngOnChanges(): void {
     this.onServicioSeleccionado()
   }
 
   ngOnInit(): void {
+    this.role = localStorage.getItem('role') || '';
+    this.localServicioId = Number(localStorage.getItem('servicio_id')) || 0;
+    this.localSub = Number(localStorage.getItem('subId')) || 0;
+    this.actividad.servicio_id = this.localServicioId;
+    this.actividad.subdireccion_id = this.localSub;
+    this.onServicioSeleccionado();
+
+
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = Number(idParam);
@@ -147,7 +154,12 @@ export class FormularioComponent implements OnInit, OnChanges {
     this.listarTipoActividad();
     this.listarModalidades();
     this.listarEstados();
+
+    // console.log(this.actividad)
+
   }
+
+
 
 
 
@@ -276,7 +288,7 @@ export class FormularioComponent implements OnInit, OnChanges {
 
   async listarServicios(): Promise<void> {
     try {
-      this.serviciosResponsables = await this.api.getServiciosResponsables({});
+      // this.serviciosResponsables = await this.api.getServiciosResponsables({});
       this.subRH = await this.api.getServiciosResponsables({ sub: 6 });
       this.subGerencia = await this.api.getServiciosResponsables({ sub: 5 });
       this.subTecnica = await this.api.getServiciosResponsables({ sub: 4 });
@@ -319,11 +331,36 @@ export class FormularioComponent implements OnInit, OnChanges {
   }
 
 
-  onServicioSeleccionado(): void {
-    const servicio = this.subTecnica.find(ser => ser.id === this.actividad.servicio_id);
-    this.encargado = servicio ? servicio.encargado_servicio : '';
-    this.jefe = servicio ? servicio.jefe_inmediato : '';
-    // console.log('Encargado seleccionado:', this.encargado);
+  async onServicioSeleccionado(): Promise<void> {
+    try {
+      // Asegúrate de que this.localServicioId sea un número
+      const id = Number(this.actividad.servicio_id);
+      if (!id) {
+        console.warn('⚠️ No hay servicio seleccionado.');
+        return;
+      }
+
+      // Esperar la respuesta del servicio
+      const data = await this.api.getServiciosResponsables({ id });
+
+      if (data && data.length > 0) {
+        const servicio = data[0];
+        this.encargado = servicio.encargado_servicio || '';
+        this.jefe = servicio.jefe_inmediato || '';
+        // console.log('✅ Datos del servicio:', servicio);
+      } else {
+        console.warn('⚠️ No se encontró información para el servicio con id:', id);
+        this.encargado = '';
+        this.jefe = '';
+      }
+
+    } catch (error) {
+      console.error('❌ Error al obtener servicio:', error);
+    }
+  }
+
+  getJefes() {
+
   }
 
 

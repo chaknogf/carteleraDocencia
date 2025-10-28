@@ -4,7 +4,7 @@
   <!-- Título principal -->
   <header class="text-center mb-4">
     <h2 class="titulo">📊 Reporte de Actividades de Docencia</h2>
-    <p class="subtitulo">Hospital General Tipo I de Tecpán Guatemala</p>
+    <!-- <p class="subtitulo">Hospital General Tipo I de Tecpán Guatemala</p> -->
   </header>
 
   <!-- Filtros -->
@@ -42,28 +42,25 @@
       <button type="button" class="btn-accion success" (click)="exportarActividadesExcel()">
         📥 Excel
       </button>
-      <button type="button" class="btn-accion secondary" (click)="volver()">
-        ↩ Volver
-      </button>
+
     </div>
   </form>
 
+  <div class="chart">
+
+    <div class="bar"  *ngFor="let data of ejecutados; let i = index"
+         [style.--value]="data.ejecutado * 100 + '%'"
+         title="{{data.servicio_encargado}}">
+        <div class="bar-inner">
+          <span class="bar-value">{{ (data.ejecutado * 100) | number:'1.0-0' }}%</span>
+        </div>
+        <span class="bar-label">{{data.servicio_encargado}}</span>
+      </div>
+  </div>
+
   <!-- Contenido principal -->
   <div class="contenido-grid">
-    <!-- Gráfico de ejecución -->
-    <div class="glass-panel grafico" >
-      <h4 class="panel-title">Ejecución por Estado de Dirección</h4>
-      <canvas id="graficoEjecucion" >
-        <div *ngFor="let data of direccion">
-          <label for="">{{data.servicio_encargado}}</label>
-          <div class="progress">
-            <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">{{data.total}}</div>
-          </div>
 
-        </div>
-
-      </canvas>
-    </div>
 
     <!-- Resumen de Totales -->
     <div class="glass-panel resumen">

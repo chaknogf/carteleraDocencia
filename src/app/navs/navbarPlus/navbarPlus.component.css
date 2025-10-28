@@ -7,10 +7,7 @@
   color: #fff;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  border-top: none;
-  padding-top: 0;
   font-family: 'Altivo', sans-serif;
-
 }
 
 /* Contenedor flex */
@@ -31,7 +28,7 @@
 /* Menú hamburguesa (solo visible en móvil) */
 .menu-toggle {
   display: none;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   cursor: pointer;
 }
 
@@ -55,34 +52,8 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Responsive para móviles */
-@media (max-width: 768px) {
-  .menu-toggle {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    background-color: #1e1e2f;
-    flex-direction: column;
-    align-items: center;
-    display: none;
-    gap: 0;
-    padding: 0.5rem 0;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-links li {
-    width: 100%;
-    text-align: center;
-    margin: 0.25rem 0;
-  }
+.ocultoli {
+  display: none;
 }
 
 .data-user {
@@ -94,6 +65,52 @@
   padding: 0.4rem;
   border-radius: 50%;
 }
+
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .ocultoli {
+    display: block;
+  }
+
+  .data-user {
+    display: none;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    background-color: #1e1e2f;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+    gap: 2.5rem;
+    padding:0;
+    z-index: 2;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+    margin: 0.25rem 0;
+  }
+
+  .menu-toggle.active + .fab-center {
+  display: none;
+}
+
+}
+
+
 
 
 /* FAB central */

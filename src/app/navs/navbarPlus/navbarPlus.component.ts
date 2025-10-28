@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UsuarioActualComponent } from "../users/usuarioActual/usuarioActual.component";
+import { UsuarioActualComponent } from "../../users/usuarioActual/usuarioActual.component";
 import { Router } from '@angular/router';
-import { ApiService } from '../service/api.service';
+import { ApiService } from '../../service/api.service';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+  selector: 'app-navbarPlus',
+  templateUrl: './navbarPlus.component.html',
+  styleUrls: ['./navbarPlus.component.css'],
   standalone: true,
   imports: [CommonModule, UsuarioActualComponent]
 })
-export class NavbarComponent implements OnInit {
+export class NavbarPlusComponent implements OnInit {
 
   constructor(
     private router: Router,
@@ -22,9 +22,12 @@ export class NavbarComponent implements OnInit {
   }
 
   mostrarMenu = false;
+  menuActivo = false;
+
 
   toggleMenu() {
     this.mostrarMenu = !this.mostrarMenu;
+    this.menuActivo = !this.menuActivo;
   }
 
   usuarios() {
@@ -46,5 +49,12 @@ export class NavbarComponent implements OnInit {
   irActividades() {
     this.router.navigate(['tabla']);
   }
+
+  logout() {
+    ['username', 'role', 'servicio_id', 'subId'].forEach(key => localStorage.removeItem(key));
+    this.router.navigate(['eventos']);
+  }
+
+
 
 }

@@ -1,17 +1,18 @@
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Usuarios } from '../../interface/interfaces';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
+import { NavbarComponent } from "../../navs/navbar/navbar.component";
 
 @Component({
   selector: 'app-formUser',
   templateUrl: './formUser.component.html',
   styleUrls: ['./formUser.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule, FormsModule, NavbarComponent]
 })
 export class FormUserComponent implements OnInit {
 
@@ -24,7 +25,9 @@ export class FormUserComponent implements OnInit {
     password: '',
     email: '',
     role: '',
-    estado: ''
+    estado: '',
+    servicio_id: 0,
+    google_id: ''
   }
 
 
@@ -40,12 +43,12 @@ export class FormUserComponent implements OnInit {
     if (idParam) {
       const id = Number(idParam);
       if (!isNaN(id)) {
-        this.api.getUser(id)
+        this.api.getUsers({ id: id })
           .then((data) => {
-            this.usuario = data;
+            this.usuario = data[0];
 
             this.enEdicion = true;
-            console.log('✅ Usuario cargado para edición');
+            // console.log(this.usuario);
           })
           .catch((error) => {
             console.error('❌ Error al cargar usuario para edición:', error);
@@ -58,7 +61,7 @@ export class FormUserComponent implements OnInit {
     }
   }
   volver(): void {
-    this.router.navigate(['tabla']);
+    this.router.navigate(['tablaUsers']);
   }
 
   agregar(): void {
@@ -66,7 +69,7 @@ export class FormUserComponent implements OnInit {
 
     this.api.createUser(this.usuario)
       .then(() => {
-        console.log('✅ Usuario creado correctamente');
+        // console.log('✅ Usuario creado correctamente');
         this.router.navigate(['tablaUsers']);
       })
       .catch((error) => {
@@ -78,10 +81,10 @@ export class FormUserComponent implements OnInit {
 
     try {
       await this.api.updateUser(this.usuario.id, this.usuario);
-      console.log('✅ Usuario actualizado correctamente');
+      // console.log('✅ Usuario actualizado correctamente');
 
 
-      this.router.navigate(['tabla']);
+      this.router.navigate(['tablaUsers']);
     } catch (error) {
       console.error('❌ Error al actualizar usuario:', error);
       console.log('Usuario a actualizar:', this.usuario);

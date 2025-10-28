@@ -1,73 +1,77 @@
+<app-navbar></app-navbar>
+
 <div class="formulario-container">
-  <button class="btn-c" (click)="volver()">Volver</button>
-  <h1>Formulario</h1>
-  <form class="dos-columnas" (ngSubmit)="guardar()">
 
-    <div class="form-group">
-       <label for="username">Username:</label>
-    <input
-    type="text"
-    id="username"
-    name="username"
-    [(ngModel)]="usuario.username">
+  <button class="btn-volver" (click)="volver()">← Volver</button>
 
-    </div>
+  <div class="form-card">
+    <h1 class="form-title">Formulario de Usuario</h1>
 
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input
-      type="text"
-      id="nombre"
-      name="nombre"
-      [(ngModel)]="usuario.nombre">
-    </div>
+    <form (ngSubmit)="guardar()" class="formulario-dos-columnas">
 
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input
-      type="text"
-      id="email"
-      name="email"
-      [(ngModel)]="usuario.email">
-    </div>
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="usuario.username"
+          placeholder="Ingrese el usuario">
+      </div>
 
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          [(ngModel)]="usuario.nombre"
+          placeholder="Ingrese el nombre completo">
+      </div>
 
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="usuario.email"
+          placeholder="ejemplo@correo.com">
+      </div>
 
-<div class="form-group">
-  <label for="tiempoAproximado">Rol:</label>
-    <select id="tiempoAproximado" name="tiempoAproximado" [(ngModel)]="usuario.role">
-      <option value=""></option>
-      <option value="admin">Administrador</option>
-      <option value="estandar">Estandar</option>
-    </select>
+      <div class="form-group">
+        <label for="role">Rol</label>
+        <select id="role" name="role" [(ngModel)]="usuario.role">
+          <option value="">Seleccione un rol</option>
+          <option value="admin">Administrador</option>
+          <option value="estandar">Estándar</option>
+        </select>
+      </div>
 
-</div>
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado" [(ngModel)]="usuario.estado">
+          <option value="">Seleccione un estado</option>
+          <option value="A">Activo</option>
+          <option value="I">Inactivo</option>
+        </select>
+      </div>
 
-<div class="form-group">
-  <label for="Estado">Modalidad:</label>
-    <select
-      id="Estado"
-      name="Estado"
-      [(ngModel)]="usuario.estado">
-      <option value=""></option>
-      <option value="A">Activo</option>
-      <option value="I">Inactivo</option>
-    </select>
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="usuario.password"
+          placeholder="Ingrese una contraseña">
+      </div>
 
-</div>
+      <div class="form-actions">
+        <button class="btn-guardar" type="submit">💾 Guardar</button>
+      </div>
 
-<div class="form-group">
-  <label for="Password">Password:</label>
-    <input
-      type="text"
-      id="Password"
-      name="Password"
-      [(ngModel)]="usuario.password">
-</div>
-
-
-    <button class="btn-c" type="submit">Guardar</button>
-  </form>
-
+    </form>
+  </div>
 
 </div>

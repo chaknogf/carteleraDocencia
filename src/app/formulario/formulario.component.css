@@ -224,8 +224,8 @@ legend {
 .form-group.row-3 {
   display: grid;
   margin: 0.5rem 0;
-  grid-template-columns: repeat(2, 1fr); /* 3 columnas iguales */
-  gap: 1rem; /* espacio entre columnas */
+  grid-template-columns: repeat( 1 , 2fr);
+  gap: 0.4rem; /* espacio entre columnas */
   padding: 1.25rem 1.5rem;
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -234,6 +234,7 @@ legend {
   transition: all 0.3s ease;
   align-items: center;
   align-content: center;
+
 }
 
 .form-group.row-3:hover {
@@ -420,4 +421,14 @@ textarea{
   pointer-events: auto;
 }
 
+/* Botón de volver */
+.btn-volver {
+  background: none;
+  border: none;
+  color: #2c5ab6;
+  font-size: 1.3rem;
+  font-weight: bolder;
+  margin-bottom: 1rem;
+  cursor: pointer;
 
+}

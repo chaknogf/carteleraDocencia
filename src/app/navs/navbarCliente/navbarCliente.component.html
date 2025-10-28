@@ -1,7 +1,7 @@
 
 
   <nav class="navbar navbar-container">
-    <div class="logo">
+    <div class="logo" [class.active]="menuActivo" (click)="toggleMenu()">
       <span>DocenciaApp</span>
       <div class="cinta-titulo justify-content-center">
   <span class="title1">Ministerio de Salud Pública y Asistencia Social</span>
@@ -9,17 +9,18 @@
 </div>
     </div>
 
-    <div class="menu-toggle" (click)="toggleMenu()">
+    <div class="menu-toggle" [class.active]="menuActivo" (click)="toggleMenu()">
       &#9776;
     </div>
 
    <ul class="nav-links" [class.active]="mostrarMenu">
     <li>
+      <a class="btn nav-btn register-btn" (click)="registrarse()">Registrarse</a>
+    </li>
+    <li class="bg-info rounded-pill">
       <a class="btn nav-btn login-btn fa-right-to-bracket" (click)="open()"> Ingresar</a>
     </li>
-    <li>
-      <a class="btn nav-btn register-btn">Registrarse</a>
-    </li>
+
   </ul>
   </nav>
 

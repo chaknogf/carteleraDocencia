@@ -1,6 +1,6 @@
 /* Contenedor general */
 .formulario-container {
-  max-width: 500px;      /* Limita ancho para desktop */
+  max-width: 1000px;      /* Limita ancho para desktop */
   margin: 1rem auto;
   padding: 0 1rem;
   font-family: 'Altivo', sans-serif;
@@ -102,3 +102,4 @@
   margin-bottom: 1rem;
   cursor: pointer;
 }
+
