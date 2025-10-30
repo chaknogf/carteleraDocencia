@@ -15,7 +15,7 @@
       <li><a (click)="irCartelera()">Cartelera</a></li>
       <li><a (click)="irActividades()">Actividades</a></li>
       <li><a (click)="reporte()">Reportes</a></li>
-      <li><a (click)="usuarios()">Usuarios</a></li>
+      <li *ngIf="acceso"><a (click)="usuarios()">Usuarios</a></li>
       <li class="oculto"><a (click)="logout()">Salir</a></li>
 
     </ul>

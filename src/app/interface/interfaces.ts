@@ -147,7 +147,9 @@ export interface Reportes {
   tema: string;
   actividad: string;
   servicio_encargado: string;
+  servicio_id: number;
   subdireccion: string;
+  subdireccion_id: number;
   fecha_programada: string;
   mes: string;
   mes_id: number;

@@ -12,13 +12,19 @@ import { ApiService } from '../../service/api.service';
   imports: [CommonModule, UsuarioActualComponent]
 })
 export class NavbarComponent implements OnInit {
+  acceso: boolean = false;
+
 
   constructor(
     private router: Router,
     private api: ApiService
+
   ) { }
 
   ngOnInit() {
+    if (localStorage.getItem('role') === 'admin') {
+      this.acceso = true
+    }
   }
 
   mostrarMenu = false;
@@ -34,7 +40,7 @@ export class NavbarComponent implements OnInit {
   }
 
   reporte() {
-    this.router.navigate(['reporteActividades']);
+    this.router.navigate(['dashboard']);
   }
 
   agregarDocencia() {

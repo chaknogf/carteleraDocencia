@@ -28,6 +28,38 @@
           [(ngModel)]="usuario.nombre"
           placeholder="Ingrese el nombre completo">
       </div>
+      <div class="form-group">
+        <label for="subdireccion">Subdirección</label>
+        <select
+          id="subdireccion"
+          name="subdireccion"
+          class="form-control"
+          required
+          [(ngModel)]="subdireccion_id"
+          (change)="onSubdireccionChange(subdireccion_id); listarServicios(subdireccion_id)">
+
+          <option value="" disabled selected>Seleccione una subdirección</option>
+          <option *ngFor="let sub of subdirecciones" [value]="sub.id">
+            {{ sub.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="serviciosResponsables.length > 0">
+        <label for="servicios">Servicio</label>
+        <select
+          id="servicios"
+          name="servicios"
+          class="form-control"
+          required
+          [(ngModel)]="usuario.servicio_id">
+
+          <option value="" disabled selected>Seleccione un servicio</option>
+          <option *ngFor="let serv of serviciosResponsables" [value]="serv.id" default="ser.id">
+            {{ serv.nombre }}
+          </option>
+        </select>
+      </div>
 
       <div class="form-group">
         <label for="email">Correo electrónico</label>

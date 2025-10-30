@@ -1,0 +1,110 @@
+<app-navbar></app-navbar>
+
+<section class="dashboard-container">
+  <!-- Título -->
+  <header class="header-section">
+    <h2 class="titulo">📊 Reporte de Actividades de Docencia</h2>
+  </header>
+
+  <!-- Filtros y reportes -->
+  <section class="filtros-grid">
+    <!-- Formulario de Autorización -->
+    <form class="filtros glass-panel">
+      <legend>Generar Informe de Autorización</legend>
+      <div class="input-row">
+        <div class="input-group">
+          <label for="anio">Año</label>
+          <input
+            type="number"
+            id="anio"
+            [(ngModel)]="anioSeleccion"
+            name="anio"
+            min="2024"
+            max="2100"
+            placeholder="Ej. 2025"
+          />
+        </div>
+        <div class="acciones">
+          <button type="button" class="btn-accion primary" (click)="informeAutorizado()">
+            📑 Informe
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Formulario de Reportes -->
+    <form class="filtros glass-panel">
+      <legend>Generar Reportes</legend>
+      <div class="input-row">
+        <div class="input-group">
+          <label for="anio">Año</label>
+          <input
+            type="number"
+            id="anio"
+            [(ngModel)]="buscarAnio"
+            name="anio"
+            min="2024"
+            max="2100"
+            placeholder="Ej. 2025"
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="mes">Mes</label>
+          <input
+            type="number"
+            id="mes"
+            [(ngModel)]="buscarMes"
+            name="mes"
+            min="1"
+            max="12"
+            placeholder="Ej. 10"
+          />
+        </div>
+
+        <div class="acciones">
+          <button type="button" class="btn-accion primary">
+            🔍 Generar
+          </button>
+          <button type="button" class="btn-accion success" (click)="exportarActividadesExcel()">
+            📥 Excel
+          </button>
+          <button type="button" class="btn-accion btn-light" (click)="informeAutorizado()">
+            📑 Informe
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- Gráfico -->
+  <section class="chart-section">
+    <div class="chart">
+      <div
+        class="bar"
+        *ngFor="let data of ejecutados; let i = index"
+        [style.--value]="data.ejecutado * 100 + '%'"
+        title="{{ data.servicio_encargado }}"
+      >
+        <div class="bar-inner">
+          <span class="bar-value">{{ (data.ejecutado * 100) | number: '1.0-0' }}%</span>
+        </div>
+        <span class="bar-label">{{ data.servicio_encargado }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resumen -->
+  <section class="contenido-grid">
+    <div class="glass-panel resumen">
+      <h4 class="panel-title">Resumen</h4>
+      <ul class="resumen-lista">
+        <li><span>✅ Completas:</span> {{ resumen.completadas }}</li>
+        <li><span>📅 Programadas:</span> {{ resumen.programadas }}</li>
+        <li><span>🔁 Reprogramadas:</span> {{ resumen.reprogramadas }}</li>
+        <li><span>🚫 Anuladas:</span> {{ resumen.anuladas }}</li>
+        <li class="total"><span>📊 Total:</span> {{ resumen.total }}</li>
+      </ul>
+    </div>
+  </section>
+</section>

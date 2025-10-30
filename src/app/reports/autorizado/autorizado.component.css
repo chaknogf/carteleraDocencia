@@ -1,0 +1,118 @@
+/* Configuración de página para impresión horizontal tamaño oficio */
+@page {
+  size: 13.5in 8.5in landscape;
+  margin: 1in;
+
+}
+
+
+.informe-container {
+  /* width: 100dvw; */
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding: 1rem;
+  background-color: white;
+
+
+
+}
+
+/* ENCABEZADO */
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #444;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.logo img {
+  width: 280px;
+  height: auto;
+}
+
+.titulo {
+  flex: 1;
+  text-align: center;
+}
+
+.titulo h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.titulo p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* TABLA */
+.tabla-reporte {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border-radius: 4px;
+
+}
+
+.tabla-reporte th, .tabla-reporte td {
+  border: 1px solid #666;
+  padding: 6px;
+  text-align: left;
+}
+
+.tabla-reporte th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* PIE DE FIRMA */
+.firmas {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.firma {
+  width: 45%;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+/* Adaptación para impresión */
+@media print {
+  body {
+    margin: 0;
+
+  }
+
+  .informe-container {
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+      display: none;
+    }
+
+  .tabla-reporte th {
+    background-color: #ddd !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .firmas {
+    page-break-inside: avoid;
+  }
+
+
+
+
+
+}

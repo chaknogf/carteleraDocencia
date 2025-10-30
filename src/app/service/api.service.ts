@@ -6,8 +6,8 @@ import { Actividades, ActividadesVista, Estados, Modalidades, ResumenAnual, Serv
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
-  // public readonly baseUrl = 'http://localhost:8000';
+  // public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
+  public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
@@ -384,9 +384,14 @@ export class ApiService {
   //   }
   // }
 
-  async getReporteActividades(mes: number, anio: number): Promise<any> {
+  async getReporteActividades(filtros: any): Promise<any> {
     try {
-      const response = await this.api.get(`/reporte/vista?mes=${mes}&anio=${anio}`);
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get(`/reporte/vista`,
+        {
+          params: filtrosLimpiados
+        }
+      );
       // console.log('📊 Reporte de actividades obtenido correctamente');
       return response.data;
     } catch (error) {

@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MesNombrePipe } from '../pipe/fechas.pipe';
@@ -9,23 +9,27 @@ import { ApiService } from '../service/api.service';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
+import { ComunicacionService } from '../service/comunicacion.service';
 
 
 
 @Component({
-  selector: 'app-reporteActividades',
-  templateUrl: './reporteActividades.component.html',
-  styleUrls: ['./reporteActividades.component.css'],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
   standalone: true,
   imports: [CommonModule, NavbarComponent, FormsModule]
 })
-export class ReporteActividadesComponent implements OnInit {
+export class DashboardComponent implements OnInit {
 
 
 
   public añoActual: number = new Date().getFullYear();
   public mesActual: number = new Date().getMonth() + 1;
+  public anioSeleccion: number = this.añoActual;
 
+  // 👇 Evento de salida para emitir el valor
+  @Output() anioSeleccionChange = new EventEmitter<number>();
   public buscarMes: number = 0;
   public buscarAnio: number = 0;
   public anio: number = new Date().getFullYear();
@@ -52,19 +56,25 @@ export class ReporteActividadesComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private comunicacionService: ComunicacionService
   ) {
 
   }
 
   ngOnInit() {
+
     this.buscarMes = this.mesActual;
     this.buscarAnio = this.añoActual;
     // this.generarReporte();
     this.obtenerEjecucion();
     this.resumenAnual();
 
+
+
   }
+
+
 
   // async generarReporte() {
   //   if (this.buscarMes === 0 || this.buscarAnio === 0) {
@@ -108,6 +118,11 @@ export class ReporteActividadesComponent implements OnInit {
     }
   }
 
+  informeAutorizado() {
+    this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
+    // console.log(this.anioSeleccion)
+    this.router.navigate(['/autorizado'])
+  }
 
   volver() {
     this.router.navigate(['/tabla']);

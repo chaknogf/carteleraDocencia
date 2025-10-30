@@ -35,7 +35,7 @@ export class NavbarClienteComponent implements OnInit {
   }
 
   acceso() {
-    this.router.navigate(['reporteActividades']);
+    this.router.navigate(['dashboard']);
   }
 
   agregarDocencia() {

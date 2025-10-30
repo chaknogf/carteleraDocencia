@@ -1,10 +1,11 @@
+import { AutorizadoComponent } from './reports/autorizado/autorizado.component';
 import { TablaDocenciaComponent } from './tablaDocencia/tablaDocencia.component';
 import { Routes } from '@angular/router';
 import { CartelComponent } from './cartel/cartel.component';
 import { FormularioComponent } from './formulario/formulario.component';
 import { TablaUsersComponent } from './users/tablaUsers/tablaUsers.component';
 import { FormUserComponent } from './users/formUser/formUser.component';
-import { ReporteActividadesComponent } from './reporteActividades/reporteActividades.component';
+import { DashboardComponent } from './dashboar/dashboard.component';
 import { SignupComponent } from '../signup/signup.component';
 
 export const routes: Routes = [
@@ -16,8 +17,9 @@ export const routes: Routes = [
   { path: 'tablaUsers', component: TablaUsersComponent },
   { path: 'formularioUsers', component: FormUserComponent },
   { path: 'editarUser/:id', component: FormUserComponent },
-  { path: 'reporteActividades', component: ReporteActividadesComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'autorizado', component: AutorizadoComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 
 ];
