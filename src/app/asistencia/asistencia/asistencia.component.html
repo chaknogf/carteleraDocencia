@@ -17,17 +17,17 @@
   <table class="tabla-informe">
     <tr>
       <th>Tema:</th>
-      <td>{{ actividad.tema || "---" }}</td>
+      <td class="text-uppercase">{{ actividad.tema || "---" }}</td>
       <th>Fecha:</th>
       <td>{{ actividad.fecha_programada | date : "dd-MM-yyyy" }}</td>
     </tr>
 
     <tr>
       <th>Servicio:</th>
-      <td>{{ actividad.servicio_encargado || "---" }}</td>
+      <td>{{ servicioR.nombre }}</td>
       <th>Persona responsable:</th>
       <td>
-        {{ actividad.persona_responsable[0] || "---" }}
+        {{ servicioR.encargado_servicio }}
       </td>
     </tr>
 

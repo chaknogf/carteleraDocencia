@@ -493,3 +493,76 @@ form .bg-warning:hover {
     border-radius: 16px;
   }
 }
+
+/* Contenedor discreto */
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;        /* Mucho más compacto */
+  padding: 0.25rem;
+  max-width: 280px;
+  font-family: "Inter", "Altivo", sans-serif;
+}
+
+/* Fila doble */
+.action-row {
+  display: flex;
+  gap: 0.35rem;
+}
+
+/* Botón base: finito, elegante */
+.action-btn {
+  flex: 1;
+  padding: 0.45rem 0.6rem;      /* Súper delgado */
+  border-radius: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #d5d9df;
+  background: #f5f7fa;          /* Gris clínico */
+  color: #1f2d3d;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+/* Hover limpio */
+.action-btn:hover {
+  background: #e8ebf1;
+  border-color: #c7ccd3;
+}
+
+/* Botón azul principal */
+.action-primary {
+  background: #2e5aac;   /* Azul moderno */
+  border-color: #294f97;
+  color: white;
+}
+.action-primary:hover {
+  background: #264b8f;
+}
+
+/* Botón azul suave */
+.action-soft {
+  background: #e6eefc;   /* Azul pastel muy suave */
+  border-color: #cbd9f3;
+  color: #2c4d9a;
+}
+.action-soft:hover {
+  background: #d9e5fb;
+}
+
+/* Botón de edición con gris azulado */
+.action-edit {
+  background: #f0f4f8;
+  border-color: #d3dae2;
+  color: #425a70;
+}
+.action-edit:hover {
+  background: #e4e9ee;
+}
+
+/* Mobile compacto */
+@media (max-width: 480px) {
+  .action-row {
+    flex-direction: column;
+  }
+}

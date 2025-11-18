@@ -80,7 +80,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -101,7 +101,7 @@
 }
 
 .tabla-listado tr {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* Ajustes visuales para filas */
@@ -180,8 +180,7 @@
   transform: translateX(-50%);
   margin: 0;
   text-align: center;
-
-  font-size: 28px;
+  font-size: 18px;
   font-weight: 700;
   text-transform: uppercase;
   color: #1e3a8a;
@@ -270,3 +269,7 @@
   width: 12%;
 }
 
+.tabla-informe th:nth-child(4),
+.tabla-informe td:nth-child(4) {
+  width: 28%;
+}

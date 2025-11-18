@@ -30,7 +30,7 @@ export class ModificarServicioComponent implements OnInit {
     encargado_servicio: '',
     activo: true,
     subdireccion_id: 0,
-
+    puesto_funcional: ''
   }
 
 

@@ -32,8 +32,16 @@ export class SerResponsablesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.obtenerSubdirecciones();
-    this.listarServicios();
+    const rol = localStorage.getItem('role');
+    const servicio = Number(localStorage.getItem('servicio_id'))
+
+    if (rol == 'admin') {
+      this.obtenerSubdirecciones();
+      this.listarServicios();
+    } else {
+      this.miServicio(servicio)
+    }
+
   }
 
   async obtenerSubdirecciones() {
@@ -71,43 +79,22 @@ export class SerResponsablesComponent implements OnInit {
     }
   }
 
-  // skipPlus() {
-  //   const skip = this.paginaActual + 1;
-  //   this.paginaActual = skip;
-  //   if (this.paginaActual > this.totalActividades) {
-  //     this.paginaActual = this.totalActividades;
-  //   }
-  //   this.listarServicios();
-  // }
+  async miServicio(id: number) {
 
-  // skipMinus() {
-  //   const skip = this.paginaActual - 1;
-  //   this.paginaActual = skip;
-  //   if (this.paginaActual < 0) {
-  //     this.paginaActual = 0;
-  //   }
-  //   this.listarServicios();
-  // }
+    try {
+      const data = await this.api.getServiciosResponsables({ id: id });
+      this.serviciosResponsables = data;
 
-  // cambiarPagina(direccion: number) {
-  //   this.paginaActual += direccion;
-  //   this.listarServicios();
-  // }
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
+  }
+
   editar(value: number) {
     this.router.navigate(['modificarSer/', value]);
 
   }
-  // eliminarUsuario(id: number) {
-  //   // Lógica para eliminar la docencia
-  //   this.api.deleteUser(id).then(() => {
-  //     this.listarServicios();
-  //     console.log(' eliminado correctamente');
-  //     this.mensajeEliminado = true;
-  //     setTimeout(() => {
-  //       this.mensajeEliminado = false;
-  //     }, 3000);
-  //   });
-  // }
+
 
   agregarServicio() {
     // Lógica para agregar una nueva docencia

@@ -12,9 +12,9 @@
     <div class="titulo">
       <h2>Cronograma de Capacitaciones y Charlas</h2>
       {{ resumen[0].anio }}
-      <p>
+      <p class="text-uppercase">
         Actividades Programadas del Servicio de
-        {{ resumen[0].servicio_encargado }}
+        {{ servicioR.nombre }}
       </p>
     </div>
   </header>
@@ -30,6 +30,8 @@
         <th>Mes</th>
         <th>Año</th>
         <th>Modalidad</th>
+        <th>Lugar</th>
+        <th>Horario</th>
         <th>Estado</th>
         <th>Nota</th>
       </tr>
@@ -43,6 +45,8 @@
         <td>{{ item.mes }}</td>
         <td>{{ item.anio }}</td>
         <td>{{ item.modalidad }}</td>
+        <td>{{ item.lugar }}</td>
+        <td>{{ item.horario_programado }}</td>
         <td>{{ item.estado }}</td>
         <td>{{ item.nota }}</td>
       </tr>
@@ -54,17 +58,19 @@
     <div class="firma">
       <p>__________________________________</p>
       <p class="m-0">
-        <strong>Jefe Inmediato:</strong> {{ resumen[0]?.jefe_inmediato }}
+        <strong></strong>
+        {{ servicioR.encargado_servicio }}
       </p>
-      <p><strong></strong> {{ resumen[0].subdireccion }}</p>
+      <p class="m-0"><strong></strong> {{ servicioR.puesto_funcional }}</p>
+      <p>Hospital General Tipo I de Tecpán Guatemala</p>
     </div>
     <div class="firma">
       <p>__________________________________</p>
       <p class="m-0">
-        <strong>Encargado del Servicio:</strong>
-        {{ resumen[0]?.encargado_servicio }}
+        <strong>Vo.Bo.:</strong> {{ servicioR.subdireccion?.persona_encargada }}
       </p>
-      <p><strong></strong> {{ resumen[0].servicio_encargado }}</p>
+      <p class="m-0"><strong></strong> {{ servicioR.subdireccion?.nombre }}</p>
+      <p>Hospital General Tipo I de Tecpán Guatemala</p>
     </div>
   </footer>
 </div>

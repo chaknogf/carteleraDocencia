@@ -63,19 +63,31 @@
       class="card-actions"
       *ngIf="docencia.servicio_id === servId || role === 'admin'"
     >
-      <button class="btn-edit" (click)="asistencias(docencia.id)">
-        Asistencias
-      </button>
-      <button class="btn-edit" (click)="editarDocencia(docencia)">
-        ✏️ Editar
-      </button>
-      <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
-    </div>
+      <div class="action-panel">
+        <div class="action-row">
+          <button
+            class="action-btn action-secondary"
+            (click)="asistencias(docencia.id)"
+          >
+            Listado de asistencia
+          </button>
 
-    <!-- <div class="card-actions" *ngIf="role === 'admin'">
-    <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button> -->
-    <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
-    <!-- </div> -->
+          <button
+            class="action-btn action-primary"
+            (click)="registrarAsistencia(docencia.id)"
+          >
+            Link de asistencia
+          </button>
+        </div>
+
+        <button
+          class="action-btn action-edit"
+          (click)="editarDocencia(docencia)"
+        >
+          ✏️ Editar
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Paginación inferiror centrado  todo el background con glasformismo-->

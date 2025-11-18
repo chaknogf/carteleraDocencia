@@ -39,6 +39,7 @@ export interface ServicioResponsables {
   nombre: string;
   descripcion: string;
   encargado_servicio: string;
+  puesto_funcional: string;
   // jefe_inmediato: string;
   activo: boolean;
   subdireccion_id: number;

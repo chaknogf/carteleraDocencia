@@ -202,4 +202,8 @@ export class TablaDocenciaComponent implements OnInit {
     this.router.navigate(['asistencias', id])
   }
 
+  registrarAsistencia(id: number) {
+    this.router.navigate(['asistencia', id]);
+  }
+
 }

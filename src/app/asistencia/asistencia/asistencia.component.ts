@@ -1,4 +1,4 @@
-import { ActividadesVista, Asistencia } from './../../interface/interfaces';
+import { ActividadesVista, Asistencia, ServicioResponsables } from './../../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +21,15 @@ import { DiscapacidadPipe, GrupoEdadPipe, IdiomaPipe, PertenenciaPipe } from '..
 export class AsistenciaComponent implements OnInit {
 
   public asistencias: Asistencia[] = [];
+  servicioR: ServicioResponsables = {
+    id: 0,
+    nombre: '',
+    descripcion: '',
+    encargado_servicio: '',
+    puesto_funcional: '',
+    activo: false,
+    subdireccion_id: 0
+  }
   actividad: ActividadesVista = {
     id: 0,
     tema: '',
@@ -69,6 +78,7 @@ export class AsistenciaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = Number(idParam);
@@ -81,6 +91,11 @@ export class AsistenciaComponent implements OnInit {
               .then((data) => {
                 this.actividad = data[0]
               })
+          })
+
+        this.api.getServiciosResponsables({ id: this.actividad.servicio_id })
+          .then((data) => {
+            this.servicioR = data[0];
           })
 
 

@@ -1,21 +1,30 @@
 <app-navbarCliente></app-navbarCliente>
 
 <div class="formulario-container">
-
   <button class="btn-volver" (click)="volver()">← Volver</button>
 
   <div class="form-card">
     <h1 class="form-title">Formulario de Registro</h1>
 
-    <form (ngSubmit)="guardar()" class="formulario-dos-columnas">
-
-       <div class="form-group">
+    <form (ngSubmit)="guardar()" class="formulario-lineal">
+      <div class="form-group">
         <label for="subdireccion">¿A qué subdirección pertenece?</label>
-        <select id="subdireccion" name="subdireccion" [(ngModel)]="subdireccion_id" class="form-control" required="">
-          <option *ngFor="let sub of subdirecciones" [value]="sub.id">{{ sub.nombre }}</option>
+        <select
+          id="subdireccion"
+          name="subdireccion"
+          [(ngModel)]="subdireccion_id"
+          required
+        >
+          <option value="" disabled selected>
+            Seleccione una subdirección
+          </option>
+          <option *ngFor="let sub of subdirecciones" [value]="sub.id">
+            {{ sub.nombre }}
+          </option>
         </select>
       </div>
 
+      <!-- Opciones dinámicas de servicios -->
       <ng-container *ngIf="subdireccion_id == 1">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -23,7 +32,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of direccion" [value]="serv.id">
@@ -32,6 +40,7 @@
           </select>
         </div>
       </ng-container>
+
       <ng-container *ngIf="subdireccion_id == 2">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -39,7 +48,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of subEnfermeria" [value]="serv.id">
@@ -48,6 +56,7 @@
           </select>
         </div>
       </ng-container>
+
       <ng-container *ngIf="subdireccion_id == 3">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -55,7 +64,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of subMedica" [value]="serv.id">
@@ -64,6 +72,7 @@
           </select>
         </div>
       </ng-container>
+
       <ng-container *ngIf="subdireccion_id == 4">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -71,7 +80,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of subTecnica" [value]="serv.id">
@@ -80,6 +88,7 @@
           </select>
         </div>
       </ng-container>
+
       <ng-container *ngIf="subdireccion_id == 5">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -87,7 +96,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of subGerencia" [value]="serv.id">
@@ -96,6 +104,7 @@
           </select>
         </div>
       </ng-container>
+
       <ng-container *ngIf="subdireccion_id == 6">
         <div class="form-group">
           <label for="servicios">¿Elija su servicio?</label>
@@ -103,7 +112,6 @@
             id="servicios"
             name="servicios"
             [(ngModel)]="usuario.servicio_id"
-            class="form-control"
             required
           >
             <option *ngFor="let serv of subRH" [value]="serv.id">
@@ -113,9 +121,6 @@
         </div>
       </ng-container>
 
-
-
-
       <div class="form-group">
         <label for="username">Usuario</label>
         <input
@@ -123,7 +128,9 @@
           id="username"
           name="username"
           [(ngModel)]="usuario.username"
-          placeholder="Ingrese el usuario" required="">
+          placeholder="Ingrese el usuario"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -133,7 +140,9 @@
           id="nombre"
           name="nombre"
           [(ngModel)]="usuario.nombre"
-          placeholder="Ingrese el nombre completo" required="">
+          placeholder="Ingrese el nombre completo"
+          required
+        />
       </div>
 
       <div class="form-group">
@@ -143,10 +152,10 @@
           id="email"
           name="email"
           [(ngModel)]="usuario.email"
-          placeholder="ejemplo@correo.com" required="">
+          placeholder="ejemplo@correo.com"
+          required
+        />
       </div>
-
-
 
       <div class="form-group">
         <label for="password">Contraseña</label>
@@ -155,14 +164,13 @@
           id="password"
           name="password"
           [(ngModel)]="usuario.password"
-          placeholder="Ingrese una contraseña">
+          placeholder="Ingrese una contraseña"
+        />
       </div>
 
       <div class="form-actions">
         <button class="btn-guardar" type="submit">💾 Guardar</button>
       </div>
-
     </form>
   </div>
-
 </div>

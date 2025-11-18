@@ -2,7 +2,7 @@ import { estado } from './../../interface/enum';
 import { Component, input, OnInit, Input } from '@angular/core';
 import { ApiService } from '../../service/api.service';
 import { Router } from '@angular/router';
-import { ActividadesVista, Reportes } from '../../interface/interfaces';
+import { ActividadesVista, Reportes, ServicioResponsables } from '../../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../navs/navbar/navbar.component";
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -20,6 +20,15 @@ import { ComunicacionService } from '../../service/comunicacion.service';
 export class AutorizadoComponent implements OnInit {
   anioSeleccion: number = 0;
   public resumen: any[] = [];
+  servicioR: ServicioResponsables = {
+    id: 0,
+    nombre: '',
+    descripcion: '',
+    encargado_servicio: '',
+    puesto_funcional: '',
+    activo: false,
+    subdireccion_id: 0
+  }
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
   private sanitizarSvg(svg: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(svg);
@@ -51,6 +60,11 @@ export class AutorizadoComponent implements OnInit {
     const localServid = Number(localStorage.getItem('servicio_id'))
     // console.log(localServid, this.anioSeleccion)
     this.getDatos(localServid, this.anioSeleccion);
+
+    this.api.getServiciosResponsables({ id: localServid })
+      .then((data) => {
+        this.servicioR = data[0];
+      })
 
   }
 

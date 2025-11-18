@@ -6,40 +6,33 @@
   <div class="form-card">
     <h1 class="form-title">Formulario de Servicio</h1>
 
-    <form (ngSubmit)="guardar()" class="formulario-dos-columnas">
+    <form (ngSubmit)="guardar()" class="formulario-lineal">
       <div class="form-group">
-        <label for="">Nombre:</label>
+        <label>Nombre del Servicio</label>
         <input
           type="text"
-          id="nombre"
-          name="nombre"
           [(ngModel)]="Servicio.nombre"
+          name="nombre"
           placeholder="Ingrese el Nombre del Servicio"
         />
       </div>
 
       <div class="form-group">
-        <label for="nombre">Encargado del servicio:</label>
+        <label>Encargado del Servicio</label>
         <input
           type="text"
-          id="encargado"
-          name="encargado"
           [(ngModel)]="Servicio.encargado_servicio"
-          placeholder="Ingrese el nombre completo del encargado del servicio"
+          name="encargado"
+          placeholder="Nombre completo del encargado"
         />
       </div>
+
       <div class="form-group">
-        <label for="subdireccion">Subdirección</label>
+        <label>Subdirección</label>
         <select
-          id="subdireccion"
-          name="subdireccion"
-          class="form-control"
-          required
           [(ngModel)]="Servicio.subdireccion_id"
-          (change)="
-            onSubdireccionChange(subdireccion_id);
-            listarServicios(subdireccion_id)
-          "
+          name="subdireccion"
+          required
         >
           <option value="" disabled selected>
             Seleccione una subdirección
@@ -50,31 +43,49 @@
         </select>
       </div>
 
-      <!-- <div class="form-group">
-        <label for="jefe">Jefe Inmediato:</label>
-        <input
-          type="text"
-          id="jefe"
-          name="jefe"
-          [(ngModel)]="Servicio.jefe_inmediato"
-          placeholder="Nombre completo del jefe inmediato"
-        />
-      </div> -->
-
       <div class="form-group">
-        <label for="role">Descripción del servicio</label>
+        <label>Puesto Funcional</label>
         <input
           type="text"
-          id="descripcion"
-          name="descripcion"
-          [(ngModel)]="Servicio.descripcion"
-          placeholder="Ingrese una descripcion del servicio"
+          [(ngModel)]="Servicio.puesto_funcional"
+          name="puesto"
+          placeholder="Encargado, Jefe o función"
         />
       </div>
 
       <div class="form-group">
-        <label for="activo">Activo:</label>
-        <input type="radio" [(ngModel)]="Servicio.activo" />
+        <label>Descripción del Servicio</label>
+        <input
+          type="text"
+          [(ngModel)]="Servicio.descripcion"
+          name="descripcion"
+          placeholder="Breve descripción del servicio"
+        />
+      </div>
+
+      <div class="form-group radio-activo">
+        <label>Activo</label>
+        <div class="radio-wrapper">
+          <label>
+            <input
+              type="radio"
+              value="true"
+              name="activo"
+              [(ngModel)]="Servicio.activo"
+            />
+            Sí
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="false"
+              name="activo"
+              [(ngModel)]="Servicio.activo"
+            />
+            No
+          </label>
+        </div>
       </div>
 
       <div class="form-actions">
