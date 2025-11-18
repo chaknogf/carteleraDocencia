@@ -1,0 +1,77 @@
+<app-navbar class="no-print"></app-navbar>
+<div class="informe-container">
+  <button class="no-print btn btn-primary" (click)="print()">
+    <span [innerHTML]="icons['print']"></span>
+  </button>
+  <!-- Encabezado -->
+  <header class="encabezado">
+    <div class="logo">
+      <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
+    </div>
+
+    <div class="titulo">
+      <h1 class="titulo-informe">Listado de Asistencia</h1>
+    </div>
+  </header>
+
+  <table class="tabla-informe">
+    <tr>
+      <th>Tema:</th>
+      <td>{{ actividad.tema || "---" }}</td>
+      <th>Fecha:</th>
+      <td>{{ actividad.fecha_programada | date : "dd-MM-yyyy" }}</td>
+    </tr>
+
+    <tr>
+      <th>Servicio:</th>
+      <td>{{ actividad.servicio_encargado || "---" }}</td>
+      <th>Persona responsable:</th>
+      <td>
+        {{ actividad.persona_responsable[0] || "---" }}
+      </td>
+    </tr>
+
+    <!-- Fila combinada Servicio + Fecha -->
+    <tr></tr>
+  </table>
+
+  <hr />
+
+  <table class="tabla-listado">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre completo</th>
+        <th>Sexo</th>
+        <th>Edad</th>
+        <th>CUI</th>
+        <th>Puesto</th>
+        <th>Nombre de Unidad Administrativa</th>
+        <th>Código Empleado</th>
+        <th>Pertenencia Cultural</th>
+        <th>Comunidad Linguistica</th>
+        <th>Discapacidad</th>
+        <th>Contacto</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let a of asistencias; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td class="text-capitalize">{{ a.nombre_completo }}</td>
+
+        <td>{{ a.sexo_id == 1 ? "Hombre" : "Mujer" }}</td>
+        <td>{{ a.grupo_edad_id | grupoEdad }}</td>
+
+        <td>{{ a.cui }}</td>
+        <td>{{ a.puesto_funcional }}</td>
+        <td>{{ a.datos_extras.unidad_administrativa }}</td>
+        <td>{{ a.datos_extras.codigo_empleado }}</td>
+        <td>{{ a.pertenencia_cultural_id | pertenencia }}</td>
+        <td>{{ a.datos_extras.idioma | idioma }}</td>
+        <td>{{ a.datos_extras.discapacidad | discapacidad }}</td>
+        <td>{{ a.telefono_email }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

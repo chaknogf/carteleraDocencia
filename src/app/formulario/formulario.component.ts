@@ -2,7 +2,7 @@ import { mes, actividad, Estado, Meses } from './../interface/enum';
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
-import { Actividades, ActividadesVista, Detalles, Estados, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad } from './../interface/interfaces';
+import { Actividades, Detalles, Estados, Lugares, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad } from './../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
@@ -16,7 +16,7 @@ import { infoIcons } from '../shared/icons/icons';
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NavbarComponent]
+  imports: [CommonModule, FormsModule, NavbarComponent]
 })
 export class FormularioComponent implements OnInit, OnChanges {
 
@@ -33,6 +33,10 @@ export class FormularioComponent implements OnInit, OnChanges {
   public modalidades: Modalidades[] = [];
   public estados: Estados[] = [];
   public tipoActividades: TipoActividad[] = [];
+  public lugares: Lugares[] = [];
+  public verificado: boolean = false;
+  public coincidencias: any[] = [];
+  public mensajeValidacion: string = '';
   encargado: string = '';
   jefe: string = '';
   localServicioId: number = 0;
@@ -45,7 +49,6 @@ export class FormularioComponent implements OnInit, OnChanges {
     link: '',
     duracion: '',
     grupo_dirigido: '',
-    lugar: '',
     contenido: '',
     asistencia: 0,
     inasistencia: 0,
@@ -83,8 +86,11 @@ export class FormularioComponent implements OnInit, OnChanges {
     detalles: this.detalle,
     metadatos: this.metadato,
     tiempo_aproximado: '',
-    fecha_programada: ''
+    fecha_programada: '',
+    horario_programado: '00:00',
+    lugar_id: 0
   };
+
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
@@ -154,13 +160,22 @@ export class FormularioComponent implements OnInit, OnChanges {
     this.listarTipoActividad();
     this.listarModalidades();
     this.listarEstados();
+    this.getLugares();
 
-    // console.log(this.actividad)
+
 
   }
 
 
 
+  async getLugares(): Promise<void> {
+    try {
+      this.lugares = await this.api.getLugaresRealizacion({});
+      // console.log(this.lugares)
+    } catch (error) {
+      console.error('error al obtener datos');
+    }
+  }
 
 
   prepararActividadPayload(actividad: any, esActualizacion = false): any {
@@ -191,6 +206,8 @@ export class FormularioComponent implements OnInit, OnChanges {
       persona_responsable: actividad.persona_responsable || {},
       tiempo_aproximado: actividad.tiempo_aproximado || '',
       fecha_programada: actividad.fecha_programada || '',
+      lugar_id: actividad.lugar_id,
+      horario_programado: actividad.horario_programado || '',
       // 👇 enviar como objeto, NO string
       detalles: detallesObj,
       metadatos: metadatosObj,
@@ -321,6 +338,7 @@ export class FormularioComponent implements OnInit, OnChanges {
   async listarModalidades(): Promise<void> {
     try {
       this.modalidades = await this.api.getModalidades({});
+
     } catch (error) {
       console.error('Error al listar modalidades:', error);
     }
@@ -340,14 +358,15 @@ export class FormularioComponent implements OnInit, OnChanges {
         return;
       }
 
+      this.jefe = ''
       // Esperar la respuesta del servicio
       const data = await this.api.getServiciosResponsables({ id });
 
       if (data && data.length > 0) {
         const servicio = data[0];
         this.encargado = servicio.encargado_servicio || '';
-        this.jefe = servicio.jefe_inmediato || '';
-        // console.log('✅ Datos del servicio:', servicio);
+        this.jefe = servicio.subdireccion?.persona_encargada || '';
+
       } else {
         console.warn('⚠️ No se encontró información para el servicio con id:', id);
         this.encargado = '';
@@ -378,6 +397,25 @@ export class FormularioComponent implements OnInit, OnChanges {
 
   toggleDetalle(): void {
     this.mostrarDetalle = !this.mostrarDetalle;
+  }
+
+
+  async validar() {
+    const filtros = {
+      fecha: this.actividad.fecha_programada,
+      hora: this.actividad.horario_programado,
+      lugar: this.actividad.lugar_id,
+      actividad_id: this.actividad.id,
+    };
+
+    const respuesta = await this.api.verificar(filtros);
+
+    this.verificado = respuesta.valido;
+    this.mensajeValidacion = respuesta.mensaje;
+
+    if (!respuesta.valido) {
+      this.coincidencias = respuesta.coincidencias; // id, servicio, tema
+    }
   }
 
 }

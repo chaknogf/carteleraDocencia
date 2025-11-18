@@ -27,6 +27,7 @@ export class CartelComponent {
   public mes: number = 0;
   public anio: number = 0;
   public hoy: string = '';
+  public inicioEvento: boolean = false;
   public mesActual = new Date().getMonth() + 1
 
   constructor(
@@ -38,6 +39,7 @@ export class CartelComponent {
     this.fechaActual();
     this.hoy = new Date().toISOString().split('T')[0];
     this.datosCartel();
+
     // console.log(this.eventos);
   }
 
@@ -73,8 +75,28 @@ export class CartelComponent {
 
   }
 
+  asistencia(id: number) {
+    this.router.navigate(['asistencia', id]);
+  }
 
+  verificarInicioEvento(fecha_programada: string, horario_programado: string): void {
+    // Unir fecha y hora en un solo objeto Date
+    const inicioEvento = new Date(`${fecha_programada}T${horario_programado}`);
 
+    if (isNaN(inicioEvento.getTime())) {
+      console.warn("Fecha u hora inválida:", fecha_programada, horario_programado);
+      this.inicioEvento = false;
+      return;
+    }
+
+    // Duración del evento: 2 horas
+    const finEvento = new Date(inicioEvento.getTime() + 2 * 60 * 60 * 1000);
+
+    const ahora = new Date();
+
+    // Activar botón solo si estamos dentro de la ventana del evento
+    this.inicioEvento = ahora >= inicioEvento && ahora <= finEvento;
+  }
 
 
 

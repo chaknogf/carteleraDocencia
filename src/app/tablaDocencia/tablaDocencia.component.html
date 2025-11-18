@@ -1,84 +1,121 @@
 <app-navbarPlus></app-navbarPlus>
 
+<div class="container-actividad my-4">
+  <div class="docencia-card" *ngFor="let docencia of actividades">
+    <!-- Encabezado -->
+    <div class="card-header">
+      <h3 class="tema text-uppercase">{{ docencia.tema }}</h3>
+      <span class="estado" [class]="docencia.estado.toLowerCase()">{{
+        docencia.estado
+      }}</span>
+    </div>
 
-<div class=" container-actividad my-4">
- <div class="docencia-card" *ngFor="let docencia of actividades">
-  <!-- Encabezado -->
-  <div class="card-header">
-    <h3 class="tema">{{ docencia.tema }}</h3>
-    <span class="estado" [class]="docencia.estado.toLowerCase()">{{ docencia.estado }}</span>
-  </div>
+    <!-- Contenido principal en dos columnas -->
+    <div class="card-content">
+      <!-- 📅 Columna Izquierda: Agenda -->
+      <div class="calendar-box">
+        <div class="calendar-header">
+          <span class="month">{{
+            docencia.fecha_programada | date : "MMM" | uppercase
+          }}</span>
+        </div>
+        <div class="calendar-day">
+          {{ docencia.fecha_programada | date : "dd" }}
+        </div>
+        <div class="calendar-year">
+          {{ docencia.fecha_programada | date : "yyyy" }}
+        </div>
+      </div>
 
-  <!-- Contenido principal en dos columnas -->
-  <div class="card-content">
-    <!-- 📅 Columna Izquierda: Agenda -->
-    <div class="calendar-box">
-      <div class="calendar-header">
-        <span class="month">{{ docencia.fecha_programada | date: 'MMM' | uppercase }}</span>
-      </div>
-      <div class="calendar-day">
-        {{ docencia.fecha_programada | date: 'dd' }}
-      </div>
-      <div class="calendar-year">
-        {{ docencia.fecha_programada | date: 'yyyy' }}
+      <!-- 🧾 Columna Derecha: Información -->
+      <div class="card-body">
+        <p><strong>🏥 Servicio:</strong> {{ docencia.servicio_encargado }}</p>
+        <p><strong>🎯 Actividad:</strong> {{ docencia.actividad }}</p>
+        <p><strong>🧩 Modalidad:</strong> {{ docencia.modalidad }}</p>
+        <p><strong>📅 Mes:</strong> {{ docencia.mes }}</p>
+        <p><strong>🧑🏻‍🏫 Lugar:</strong> {{ docencia.lugar }}</p>
+        <p>
+          <strong>⏰ Horario:</strong>
+          {{ docencia.horario_programado | horarioFormat }}
+        </p>
+        <p><strong>🖱️ Link:</strong> {{ docencia.detalles.link }}</p>
+        <p><strong> Link de Asistencia:</strong></p>
+        <p><strong> Asistencia:</strong></p>
+
+        <div
+          *ngIf="isResponsableValido(docencia.persona_responsable)"
+          class="responsables"
+        >
+          <strong>👩‍⚕️ Responsable(s):</strong>
+          <ul>
+            <li *ngFor="let r of docencia.persona_responsable | keyvalue">
+              <ng-container *ngIf="r.value.nombre">
+                {{ r.value.nombre }} — {{ r.value.puesto }}
+              </ng-container>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <!-- 🧾 Columna Derecha: Información -->
-    <div class="card-body">
-      <p><strong>🏥 Servicio:</strong> {{ docencia.servicio_encargado }}</p>
-      <p><strong>🎯 Actividad:</strong> {{ docencia.actividad }}</p>
-      <p><strong>🧩 Modalidad:</strong> {{ docencia.modalidad }}</p>
-      <p><strong>📅 Mes:</strong> {{ docencia.mes }}</p>
-
-      <div *ngIf="isResponsableValido(docencia.persona_responsable)" class="responsables">
-        <strong>👩‍⚕️ Responsable(s):</strong>
-        <ul>
-          <li *ngFor="let r of docencia.persona_responsable | keyvalue">
-            <ng-container *ngIf="r.value.nombre">
-              {{ r.value.nombre }} — {{ r.value.puesto }}
-            </ng-container>
-          </li>
-        </ul>
-      </div>
+    <!-- Acciones -->
+    <div
+      class="card-actions"
+      *ngIf="docencia.servicio_id === servId || role === 'admin'"
+    >
+      <button class="btn-edit" (click)="asistencias(docencia.id)">
+        Asistencias
+      </button>
+      <button class="btn-edit" (click)="editarDocencia(docencia)">
+        ✏️ Editar
+      </button>
+      <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
     </div>
-  </div>
 
-  <!-- Acciones -->
-  <div class="card-actions" *ngIf="docencia.servicio_id === servId">
-    <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button>
+    <!-- <div class="card-actions" *ngIf="role === 'admin'">
+    <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button> -->
     <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
+    <!-- </div> -->
   </div>
-
-  <div class="card-actions" *ngIf="role === 'admin'">
-    <button class="btn-edit" (click)="editarDocencia(docencia)">✏️ Editar</button>
-    <!-- <button class="btn-delete" (click)="eliminarDocencia(docencia.id)">🗑️ Eliminar</button> -->
-  </div>
-</div>
 
   <!-- Paginación inferiror centrado  todo el background con glasformismo-->
   <div class="d-flex justify-content-center align-items-center mt-3 gap-3">
-    <button class="btn btn-outline-secondary" [disabled]="paginaActual === 0" (click)="skipMinus()">Anterior</button>
+    <button
+      class="btn btn-outline-secondary"
+      [disabled]="paginaActual === 0"
+      (click)="skipMinus()"
+    >
+      Anterior
+    </button>
     <span class="fw-bold">Página {{ paginaActual + 1 }}</span>
-    <button class="btn btn-outline-secondary" (click)="skipPlus()">Siguiente</button>
+    <button class="btn btn-outline-secondary" (click)="skipPlus()">
+      Siguiente
+    </button>
   </div>
-<button class="btn-circular" (click)="open()">
-  <svg viewBox="0 0 100 100" class="circular-text">
-    <defs>
-      <path id="circlePath" d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"/>
-    </defs>
-    <text fill="#bde8ff" font-size="10" font-weight="500" letter-spacing="2">
-      <textPath href="#circlePath" startOffset="0%">
-             &nbsp;      &nbsp;   B U S C A R    &nbsp;
-      </textPath>
-    </text>
-  </svg>
-  <span [innerHTML]="icons['filter']"></span>
-</button>  <!-- se visualiza inferior derecho con icono de lupa -->
+  <button class="btn-circular" (click)="open()">
+    <svg viewBox="0 0 100 100" class="circular-text">
+      <defs>
+        <path
+          id="circlePath"
+          d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"
+        />
+      </defs>
+      <text fill="#bde8ff" font-size="10" font-weight="500" letter-spacing="2">
+        <textPath href="#circlePath" startOffset="0%">
+          &nbsp; &nbsp; B U S C A R &nbsp;
+        </textPath>
+      </text>
+    </svg>
+    <span [innerHTML]="icons['filter']"></span>
+  </button>
+  <!-- se visualiza inferior derecho con icono de lupa -->
 </div>
 
 <!-- modal de filtro -->
-<div *ngIf="visible()" class="modal-backdrop d-flex align-items-center justify-content-center">
+<div
+  *ngIf="visible()"
+  class="modal-backdrop d-flex align-items-center justify-content-center"
+>
   <div>
     <div class="text-end">
       <button class="btn-close-modal" (click)="close()">×</button>
@@ -86,39 +123,77 @@
 
     <h5>Filtrar Actividades</h5>
 
-    <form (ngSubmit)="listarActividades()" #docenciaForm="ngForm" class="row g-3">
+    <form
+      (ngSubmit)="listarActividades()"
+      #docenciaForm="ngForm"
+      class="row g-3"
+    >
       <!-- Campos del formulario -->
       <!-- ejemplo de un campo -->
       <div class="col-md-6">
         <label for="tema" class="form-label">Tema</label>
-        <input type="text" id="tema" class="form-control" name="tema" [(ngModel)]="buscarTema" />
+        <input
+          type="text"
+          id="tema"
+          class="form-control"
+          name="tema"
+          [(ngModel)]="buscarTema"
+        />
       </div>
 
       <div class="col-md-6">
         <label for="actividad" class="form-label fw-semibold">Actividad</label>
-        <select id="actividad" class="form-select" name="actividad" [(ngModel)]="buscarActividad">
-          <option *ngFor="let actividad of actividadesTipo" [value]="actividad.value">{{ actividad.label }}</option>
+        <select
+          id="actividad"
+          class="form-select"
+          name="actividad"
+          [(ngModel)]="buscarActividad"
+        >
+          <option
+            *ngFor="let actividad of actividadesTipo"
+            [value]="actividad.value"
+          >
+            {{ actividad.label }}
+          </option>
         </select>
       </div>
 
       <div class="col-md-6">
         <label for="mes" class="form-label fw-semibold">Mes</label>
         <select id="mes" class="form-select" name="mes" [(ngModel)]="buscarMes">
-          <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.label }}</option>
+          <option *ngFor="let mes of meses" [value]="mes.value">
+            {{ mes.label }}
+          </option>
         </select>
       </div>
 
-       <div class="col-md-6">
+      <div class="col-md-6">
         <label for="modalidad" class="form-label fw-semibold">Modalidad</label>
-        <select id="modalidad" class="form-select" name="modalidad" [(ngModel)]="buscarModalidad">
-          <option *ngFor="let modalidad of modalidades" [value]="modalidad.value">{{ modalidad.label }}</option>
+        <select
+          id="modalidad"
+          class="form-select"
+          name="modalidad"
+          [(ngModel)]="buscarModalidad"
+        >
+          <option
+            *ngFor="let modalidad of modalidades"
+            [value]="modalidad.value"
+          >
+            {{ modalidad.label }}
+          </option>
         </select>
       </div>
 
       <!-- repetir campos como en tu HTML -->
       <div class="d-flex justify-content-between">
         <button type="submit" class="btn bg-primary">Buscar</button>
-        <button type="button" class="btn bg-warning text-white" (click)="limpiarFiltros()">Limpiar</button>
+        <button
+          type="button"
+          class="btn bg-warning text-white"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar
+        </button>
       </div>
     </form>
   </div>

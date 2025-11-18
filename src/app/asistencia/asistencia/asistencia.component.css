@@ -1,0 +1,272 @@
+/* Opciones de tamaño: Carta, Oficio o Automático */
+/* Puedes activar una u otra según necesidad */
+
+@page {
+  /* size: letter landscape;   Carta horizontal */
+  /* size: letter portrait;    Carta vertical */
+  /* size: legal landscape;    Oficio horizontal */
+  /* size: legal portrait;     Oficio vertical */
+  size: auto;
+  margin: 1in;
+}
+
+/* Contenedor principal del informe */
+.informe-container {
+  width: 100%;
+  max-width: 13.5in;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  background-color: white;
+  margin: 0 auto; /* Centrado de la ficha */
+  padding: 0.5in;
+  box-sizing: border-box;
+}
+
+
+/* Subtítulo del listado */
+.subtitulo-listado {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.linea-separadora {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 25px 0;
+}
+
+.tabla-informe {
+  width: auto;
+  border-collapse: collapse; /* Quita espacios entre celdas */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-informe th,
+.tabla-informe td {
+  padding: 2px 3px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-informe tr:last-child th,
+.tabla-informe tr:last-child td {
+  border-bottom: none; /* Última fila sin borde */
+}
+
+.tabla-informe th {
+  background: #e0e7ff;
+  color: #1e3a8a;
+  font-weight: 600;
+  text-align: left;
+  border-right: 1px solid #ccc;
+}
+
+.tabla-informe tr {
+  text-align: center;
+}
+
+.tabla-informe td {
+  background: #fafafa;
+  width: 50%;
+}
+
+/* Tabla del listado de asistentes */
+.tabla-listado {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-listado th,
+.tabla-listado td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: center; /* Mejor presentación de datos */
+}
+
+.tabla-listado th {
+  background: #3730a3;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.tabla-listado tr {
+  font-size: 11px;
+}
+
+/* Ajustes visuales para filas */
+.tabla-listado tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* Opiniones con tonalidades más suaves */
+.opinion-badge {
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 70px;
+}
+
+.opinion-Excelente { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.opinion-Bueno { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.opinion-Regular { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.opinion-Malo { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* Forzar buenos saltos de página */
+@media print {
+
+  .tabla-listado tr {
+    page-break-inside: avoid;
+  }
+
+  .titulo-informe,
+  .tabla-informe,
+  .subtitulo-listado {
+    page-break-after: avoid;
+  }
+}
+
+/* Adaptación para impresión */
+@media print {
+  body {
+    margin: 0;
+
+  }
+
+  .informe-container {
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print {
+      display: none;
+    }
+
+}
+
+/* ENCABEZADO */
+.encabezado {
+  position: relative; /* Necesario para centrar el título respecto a este contenedor */
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #444;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  height: 120px; /* Asegura espacio visual armonioso */
+}
+
+.logo img {
+  width: 280px;
+  height: auto;
+}
+
+/* TITULO CENTRADO EN LA HOJA */
+.titulo-informe {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  text-align: center;
+
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1e3a8a;
+  padding-bottom: 12px;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.r90 {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  line-height: 1;            /* evita estiramiento */
+  /* display: inline-block; */
+  height: 2;                 /* truco clave */
+  padding: 0;
+  margin: 0;
+}
+.tabla-listado tbody tr {
+  height: 32px; /* o el valor que quieras */
+  text-transform: uppercase;
+}
+
+.tabla-listado thead tr {
+  height: 40px; /* ajusta según tu gusto */
+}
+.tabla-listado {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Control total */
+}
+
+.tabla-listado th:nth-child(1),
+.tabla-listado td:nth-child(1) {
+  width: 3%;
+}
+
+.tabla-listado th:nth-child(2),
+.tabla-listado td:nth-child(2) {
+  width: 18%;
+}
+
+.tabla-listado th:nth-child(3),
+.tabla-listado td:nth-child(3),
+.tabla-listado th:nth-child(4),
+.tabla-listado td:nth-child(4) {
+  width: 6%;
+
+}
+
+.tabla-listado th:nth-child(5),
+.tabla-listado td:nth-child(5) {
+  width: 10%;
+}
+
+.tabla-listado th:nth-child(6),
+.tabla-listado td:nth-child(6) {
+  width: 8%;
+}
+
+.tabla-listado th:nth-child(7),
+.tabla-listado td:nth-child(7) {
+  width: 8%;
+}
+
+.tabla-listado th:nth-child(8),
+.tabla-listado td:nth-child(8) {
+  width: 8%;
+}
+
+.tabla-listado th:nth-child(9),
+.tabla-listado td:nth-child(9) {
+  width: 8%;
+}
+
+.tabla-listado th:nth-child(10),
+.tabla-listado td:nth-child(10) {
+  width: 8%;
+}
+.tabla-listado th:nth-child(11),
+.tabla-listado td:nth-child(11) {
+  width: 8%;
+}
+.tabla-listado th:nth-child(12),
+.tabla-listado td:nth-child(12) {
+  width: 12%;
+}
+

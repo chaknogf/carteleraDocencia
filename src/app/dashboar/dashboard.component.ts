@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  informeAutorizado() {
+  cronograma() {
     this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
     // console.log(this.anioSeleccion)
     this.router.navigate(['/autorizado'])

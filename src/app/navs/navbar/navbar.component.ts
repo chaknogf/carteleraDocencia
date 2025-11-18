@@ -43,6 +43,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['dashboard']);
   }
 
+  servicios() {
+    this.router.navigate(['servicioRes'])
+  }
+
   agregarDocencia() {
     // Lógica para agregar una nueva docencia
     this.router.navigate(['formulario']);

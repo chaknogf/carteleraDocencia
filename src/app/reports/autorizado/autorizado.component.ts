@@ -19,7 +19,7 @@ import { ComunicacionService } from '../../service/comunicacion.service';
 })
 export class AutorizadoComponent implements OnInit {
   anioSeleccion: number = 0;
-  public resumen: Reportes[] = [];
+  public resumen: any[] = [];
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
   private sanitizarSvg(svg: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(svg);
@@ -38,7 +38,7 @@ export class AutorizadoComponent implements OnInit {
   ) {
 
     this.icons = {
-      print: this.sanitizarSvg(printicon)
+      print: this.iconService.getIcon('printicon')
 
     }
   }

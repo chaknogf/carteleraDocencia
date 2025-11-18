@@ -11,6 +11,7 @@ import { IconService } from '../service/icon.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { filter } from '../shared/icons/icons';
 import { NavbarPlusComponent } from '../navs/navbarPlus/navbarPlus.component';
+import { HorarioFormatPipe } from '../pipe/fechas.pipe';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { NavbarPlusComponent } from '../navs/navbarPlus/navbarPlus.component';
   templateUrl: './tablaDocencia.component.html',
   styleUrls: ['./tablaDocencia.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarPlusComponent]
+  imports: [CommonModule, FormsModule, NavbarPlusComponent, HorarioFormatPipe]
 })
 export class TablaDocenciaComponent implements OnInit {
 
@@ -92,7 +93,7 @@ export class TablaDocenciaComponent implements OnInit {
       mes: this.buscarMes,
       modalidad: this.buscarModalidad,
       estado: this.buscarEstado,
-      engtrega: "",
+      entrega: "",
       skip: this.paginaActual,
       limit: 10
 
@@ -195,6 +196,10 @@ export class TablaDocenciaComponent implements OnInit {
 
   reporte() {
     this.router.navigate(['reporteActividades']);
+  }
+
+  asistencias(id: number) {
+    this.router.navigate(['asistencias', id])
   }
 
 }

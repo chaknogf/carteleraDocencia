@@ -40,3 +40,14 @@ export class MesNombrePipe implements PipeTransform {
     return this.meses[index] || 'Mes inválido';
   }
 }
+
+
+@Pipe({
+  name: 'horarioFormat'
+})
+export class HorarioFormatPipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) return '';
+    return value.slice(0, 5); // HH:mm
+  }
+}

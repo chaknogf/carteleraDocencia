@@ -244,14 +244,14 @@ legend {
 }
 
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(60%) sepia(100%) saturate(500%) hue-rotate(180deg);
   opacity: 0.8;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
+input[type="date"]::-webkit-calendar-picker-indicator:hover, input[type="time"]::-webkit-calendar-picker-indicator:hover {
   filter: invert(80%) sepia(80%) saturate(800%) hue-rotate(200deg);
   opacity: 1;
 }
@@ -314,6 +314,16 @@ option:checked {
   background-color: #ffffffd1;
   color: #03052d;
   border: 1px solid transparent;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+[type=time] {
+  background-color: #ffffffd1;
+  color: #03052d;
+  border: 1px solid transparent;
+  border-radius: 10px;
   padding: 0.6rem 1rem;
   font-size: 1rem;
   transition: all 0.3s ease;

@@ -1,0 +1,224 @@
+<app-navbarCliente></app-navbarCliente>
+
+<div class="formulario-container">
+  <button class="btn-volver" (click)="volver()">← Volver</button>
+
+  <div class="form-card">
+    <header class="form-header">
+      <h1 class="form-title">Registro de Asistencia</h1>
+
+      <h2 class="form-subtitle">
+        <span class="dato-capacitacion">
+          {{ asistencia.capacitacion_id }} — {{ actividadAsignada.tema }}
+        </span>
+      </h2>
+    </header>
+
+    <form (ngSubmit)="guardar()" class="formulario-dos-columnas">
+      <!-- Nombre Completo -->
+      <div class="form-group">
+        <legend for="nombre_completo">Nombre Completo</legend>
+        <input
+          id="nombre_completo"
+          type="text"
+          class="form-control text-capitalize"
+          name="nombre_completo"
+          [(ngModel)]="asistencia.nombre_completo"
+          required
+        />
+      </div>
+
+      <!-- Sexo -->
+      <div class="form-group row-3">
+        <legend>Sexo</legend>
+        <div class="options-grid">
+          <label class="option-glass">
+            <input
+              type="radio"
+              name="sexo"
+              [value]="1"
+              [(ngModel)]="asistencia.sexo_id"
+            />
+            Hombre
+          </label>
+
+          <label class="option-glass">
+            <input
+              type="radio"
+              name="sexo"
+              [value]="2"
+              [(ngModel)]="asistencia.sexo_id"
+            />
+            Mujer
+          </label>
+        </div>
+      </div>
+
+      <!-- Grupo de Edad -->
+      <div class="form-group row-3">
+        <legend>Grupo de Edad</legend>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let item of gruposEdad">
+            <input
+              type="radio"
+              name="grupoEdad"
+              [value]="item.id"
+              [(ngModel)]="asistencia.grupo_edad_id"
+            />
+            {{ item.rango }}
+          </label>
+        </div>
+      </div>
+
+      <!-- CUI -->
+      <div class="form-group">
+        <legend for="cui">CUI</legend>
+        <input
+          id="cui"
+          type="number"
+          class="form-control"
+          name="cui"
+          [(ngModel)]="asistencia.cui"
+        />
+      </div>
+
+      <!-- Codigo Empleado -->
+      <div class="form-group">
+        <legend for="codigo_empleado">Codigo de Empleado 011</legend>
+        <input
+          id="codigo_empleado"
+          type="number"
+          class="form-control"
+          name="codigo_empleado"
+          [(ngModel)]="asistencia.datos_extras.codigo_empleado"
+        />
+      </div>
+
+      <!-- Puesto funcional -->
+      <div class="form-group">
+        <legend for="puesto_funcional">Puesto Funcional</legend>
+        <input
+          id="puesto_funcional"
+          type="text"
+          class="form-control"
+          name="puesto_funcional"
+          [(ngModel)]="asistencia.puesto_funcional"
+        />
+      </div>
+
+      <!-- Unidad Administrativa -->
+      <div class="form-group">
+        <legend for="unidadAdministrativa">
+          Nombre de la Unidad Administrativa
+        </legend>
+        <input
+          id="unidadAdministrativa"
+          type="text"
+          class="form-control"
+          name="unidadAdministrativa"
+          [(ngModel)]="asistencia.datos_extras.unidad_administrativa"
+        />
+      </div>
+
+      <!-- Pertenencia cultural -->
+      <div class="form-group row-3">
+        <legend>Pertenencia Cultural</legend>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let item of pertenenciaCultura">
+            <input
+              type="radio"
+              name="pertenencia"
+              [value]="item.id"
+              [(ngModel)]="asistencia.pertenencia_cultural_id"
+            />
+            {{ item.nombre }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Idiomas -->
+      <div class="form-group row-3">
+        <legend>Comunidad Linguistica</legend>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let item of i">
+            <input
+              type="radio"
+              name="idiomas"
+              [value]="item.value"
+              [(ngModel)]="asistencia.datos_extras.idioma"
+            />
+            {{ item.label }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Discapacidad -->
+      <div class="form-group row-3">
+        <legend>Discapacidad</legend>
+        <div class="options-grid">
+          <label class="option-glass" *ngFor="let item of d">
+            <input
+              type="radio"
+              name="discapacidad"
+              [value]="item.value"
+              [(ngModel)]="asistencia.datos_extras.discapacidad"
+            />
+            {{ item.label }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Teléfono o email -->
+      <div class="form-group">
+        <legend for="telefono_email">Teléfono o email</legend>
+        <input
+          id="telefono_email"
+          type="text"
+          class="form-control"
+          name="telefono_email"
+          [(ngModel)]="asistencia.telefono_email"
+        />
+      </div>
+
+      <!-- Datos extras -->
+      <div class="form-group">
+        <div>
+          <legend for="comentario">Escribe un comentario</legend>
+          <input
+            type="text"
+            class="form-control"
+            name="comentario"
+            [(ngModel)]="asistencia.datos_extras.comentario"
+          />
+        </div>
+
+        <!-- Grupo de Edad -->
+        <div class="form-group row-3">
+          <legend>Cómo calificas la actividad?</legend>
+          <div class="options-grid">
+            <label class="option-glass" *ngFor="let item of opinion">
+              <input
+                type="radio"
+                name="grupoEdad"
+                [value]="item"
+                [(ngModel)]="asistencia.datos_extras.opinion"
+              />
+              {{ item }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-guardar" type="submit">💾 Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-gracias" *ngIf="mostrarModal">
+  <div class="modal-contenido">
+    <h2>🎉 Gracias por tu asistencia</h2>
+    <p>Tu registro se completó correctamente.</p>
+  </div>
+</div>

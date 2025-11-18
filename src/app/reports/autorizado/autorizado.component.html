@@ -2,16 +2,20 @@
 
 <div class="informe-container">
   <button class="no-print btn btn-primary" (click)="print()">
-  <span [innerHTML]="icons['print']"></span>
-</button>
+    <span [innerHTML]="icons['print']"></span>
+  </button>
   <!-- Encabezado -->
   <header class="encabezado">
     <div class="logo">
-      <img src="assets/images/logoDocumento.svg" alt="Logo Institucional">
+      <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
     </div>
     <div class="titulo">
-      <h2>Informe de Capacitaciones y Charlas {{resumen[0].anio}}</h2>
-      <p>Reporte General de Actividades del Servicio de  {{resumen[0].servicio_encargado}}</p>
+      <h2>Cronograma de Capacitaciones y Charlas</h2>
+      {{ resumen[0].anio }}
+      <p>
+        Actividades Programadas del Servicio de
+        {{ resumen[0].servicio_encargado }}
+      </p>
     </div>
   </header>
 
@@ -31,11 +35,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of resumen, let i = index">
+      <tr *ngFor="let item of resumen; let i = index">
         <td>{{ i + 1 }}</td>
         <td>{{ item.tema }}</td>
         <td>{{ item.actividad }}</td>
-        <td>{{ item.fecha_programada | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
         <td>{{ item.mes }}</td>
         <td>{{ item.anio }}</td>
         <td>{{ item.modalidad }}</td>
@@ -49,14 +53,18 @@
   <footer class="firmas">
     <div class="firma">
       <p>__________________________________</p>
-      <p class="m-0"><strong>Jefe Inmediato:</strong> {{ resumen[0]?.jefe_inmediato }}</p>
-       <p><strong></strong> {{ resumen[0].subdireccion }}</p>
-
+      <p class="m-0">
+        <strong>Jefe Inmediato:</strong> {{ resumen[0]?.jefe_inmediato }}
+      </p>
+      <p><strong></strong> {{ resumen[0].subdireccion }}</p>
     </div>
     <div class="firma">
       <p>__________________________________</p>
-      <p class="m-0"><strong>Encargado del Servicio:</strong> {{ resumen[0]?.encargado_servicio }}</p>
-       <p><strong></strong> {{ resumen[0].servicio_encargado }}</p>
+      <p class="m-0">
+        <strong>Encargado del Servicio:</strong>
+        {{ resumen[0]?.encargado_servicio }}
+      </p>
+      <p><strong></strong> {{ resumen[0].servicio_encargado }}</p>
     </div>
   </footer>
 </div>

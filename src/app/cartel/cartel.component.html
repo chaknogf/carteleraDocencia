@@ -3,48 +3,77 @@
 <section class="cartelera">
   <header class="cartelera-header">
     <h2 class="titulo">🗓️ Calendario de Actividades de Docencia</h2>
-    <p class="subtitulo">Mes de {{ mes | mes }} {{ anio }} — Hospital General Tipo I de Tecpán Guatemala</p>
+    <p class="subtitulo">
+      Mes de {{ mes | mes }} {{ anio }} — Hospital General Tipo I de Tecpán
+      Guatemala
+    </p>
   </header>
 
   <div class="eventos-lista">
-    <div class="evento-card" *ngFor="let evento of eventos" [class.hoy]="evento.fecha_programada === hoy">
+    <div
+      class="evento-card"
+      *ngFor="let evento of eventos"
+      [class.hoy]="evento.fecha_programada === hoy"
+    >
       <div class="fecha">
-        <span class="dia">{{ evento.fecha_programada | date: 'dd' }}</span>
-        <span class="mes">{{ evento.fecha_programada | date: 'MMM' }}</span>
+        <span class="dia">{{ evento.fecha_programada | date : "dd" }}</span>
+        <span class="mes">{{ evento.fecha_programada | date : "MMM" }}</span>
       </div>
 
       <div class="contenido">
         <h3 class="tema">{{ evento.tema }}</h3>
         <p class="label-info">🧪 Tipo de Actividad:</p>
         <p class="data-info">{{ evento.actividad }}</p>
-        <p class="label-info"> Servicio Encargado:</p>
+        <p class="label-info">Servicio Encargado:</p>
         <p class="data-info">🏥 {{ evento.servicio_encargado }}</p>
 
-        <div *ngIf="isResponsableValido(evento.persona_responsable)" class="capacitadores">
-          <p class="label-info" >😎 Capacitador</p>
+        <div
+          *ngIf="isResponsableValido(evento.persona_responsable)"
+          class="capacitadores"
+        >
+          <p class="label-info">😎 Capacitador</p>
           <ul>
             <li *ngFor="let r of evento.persona_responsable | keyvalue">
               <ng-container *ngIf="r.value.nombre">
-                <p class="data-info">{{ r.value.nombre }} — {{ r.value.puesto }}</p>
+                <p class="data-info">
+                  {{ r.value.nombre }} — {{ r.value.puesto }}
+                </p>
               </ng-container>
             </li>
           </ul>
         </div>
         <p class="label-info">⏳ Duración</p>
-          <p class="data-info">{{ evento.tiempo_aproximado }}</p>
-          <p class="label-info">Modalidad:</p>
-            <ng-container [ngSwitch]="evento.modalidad">
-
-             <p class="data-info" *ngSwitchCase="'Virtual'">💻 {{evento.modalidad}} </p>
-              <p class="data-info" *ngSwitchCase="'Presencial'">👩🏻‍🏫 {{evento.modalidad}}</p>
-              <p class="data-info" *ngSwitchCase="'Híbrida'">💻👩🏻‍🏫 {{evento.modalidad}}</p>
-
-
-            </ng-container>
+        <p class="data-info">{{ evento.tiempo_aproximado }}</p>
+        <p class="label-info">Modalidad:</p>
+        <ng-container [ngSwitch]="evento.modalidad">
+          <p class="data-info" *ngSwitchCase="'Virtual'">
+            💻 {{ evento.modalidad }}
+          </p>
+          <p class="data-info" *ngSwitchCase="'Presencial'">
+            👩🏻‍🏫 {{ evento.modalidad }}
+          </p>
+          <p class="data-info" *ngSwitchCase="'Híbrida'">
+            💻👩🏻‍🏫 {{ evento.modalidad }}
+          </p>
+        </ng-container>
 
         <div class="detalles">
-          <p *ngIf="evento.detalles.link" class="label-info">🔗 <a [href]="evento.detalles.link" target="_blank">{{ evento.detalles.link }}</a></p>
-          <p class="estado label-info">📄   {{ evento.estado }}</p>
+          <p *ngIf="evento.detalles.link" class="label-info">
+            🔗
+            <a [href]="evento.detalles.link" target="_blank">{{
+              evento.detalles.link
+            }}</a>
+          </p>
+          <p class="estado label-info">📄 {{ evento.estado }}</p>
+        </div>
+        <div>
+          <button
+            type="button"
+            class="link-btn"
+            (click)="asistencia(evento.id)"
+          >
+            Asistencia
+          </button>
         </div>
       </div>
     </div>

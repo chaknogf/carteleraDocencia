@@ -1,0 +1,92 @@
+<app-navbar></app-navbar>
+
+<div class="usuarios-container">
+  <h1 class="titulo">👥 Gestor de Servicios</h1>
+
+  <div class="acciones-superiores">
+    <button class="btn-c salir" (click)="volver()">Salir</button>
+    <button class="btn-c agregar" (click)="agregarServicio()">
+      ➕ Agregar Servicio
+    </button>
+    <button class="btn-c" (click)="open()">🔍 Filtrar</button>
+    <button class="btn-c limpiar" (click)="limpiarFiltros()">🧹 Limpiar</button>
+  </div>
+
+  <!-- CONTENEDOR DE TARJETAS -->
+  <div class="container-actividad">
+    <div class="usuario-card" *ngFor="let data of serviciosResponsables">
+      <div class="usuario-info">
+        <div class="avatar">
+          <span>{{ data.nombre.charAt(0) | uppercase }}</span>
+        </div>
+
+        <div class="usuario-detalles">
+          <h3>{{ data.nombre }}</h3>
+          <p class="username">{{ data.subdireccion?.nombre }}</p>
+
+          <p class="rol">
+            Encargado de Servicio:
+            <strong>{{ data.encargado_servicio }}</strong>
+          </p>
+          <p class="rol">
+            Subdirector o Gerente a cargo:
+            <strong>{{ data.subdireccion?.persona_encargada }}</strong>
+          </p>
+          <p>id: {{ data.id }}</p>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button class="btn-c editar" (click)="editar(data.id)">
+          ✏️ Editar
+        </button>
+        <!-- <button class="btn-c eliminar" (click)="eliminarUsuario(data.id)">🗑️ Eliminar</button> -->
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!serviciosResponsables.length" class="no-usuarios">
+    <p>No hay registros para mostrar.</p>
+  </div>
+
+  <!-- <div class="paginacion">
+    <button
+      class="btn btn-primary text-dark"
+      [disabled]="paginaActual === 0"
+      (click)="skipMinus()"
+    >
+      ⬅️ Anterior
+    </button>
+    <span class="fw-bold text-dark">Página {{ paginaActual + 1 }}</span>
+    <button class="btn btn-primary text-dark" (click)="skipPlus()">
+      Siguiente ➡️
+    </button>
+  </div> -->
+</div>
+
+<!-- MODAL FILTROS -->
+<div *ngIf="visible()" class="modal-backdrop">
+  <div class="modal-content">
+    <button class="close-button" (click)="close()">×</button>
+    <form (ngSubmit)="listarServicios()" #dataForm="ngForm">
+      <h3 class="titulo-modal">🔍 Filtros de Búsqueda</h3>
+      <label>Nombre de Servicio:</label>
+      <input type="text" [(ngModel)]="buscarNombre" name="nombre" />
+
+      <label for="buscarSub">Subdirección:</label>
+      <select
+        [(ngModel)]="buscarSub"
+        name="buscarSub"
+        id="buscarSub"
+        class="form-select"
+      >
+        <option value="">Seleccione una subdirección</option>
+        <option *ngFor="let sub of subListado" [value]="sub.id">
+          {{ sub.nombre }}
+        </option>
+      </select>
+
+      <button type="submit">Buscar</button>
+    </form>
+  </div>
+</div>

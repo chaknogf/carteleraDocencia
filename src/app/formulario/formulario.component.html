@@ -6,347 +6,481 @@
   </div>
 
   <form (ngSubmit)="guardar()" class="glass-form">
-
     <fieldset class="fieldset-glass">
-      <legend (click)="toggleServicios()">Datos del Servicio Responsable
-      <span class="arrow" [class.open]="mostrarServicios">▾</span>
-    </legend>
+      <legend (click)="toggleServicios()">
+        Datos del Servicio Responsable
+        <span class="arrow" [class.open]="mostrarServicios">▾</span>
+      </legend>
 
-    <div class="form-grid" id="servicios" [class.open]="mostrarServicios">
+      <div class="form-grid" id="servicios" [class.open]="mostrarServicios">
+        <!-- SUBDIRECCIONES -->
+        <div class="form-group rations">
+          <label class=""
+            >Seleccione Dirección o Subdirección Perteneciente</label
+          >
+          <div class="options-grid">
+            <label class="option-glass" *ngFor="let sub of subdirecciones">
+              <input
+                type="radio"
+                name="subdireccion"
+                [value]="sub.id"
+                [(ngModel)]="actividad.subdireccion_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
 
-  <!-- SUBDIRECCIONES -->
-      <div class="form-group rations">
-        <label class="">Seleccione Dirección o Subdirección Perteneciente</label>
-        <div class="options-grid">
-          <label class="option-glass" *ngFor="let sub of subdirecciones">
-            <input
-              type="radio"
-              name="subdireccion"
-              [value]="sub.id"
-              [(ngModel)]="actividad.subdireccion_id"
-              [disabled]="localServicioId > 2 && role ==='estandar'">
-
-            <span>{{ sub.nombre }}</span>
-          </label>
-        </div>
-      </div>
-
-  <!-- SERVICIOS DEPENDIENDO DE SUBDIRECCIÓN -->
-      <div class="form-group rations" *ngIf="actividad.subdireccion_id">
-        <label class="">Seleccione el Servicio</label>
-
-        <!-- Recursos Humanos -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 6">
-          <label class="option-glass" *ngFor="let ser of subRH">
-            <input
-              type="radio"
-              name="servicio"
-              [value]="ser.id"
-              [(ngModel)]="actividad.servicio_id"
-              [disabled]="localServicioId > 2 && role ==='estandar'">
-
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-
-        <!-- Subgerencia -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 5">
-          <label class="option-glass" *ngFor="let ser of subGerencia">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-
-       <!-- Técnica -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 4">
-          <label
-            class="option-glass"
-            *ngFor="let ser of subTecnica"
-            [class.inactivo]="ser.id !== actividad.servicio_id"
-            >
-
-            <input
-              type="radio"
-              name="servicio"
-              [value]="ser.id"
-              [(ngModel)]="actividad.servicio_id"
-              (change)="onServicioSeleccionado()"
-              [disabled]="localServicioId > 2 && role ==='estandar'">
-
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-
-        <!-- Médica -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 3">
-          <label class="option-glass" *ngFor="let ser of subMedica">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-
-        <!-- Enfermería -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 2">
-          <label class="option-glass" *ngFor="let ser of subEnfermeria">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-
-        <!-- Dirección -->
-        <div class="options-grid" *ngIf="actividad.subdireccion_id === 1">
-
-          <label class="option-glass" *ngFor="let ser of direccion">
-            <input type="radio" name="servicio" [value]="ser.id" [(ngModel)]="actividad.servicio_id" [disabled]="localServicioId > 2 && role ==='estandar'">
-            <span>{{ ser.nombre }}</span>
-          </label>
-        </div>
-      </div>
-
-       <div class="form-group full">
-          <label class="">Responsables de Servicios</label>
-
-          <div class="responsables-container">
-            <div class="encargado-display" *ngIf="encargado">
-              <span class="icon">👤</span>
-              <div class="info">
-                <strong>Jefe o Encargado:</strong>
-                <p>{{ encargado }}</p>
-              </div>
-            </div>
-
-            <div class="encargado-display" *ngIf="jefe">
-              <span class="icon">✅</span>
-              <div class="info">
-                <strong>Visto Bueno:</strong>
-                <p>{{ jefe }}</p>
-              </div>
-            </div>
+              <span>{{ sub.nombre }}</span>
+            </label>
           </div>
         </div>
-    </div>
+
+        <!-- SERVICIOS DEPENDIENDO DE SUBDIRECCIÓN -->
+        <div class="form-group rations" *ngIf="actividad.subdireccion_id">
+          <label class="">Seleccione el Servicio</label>
+
+          <!-- Recursos Humanos -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 6">
+            <label class="option-glass" *ngFor="let ser of subRH">
+              <input
+                type="radio"
+                name="rh"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+
+          <!-- Subgerencia -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 5">
+            <label class="option-glass" *ngFor="let ser of subGerencia">
+              <input
+                type="radio"
+                name="gerencia"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+
+          <!-- Técnica -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 4">
+            <label
+              class="option-glass"
+              *ngFor="let ser of subTecnica"
+              [class.inactivo]="ser.id !== actividad.servicio_id"
+            >
+              <input
+                type="radio"
+                name="tecnica"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                (change)="onServicioSeleccionado()"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+
+          <!-- Médica -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 3">
+            <label class="option-glass" *ngFor="let ser of subMedica">
+              <input
+                type="radio"
+                name="medica"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+
+          <!-- Enfermería -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 2">
+            <label class="option-glass" *ngFor="let ser of subEnfermeria">
+              <input
+                type="radio"
+                name="enfermeria"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+
+          <!-- Dirección -->
+          <div class="options-grid" *ngIf="actividad.subdireccion_id === 1">
+            <label class="option-glass" *ngFor="let ser of direccion">
+              <input
+                type="radio"
+                name="direccion"
+                [value]="ser.id"
+                [(ngModel)]="actividad.servicio_id"
+                [disabled]="localServicioId > 2 && role === 'estandar'"
+              />
+              <span>{{ ser.nombre }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
     </fieldset>
 
-
-
     <fieldset class="fieldset-glass">
-      <legend (click)="toggleActividad()" >Información de la Actividad de Docencia
+      <legend (click)="toggleActividad()">
+        Información de la Actividad de Docencia
         <span class="arrow" [class.open]="mostrarActividad">▾</span>
       </legend>
 
-    <div class="form-grid" id="actividad" [class.open]="mostrarActividad">
-      <!-- Tema -->
-      <div class="form-group full">
-        <label for="tema">Tema</label>
-        <textarea type="text" id="tema" [(ngModel)]="actividad.tema" name="tema" ></textarea>
-      </div>
-
-      <!-- Tipo Actividad -->
-      <div class="form-group row-3">
-        <label for="actividad">Tipo de Actividad</label>
-        <div class="options-grid">
-          <label class="option-glass" *ngFor="let act of tipoActividades">
-            <input
-              type="radio"
-              name="tipoActividad_id"
-              [value]="act.id"
-              [(ngModel)]="actividad.actividad_id"
-               />
-            <span>{{ act.nombre }}</span>
-          </label>
+      <div class="form-grid" id="actividad" [class.open]="mostrarActividad">
+        <!-- Tema -->
+        <div class="form-group full">
+          <label for="tema">Tema</label>
+          <textarea
+            type="text"
+            id="tema"
+            [(ngModel)]="actividad.tema"
+            name="tema"
+          ></textarea>
         </div>
-      </div>
 
-      <!-- Modalidad -->
-      <div class="form-group row-3">
-        <label for="modalidad">Modalidad de la Actividad</label>
-        <div class="options-grid">
-          <label class="option-glass" *ngFor="let mod of modalidades">
-            <input
-              type="radio"
-              name="modalidad_id"
-              [value]="mod.id"
-              [(ngModel)]="actividad.modalidad_id"
-               />
-            <span>{{ mod.nombre }}</span>
-          </label>
+        <!-- Tipo Actividad -->
+        <div class="form-group row-3">
+          <label for="actividad">Tipo de Actividad</label>
+          <div class="options-grid">
+            <label class="option-glass" *ngFor="let act of tipoActividades">
+              <input
+                type="radio"
+                name="tipoActividad_id"
+                [value]="act.id"
+                [(ngModel)]="actividad.actividad_id"
+              />
+              <span>{{ act.nombre }}</span>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <!-- Estados -->
-      <div class="form-group row-3" *ngIf="enEdicion">
-        <label for="estados">Estado de la Actividad </label>
-        <div class="options-grid">
-          <label class="option-glass" *ngFor="let e of estados">
-            <input
-              type="radio"
-              name="Estado_id"
-              [value]="e.id"
-              [(ngModel)]="actividad.estado_id"
-               />
-            <span>{{ e.nombre }}</span>
-          </label>
+        <!-- Modalidad -->
+        <div class="form-group row-3">
+          <label for="modalidad">Modalidad de la Actividad</label>
+          <div class="options-grid">
+            <label class="option-glass" *ngFor="let mod of modalidades">
+              <input
+                type="radio"
+                name="modalidad_id"
+                [value]="mod.id"
+                [(ngModel)]="actividad.modalidad_id"
+              />
+              <span>{{ mod.nombre }}</span>
+            </label>
+          </div>
         </div>
-      </div>
 
-       <!-- Fecha -->
-      <div class="form-group row-3">
-        <label for="fecha">Fecha a Desarrollar</label>
-        <input type="date" id="fecha" [(ngModel)]="actividad.fecha_programada" name="fecha"  />
-      </div>
+        <!-- Estados -->
+        <div class="form-group row-3" *ngIf="enEdicion">
+          <label for="estados">Estado de la Actividad </label>
+          <div class="options-grid">
+            <label class="option-glass" *ngFor="let e of estados">
+              <input
+                type="radio"
+                name="Estado_id"
+                [value]="e.id"
+                [(ngModel)]="actividad.estado_id"
+              />
+              <span>{{ e.nombre }}</span>
+            </label>
+          </div>
+        </div>
 
         <!-- Fecha -->
-      <div class="form-group row-3">
-        <label for="fecha">Mes a Desarrollar</label>
-       <select [(ngModel)]="actividad.mes_id" name="mes_id">
-          <option *ngFor="let m of meses" [value]="m.value">
-            {{ m.label }}
-          </option>
-        </select>
-      </div>
-
-
-      <!-- Tiempo -->
-      <div class="form-group row-3">
-        <label for="tiempo">Tiempo Aproximado</label>
-        <input type="text" id="tiempo" [(ngModel)]="actividad.tiempo_aproximado" name="tiempo" />
-      </div>
-
-        <!-- link -->
-      <div class="form-group row-3" *ngIf="actividad.modalidad_id != 1">
-        <span
-        class="m-0 p-0"
-        [innerHTML]="icons['infoico']"
-        title="Si tiene el link de la reunion virtual de meet, teams, zoom agregalo acá"
-        ></span>
-        <label for="link">Link de la Actividad</label>
-        <input type="text" id="tiempo" [(ngModel)]="actividad.detalles.link" name="link" />
-      </div>
-
-        <!-- Grupo Dirigido -->
-      <div class="form-group row-3" >
-        <span
-        class="m-0 p-0"
-        [innerHTML]="icons['infoico']"
-        title="Ejemplo: Auxiliares de Registros Médicos"
-        ></span>
-        <label for="link">Grupo o Personal Dirigido</label>
-        <input type="text" id="grupo" [(ngModel)]="actividad.detalles.grupo_dirigido" name="grupo_dirigido" />
-      </div>
-
-      <!-- Responsables -->
-      <div class="form-group full">
-        <span
-        class="m-0 p-0"
-        [innerHTML]="icons['infoico']"
-        title="Persona que impartira la actividad puede ser el jefe de servicio, personal de otro servicio o es un expositor externo"
-        ></span>
-        <label>Capacitador o Educador</label>
-        <div *ngFor="let responsable of actividad.persona_responsable | keyvalue" class="responsables-container">
-          <input type="text" placeholder="Nombre" [(ngModel)]="responsable.value.nombre" name="nombre{{responsable.key}}" />
-          <input type="text" placeholder="Puesto" [(ngModel)]="responsable.value.puesto" name="puesto{{responsable.key}}" />
-          <button type="button" class="btn-remove" (click)="removerResponsable(responsable.key)">−</button>
+        <div class="form-group row-3">
+          <label for="fecha">Fecha a Desarrollar</label>
+          <input
+            type="date"
+            id="fecha"
+            [(ngModel)]="actividad.fecha_programada"
+            name="fecha"
+          />
         </div>
-        <button type="button" class="btn-glass small" (click)="agregarResponsable()">+ Agregar Responsable</button>
-      </div>
 
-      <!-- Nota -->
-      <div class="form-group full">
-        <span
-        class="m-0 p-0"
-        [innerHTML]="icons['infoico']"
-        title="Información extra o relavante para la actividad u otros comentarios a tomar en cuenta. ejemplo: 'Traer Ropa Deportiva'"
-        ></span>
-        <label for="nota">Nota</label>
-        <textarea id="nota" rows="3" [(ngModel)]="actividad.detalles.nota" name="nota"></textarea>
-      </div>
+        <!-- Mes -->
+        <div class="form-group row-3">
+          <label for="mes">Mes a Desarrollar</label>
+          <select [(ngModel)]="actividad.mes_id" name="mes_id">
+            <option *ngFor="let m of meses" [value]="m.value">
+              {{ m.label }}
+            </option>
+          </select>
+        </div>
 
+        <!-- Hoario -->
+        <div class="form-group row-3">
+          <label for="horario">Horario Programado</label>
+          <input
+            type="time"
+            id="horario"
+            [(ngModel)]="actividad.horario_programado"
+            name="horario"
+          />
+        </div>
 
-
-
-    </div>
-    </fieldset>
-
-
-    <fieldset class="fieldset-glass">
-       <legend (click)="toggleDetalle()" *ngIf="enEdicion">Detalles Extras de la Actividad
-        <span class="arrow" [class.open]="mostrarDetalle">▾</span>
-       </legend>
-    <div class="form-grid" *ngIf="enEdicion" id="detalle" [class.open]="mostrarDetalle">
-
-        <!-- Contenido -->
-      <div class="form-group full" >
-        <label for="link">Contenido</label>
-        <textarea type="text" id="contenido" [(ngModel)]="actividad.detalles.contenido" name="contenido" ></textarea>
-      </div>
-
-
-        <!-- Duración -->
-      <div class="form-group row-3" >
-        <label for="duracion">Duración</label>
-        <input type="text" id="duracion" [(ngModel)]="actividad.detalles.duracion" name="duracion" />
-      </div>
+        <!-- Tiempo -->
+        <div class="form-group row-3">
+          <label for="tiempo">Tiempo Aproximado</label>
+          <input
+            type="text"
+            id="tiempo"
+            [(ngModel)]="actividad.tiempo_aproximado"
+            name="tiempo"
+          />
+        </div>
 
         <!-- Lugar -->
-      <div class="form-group row-3" >
-        <label for="lugar">Lugar</label>
-        <input type="text" id="lugar" [(ngModel)]="actividad.detalles.lugar" name="lugar" />
+        <div class="form-group row-3">
+          <label for="lugar">Lugar</label>
+
+          <select [(ngModel)]="actividad.lugar_id" name="lugar_id">
+            <option *ngFor="let item of lugares" [value]="item.id">
+              {{ item.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- link -->
+        <div class="form-group row-3" *ngIf="actividad.modalidad_id != 1">
+          <span
+            class="m-0 p-0"
+            [innerHTML]="icons['infoico']"
+            title="Si tiene el link de la reunion virtual de meet, teams, zoom agregalo acá"
+          ></span>
+          <label for="link">Link de la Actividad</label>
+          <input
+            type="text"
+            id="tiempo"
+            [(ngModel)]="actividad.detalles.link"
+            name="link"
+          />
+        </div>
+
+        <!-- Grupo Dirigido -->
+        <div class="form-group row-3">
+          <span
+            class="m-0 p-0"
+            [innerHTML]="icons['infoico']"
+            title="Ejemplo: Auxiliares de Registros Médicos"
+          ></span>
+          <label for="link">Grupo o Personal Dirigido</label>
+          <input
+            type="text"
+            id="grupo"
+            [(ngModel)]="actividad.detalles.grupo_dirigido"
+            name="grupo_dirigido"
+          />
+        </div>
+
+        <!-- Responsables -->
+        <div class="form-group full">
+          <span
+            class="m-0 p-0"
+            [innerHTML]="icons['infoico']"
+            title="Persona que impartira la actividad puede ser el jefe de servicio, personal de otro servicio o es un expositor externo"
+          ></span>
+          <label>Capacitador o Educador</label>
+          <div
+            *ngFor="let responsable of actividad.persona_responsable | keyvalue"
+            class="responsables-container"
+          >
+            <input
+              type="text"
+              placeholder="Nombre"
+              [(ngModel)]="responsable.value.nombre"
+              name="nombre{{ responsable.key }}"
+            />
+            <input
+              type="text"
+              placeholder="Puesto"
+              [(ngModel)]="responsable.value.puesto"
+              name="puesto{{ responsable.key }}"
+            />
+            <button
+              type="button"
+              class="btn-remove"
+              (click)="removerResponsable(responsable.key)"
+            >
+              −
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn-glass small"
+            (click)="agregarResponsable()"
+          >
+            + Agregar Responsable
+          </button>
+        </div>
+
+        <!-- Nota -->
+        <div class="form-group full">
+          <span
+            class="m-0 p-0"
+            [innerHTML]="icons['infoico']"
+            title="Información extra o relavante para la actividad u otros comentarios a tomar en cuenta. ejemplo: 'Traer Ropa Deportiva'"
+          ></span>
+          <label for="nota">Nota</label>
+          <textarea
+            id="nota"
+            rows="3"
+            [(ngModel)]="actividad.detalles.nota"
+            name="nota"
+          ></textarea>
+        </div>
       </div>
-
-
-        <!-- Asistencia -->
-      <div class="form-group row-3" >
-        <label for="asistencia">Total de Asistencia</label>
-        <input type="number" id="asistencia" [(ngModel)]="actividad.detalles.asistencia" name="asistencia" />
-      </div>
-
-       <!-- Inasistencia -->
-      <div class="form-group row-3" >
-        <label for="inasistencia">Total de Asistencia</label>
-        <input type="number" id="inasistencia" [(ngModel)]="actividad.detalles.inasistencia" name="inasistencia" />
-      </div>
-
-       <!-- Notas Exelentes -->
-      <div class="form-group row-3" >
-        <label for="excelente">Total de Notas Exelentes</label>
-        <input type="number" id="exelente" [(ngModel)]="actividad.detalles.excelente" name="excelente" />
-      </div>
-
-       <!-- Notas Buenas -->
-      <div class="form-group row-3" >
-        <label for="bueno">Total de Notas Buenas</label>
-        <input type="number" id="bueno" [(ngModel)]="actividad.detalles.bueno" name="bueno" />
-      </div>
-
-       <!-- Notas Regular -->
-      <div class="form-group row-3" >
-        <label for="regular">Total de Notas Regular</label>
-        <input type="number" id="regular" [(ngModel)]="actividad.detalles.regular" name="regular" />
-      </div>
-
-       <!-- Notas Deficiente -->
-      <div class="form-group row-3" >
-        <label for="deficiente">Total de Asistencia</label>
-        <input type="number" id="deficiente" [(ngModel)]="actividad.detalles.deficiente" name="deficiente" />
-      </div>
-
-       <!-- Asistencia -->
-      <div class="form-group row-3" >
-        <label for="informe_fecha">Fecha de Informe</label>
-        <input type="date" id="informe_fecha" [(ngModel)]="actividad.detalles.fecha_entrega_informe" name="informe_fecha" />
-      </div>
-
-
-
-    </div>
-
     </fieldset>
 
+    <fieldset class="fieldset-glass">
+      <legend (click)="toggleDetalle()" *ngIf="enEdicion">
+        Detalles Extras de la Actividad
+        <span class="arrow" [class.open]="mostrarDetalle">▾</span>
+      </legend>
+      <div
+        class="form-grid"
+        *ngIf="enEdicion"
+        id="detalle"
+        [class.open]="mostrarDetalle"
+      >
+        <!-- Contenido -->
+        <div class="form-group full">
+          <label for="link">Contenido</label>
+          <textarea
+            type="text"
+            id="contenido"
+            [(ngModel)]="actividad.detalles.contenido"
+            name="contenido"
+            placeholder="ejemplo: Trabajo en equipo"
+          ></textarea>
+        </div>
 
+        <!-- Duración -->
+        <div class="form-group row-3">
+          <label for="duracion">Duración</label>
+          <input
+            type="text"
+            id="duracion"
+            [(ngModel)]="actividad.detalles.duracion"
+            name="duracion"
+            placeholder="ejemplo: 1 hora"
+          />
+        </div>
+
+        <!-- Asistencia -->
+        <div class="form-group row-3">
+          <label for="asistencia">Total de Asistencia</label>
+          <input
+            type="number"
+            id="asistencia"
+            [(ngModel)]="actividad.detalles.asistencia"
+            name="asistencia"
+          />
+        </div>
+
+        <!-- Inasistencia -->
+        <div class="form-group row-3">
+          <label for="inasistencia">Total de Asistencia</label>
+          <input
+            type="number"
+            id="inasistencia"
+            [(ngModel)]="actividad.detalles.inasistencia"
+            name="inasistencia"
+          />
+        </div>
+
+        <!-- Notas Exelentes -->
+        <div class="form-group row-3">
+          <label for="excelente">Total de Notas Exelentes</label>
+          <input
+            type="number"
+            id="exelente"
+            [(ngModel)]="actividad.detalles.excelente"
+            name="excelente"
+          />
+        </div>
+
+        <!-- Notas Buenas -->
+        <div class="form-group row-3">
+          <label for="bueno">Total de Notas Buenas</label>
+          <input
+            type="number"
+            id="bueno"
+            [(ngModel)]="actividad.detalles.bueno"
+            name="bueno"
+          />
+        </div>
+
+        <!-- Notas Regular -->
+        <div class="form-group row-3">
+          <label for="regular">Total de Notas Regular</label>
+          <input
+            type="number"
+            id="regular"
+            [(ngModel)]="actividad.detalles.regular"
+            name="regular"
+          />
+        </div>
+
+        <!-- Notas Deficiente -->
+        <div class="form-group row-3">
+          <label for="deficiente">Total de Asistencia</label>
+          <input
+            type="number"
+            id="deficiente"
+            [(ngModel)]="actividad.detalles.deficiente"
+            name="deficiente"
+          />
+        </div>
+
+        <!-- Asistencia -->
+        <div class="form-group row-3">
+          <label for="informe_fecha">Fecha de Informe</label>
+          <input
+            type="date"
+            id="informe_fecha"
+            [(ngModel)]="actividad.detalles.fecha_entrega_informe"
+            name="informe_fecha"
+          />
+        </div>
+      </div>
+    </fieldset>
 
     <!-- Guardar -->
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">💾 Guardar</button>
-      </div>
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn bt-primary bg-primary"
+        *ngIf="!verificado"
+        (click)="validar()"
+      >
+        Validar
+      </button>
+      <button type="submit" class="btn btn-primary" *ngIf="verificado">
+        💾 Guardar
+      </button>
+    </div>
   </form>
+</div>
+
+<div *ngIf="mensajeValidacion.length > 0" class="alert alert-warning mt-3">
+  <h4>Conflictos detectados</h4>
+  <p>Estas actividades coinciden con los parámetros ingresados:</p>
+
+  <ul>
+    <li *ngFor="let item of coincidencias">
+      <strong>ID:</strong> {{ item.id }} – <strong>Servicio:</strong>
+      {{ item.servicio }} – <strong>Tema:</strong> {{ item.tema }}
+    </li>
+  </ul>
 </div>

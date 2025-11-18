@@ -39,10 +39,10 @@ export interface ServicioResponsables {
   nombre: string;
   descripcion: string;
   encargado_servicio: string;
-  jefe_inmediato: string;
+  // jefe_inmediato: string;
   activo: boolean;
   subdireccion_id: number;
-  subdireccion: { id: number; nombre: string };
+  subdireccion?: { id: number; nombre: string; persona_encargada: string };
 }
 
 export interface TipoActividad {
@@ -79,7 +79,6 @@ export interface Detalles {
   link: string | null;
   duracion: string | null;
   grupo_dirigido: string | null;
-  lugar: string | null;
   contenido: string | null;
   asistencia: number | null;
   inasistencia: number | null;
@@ -111,6 +110,8 @@ export interface Actividades {
   metadatos: Metadatos;
   tiempo_aproximado: string;
   fecha_programada: string;
+  horario_programado: string;
+  lugar_id: number;
 }
 
 
@@ -128,6 +129,9 @@ export interface ActividadesVista {
   persona_responsable: { [key: string]: PersonaResponsable };
   tiempo_aproximado: string;
   fecha_programada: string;
+  horario_programado: string;
+  lugar_id: number;
+  lugar: string;
   mes: string;
   mes_id: number;
   anio: number;
@@ -185,3 +189,42 @@ export interface ResumenAnual {
   anuladas: number;
   total: number;
 }
+
+export interface Lugares {
+  id: number;
+  nombre: string;
+  descripcion: string;
+}
+
+export interface GruposDeEdad {
+  id: number;
+  rango: string;
+}
+
+export interface PertenenciaCultural {
+  id: number;
+  nombre: string;
+}
+export interface ExtrasAsistencia {
+  comentario: string;
+  opinion: string;
+  codigo_empleado: number;
+  idioma: number;
+  discapacidad: number;
+  unidad_administrativa: string;
+}
+export interface Asistencia {
+  id: number;
+  nombre_completo: string;
+  sexo_id: number;
+  grupo_edad_id: number;
+  cui: number;
+  puesto_funcional: string;
+  pertenencia_cultural_id: number;
+  telefono_email: string;
+  datos_extras: ExtrasAsistencia;
+  capacitacion_id: number;
+  fecha_registro: string;
+}
+
+

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Router } from '@angular/router';
-import { Actividades, ActividadesVista, Estados, Modalidades, ResumenAnual, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
+import { Actividades, ActividadesVista, Asistencia, Estados, GruposDeEdad, Lugares, Modalidades, ResumenAnual, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
-  // public readonly baseUrl = 'http://localhost:8000';
+  // public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
+  public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
@@ -262,7 +262,7 @@ export class ApiService {
   async updateServicioResponsable(dataId: number | string, data: any): Promise<any> {
     try {
       const response = await this.api.put(
-        `/servicios_responsables/actualizar/${dataId}`,
+        `/servicio_responsable/actualizar/${dataId}`,
         data,
         {
           headers: {
@@ -372,17 +372,7 @@ export class ApiService {
     }
   }
 
-  // async carteleraDelMes(): Promise<any> {
-  //   try {
-  //     const mesActual = new Date().getMonth() + 1;
-  //     const response = await this.api.get(`/cartelera/${mesActual}`);
-  //     // console.log('📝 Cartelera del mes obtenida correctamente');
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('❌ Error al obtener cartelera del mes:', error);
-  //     throw error;
-  //   }
-  // }
+
 
   async getReporteActividades(filtros: any): Promise<any> {
     try {
@@ -488,6 +478,102 @@ export class ApiService {
 
   clearAuthToken() {
     delete this.api.defaults.headers.common['Authorization'];
+  }
+
+  // Lugares
+  async getLugaresRealizacion(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<Lugares[]>('/lugareRealizacion/'
+        , {
+          params: filtrosLimpiados
+        });
+
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  // Grupos de Edad
+  async getGruposEdad(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<GruposDeEdad[]>('/gruposEdad/'
+        , {
+          params: filtrosLimpiados
+        });
+
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  //verificador de conflicto
+
+  async verificar(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpios = limpiarParametros(filtros);
+
+      const response = await this.api.post(
+        '/verificador/',
+        {},   // 👈 body vacío (igual que tu curl)
+        {
+          params: filtrosLimpios,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+
+      return response.data;
+
+    } catch (error) {
+      console.error('❌ Error al verificar:', error);
+      throw error;
+    }
+  }
+
+  //Asistencia
+
+  async asistenciaLink(asistencia: any): Promise<any> {
+    try {
+      const response = await this.api.post(
+        '/asistencia/', asistencia,
+        {
+          headers: {
+            'Content-Type': 'application/json', // 👈 Muy importante
+          },
+        }
+      );
+      // console.log('📝 Actividad creada correctamente');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al crear actividad:', error);
+      throw error;
+    }
+  }
+
+  async listaAsistencia(filtros: any): Promise<any> {
+    try {
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<Asistencia[]>('/asistencia/'
+        , {
+          params: filtrosLimpiados
+        });
+
+      // console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+
+
+
   }
 }
 

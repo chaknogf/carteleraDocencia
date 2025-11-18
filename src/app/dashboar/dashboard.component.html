@@ -10,7 +10,7 @@
   <section class="filtros-grid">
     <!-- Formulario de Autorización -->
     <form class="filtros glass-panel">
-      <legend>Generar Informe de Autorización</legend>
+      <legend>Generar Cronograma de Autorización</legend>
       <div class="input-row">
         <div class="input-group">
           <label for="anio">Año</label>
@@ -25,7 +25,11 @@
           />
         </div>
         <div class="acciones">
-          <button type="button" class="btn-accion primary" (click)="informeAutorizado()">
+          <button
+            type="button"
+            class="btn-accion primary"
+            (click)="cronograma()"
+          >
             📑 Informe
           </button>
         </div>
@@ -63,13 +67,19 @@
         </div>
 
         <div class="acciones">
-          <button type="button" class="btn-accion primary">
-            🔍 Generar
-          </button>
-          <button type="button" class="btn-accion success" (click)="exportarActividadesExcel()">
+          <button type="button" class="btn-accion primary">🔍 Generar</button>
+          <button
+            type="button"
+            class="btn-accion success"
+            (click)="exportarActividadesExcel()"
+          >
             📥 Excel
           </button>
-          <button type="button" class="btn-accion btn-light" (click)="informeAutorizado()">
+          <button
+            type="button"
+            class="btn-accion btn-light"
+            (click)="cronograma()"
+          >
             📑 Informe
           </button>
         </div>
@@ -87,7 +97,9 @@
         title="{{ data.servicio_encargado }}"
       >
         <div class="bar-inner">
-          <span class="bar-value">{{ (data.ejecutado * 100) | number: '1.0-0' }}%</span>
+          <span class="bar-value"
+            >{{ data.ejecutado * 100 | number : "1.0-0" }}%</span
+          >
         </div>
         <span class="bar-label">{{ data.servicio_encargado }}</span>
       </div>

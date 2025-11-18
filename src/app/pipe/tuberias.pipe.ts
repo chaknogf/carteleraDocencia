@@ -1,5 +1,6 @@
+import { discapacidades, idiomas, pertenencia } from './../interface/enum';
 import { Pipe, PipeTransform } from '@angular/core';
-import { mes, actividad, modalidad, estado } from '../interface/enum';
+import { mes, actividad, modalidad, estado, grupoEdad } from '../interface/enum';
 
 @Pipe({
   name: 'mes',
@@ -65,3 +66,65 @@ export class EnumEstadoPipe implements PipeTransform {
     }
   }
 }
+
+@Pipe({
+  name: 'grupoEdad',
+  standalone: true
+})
+export class GrupoEdadPipe implements PipeTransform {
+  transform(value: any): string {
+    const grupoEdadEncontrado = grupoEdad.find(grupoEdad => grupoEdad.value === value);
+    if (grupoEdadEncontrado) {
+      return grupoEdadEncontrado.label;
+    } else {
+      return ''
+    }
+  }
+}
+
+@Pipe({
+  name: 'pertenencia',
+  standalone: true
+})
+export class PertenenciaPipe implements PipeTransform {
+  transform(value: any): string {
+    const pertenenciaEncontrado = pertenencia.find(pertenencia => pertenencia.value === value);
+    if (pertenenciaEncontrado) {
+      return pertenenciaEncontrado.label;
+    } else {
+      return ''
+    }
+  }
+}
+
+@Pipe({
+  name: 'idioma',
+  standalone: true
+})
+export class IdiomaPipe implements PipeTransform {
+  transform(value: any): string {
+    const idiomaEncontrado = idiomas.find(idiomas => idiomas.value === value);
+    if (idiomaEncontrado) {
+      return idiomaEncontrado.label;
+    } else {
+      return ''
+    }
+  }
+}
+
+@Pipe({
+  name: 'discapacidad',
+  standalone: true
+})
+export class DiscapacidadPipe implements PipeTransform {
+  transform(value: any): string {
+    const discapacidadEncontrado = discapacidades.find(discapacidades => discapacidades.value === value);
+    if (discapacidadEncontrado) {
+      return discapacidadEncontrado.label;
+    } else {
+      return ''
+    }
+  }
+}
+
+
