@@ -6,8 +6,9 @@ import { Actividades, ActividadesVista, Asistencia, Estados, GruposDeEdad, Lugar
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  // public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
-  public readonly baseUrl = 'http://localhost:8000';
+  public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
+  //public readonly baseUrl = 'https://200.12.44.174/fad';
+  // public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
