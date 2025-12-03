@@ -33,7 +33,7 @@
 }
 
 .input-group input {
-  width: 90%; /* Ocupar todo el ancho */
+  width: 100%; /* Ocupar todo el ancho */
   border-radius: 0.5rem;
   border: 1px solid rgba(55, 65, 81, 1);
   outline: none;
@@ -46,11 +46,13 @@
 .input-group input:focus {
   border-color: rgba(167, 139, 250, 0.8);
   box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
+  background-color: #01091b;
 }
 
 .input-group input::placeholder {
   color: rgb(235, 241, 252);
   text-align: center;
+  background-color: #01091b;
 }
 
 .forgot {
@@ -181,4 +183,25 @@
   margin-right: 0.5rem;
   display: inline-block;
   vertical-align: middle;
+}
+/* mostrar contraseña */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* espacio para el icono */
+  box-sizing: border-box;
+}
+
+.toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
 }

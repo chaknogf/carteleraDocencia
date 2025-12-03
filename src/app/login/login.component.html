@@ -8,14 +8,27 @@
       <input type="text" id="username" formControlName="username" placeholder="Ingresa tu usuario">
     </div>
 
-    <div class="input-group">
-      <label for="password">Contraseña</label>
-      <input type="password" id="password" formControlName="password" placeholder="Ingresa tu contraseña">
-    </div>
+   <div class="input-group">
+  <label for="password">Contraseña</label>
 
-    <div class="forgot">
+  <div class="password-wrapper input-group">
+    <input
+      [type]="mostrarPassword ? 'text' : 'password'"
+      id="password"
+      formControlName="password"
+      placeholder="Ingresa tu contraseña"
+    >
+
+    <span class="toggle-eye" (click)="mostrarPassword = !mostrarPassword">
+      {{ mostrarPassword ? '🙈' : '👁️' }}
+    </span>
+  </div>
+</div>
+
+
+    <!-- <div class="forgot">
       <a href="#">¿Olvidaste tu contraseña?</a>
-    </div>
+    </div> -->
 
     <button class="sign" type="submit" [disabled]="loading">
       <ng-container *ngIf="!loading; else cargando">

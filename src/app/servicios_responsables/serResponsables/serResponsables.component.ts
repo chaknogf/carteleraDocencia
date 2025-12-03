@@ -127,8 +127,14 @@ export class SerResponsablesComponent implements OnInit {
     this.visible.set(false);
   }
 
+public miRol: string = localStorage.getItem('role') || '';
+public miservicio: number = Number(localStorage.getItem('servicio_id'));
 
-
+puedeEditar(sub: number): boolean {
+  return this.miRol === 'admin' || sub === this.miservicio;
+  console.log('mi rol', this.miRol);
+  console.log('mi servicio', this.miservicio);
+}
 
 
 }

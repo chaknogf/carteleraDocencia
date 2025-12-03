@@ -226,7 +226,7 @@ legend {
   margin: 0.5rem 0;
   grid-template-columns: repeat( 1 , 2fr);
   gap: 0.4rem; /* espacio entre columnas */
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1rem;
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: inset 0 0 0.5px rgba(255, 255, 255, 0.2),
@@ -440,5 +440,22 @@ textarea{
   font-weight: bolder;
   margin-bottom: 1rem;
   cursor: pointer;
+}
 
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
