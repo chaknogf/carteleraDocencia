@@ -25,8 +25,11 @@ export class TablaDocenciaComponent implements OnInit {
 
   public actividades: ActividadesVista[] = [];
   mensajeEliminado: boolean = false;
-  role: string = '';
-  servId: number = 0;
+   username: string = '';
+  roleUser: string = '';
+  subId: any = '';
+  servicioId: any = 0;
+  servicio: string = '';
 
   meses: Meses[] = []
   modalidades: Modalidad[] = []
@@ -67,10 +70,12 @@ export class TablaDocenciaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.servId = Number(localStorage.getItem('servicio_id')) || 0;
-    this.role = localStorage.getItem('role') || '';
-
-    // console.log('Rol del usuario:', this.role);
+    this.username = localStorage.getItem('username') || '';
+    this.roleUser = localStorage.getItem('role') || '';
+    this.subId = Number(localStorage.getItem('subId') || '');
+    this.servicioId = Number(localStorage.getItem('servicio_id'));
+    console.log('Rol del usuario:', this.role);
+    console.log('ID del servicio del usuario:', this.servId);
     this.listarActividades();
     this.meses = mes;
     this.modalidades = modalidad

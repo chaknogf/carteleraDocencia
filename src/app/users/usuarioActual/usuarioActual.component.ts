@@ -50,7 +50,7 @@ export class UsuarioActualComponent implements OnInit {
     this.subId = Number(localStorage.getItem('subId') || '');
     this.servicioId = Number(localStorage.getItem('servicio_id'));
     this.getServicio();
-    // console.log(this.servicioId, this.subId)
+    console.log(this.servicioId, this.subId)
 
   }
 
