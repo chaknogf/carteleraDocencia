@@ -1,9 +1,9 @@
 <div  class="d-flex">
 
   <div class="user-details">
-    <div class="nombre-usuario">👤 {{ username }}</div>
-    <div class="rol-usuario">🛡️ Rol: {{ roleUser }}</div>
-    <div class="small w-25" > {{servicio}}</div>
+    <div class="nombre-usuario">👤 {{ userData.username }}</div>
+    <div class="rol-usuario">🛡️ Rol: {{ userData.role }}</div>
+    <div class="small w-25" > {{userData.servicio?.nombre}}</div>
   </div>
   <button class="btn" (click)="logout()">
   <span [innerHTML]="icons['logoutIcon']"></span>

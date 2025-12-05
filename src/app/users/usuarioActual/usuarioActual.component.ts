@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IconService } from '../../service/icon.service';
 import { logoutIcon } from '../../shared/icons/icons';
+import { UserInfo } from 'node:os';
+import { get } from 'node:http';
 
 @Component({
   selector: 'app-usuarioActual',
@@ -16,11 +18,18 @@ import { logoutIcon } from '../../shared/icons/icons';
   imports: [CommonModule, FormsModule]
 })
 export class UsuarioActualComponent implements OnInit {
-  username: string = '';
-  roleUser: string = '';
-  subId: any = '';
-  servicioId: any = 0;
-  servicio: string = '';
+  userData: Currentuser = {
+    id: 0,
+    username: '',
+    role: '',
+    nombre: '',
+    email: '',
+    servicio_id: 0,
+    servicio: { nombre: '' }
+
+  }
+
+ 
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
@@ -45,12 +54,9 @@ export class UsuarioActualComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.username = localStorage.getItem('username') || '';
-    this.roleUser = localStorage.getItem('role') || '';
-    this.subId = Number(localStorage.getItem('subId') || '');
-    this.servicioId = Number(localStorage.getItem('servicio_id'));
-    this.getServicio();
-    console.log(this.servicioId, this.subId)
+   this.usuarioActual();
+  
+  
 
   }
 
@@ -59,18 +65,15 @@ export class UsuarioActualComponent implements OnInit {
     this.router.navigate(['eventos']);
   }
 
-  async getServicio() {
+  
+  async usuarioActual() {
     try {
-      const data = await this.api.getServiciosResponsables({ id: this.servicioId });
-      if (data && data.length > 0) {
-        this.servicio = data[0].nombre;
-      } else {
-        this.servicio = 'Sin servicio';
-      }
+      this.userData = await this.api.usuarioActual();
+      console.log('Datos del usuario actual:', this.userData);
     } catch (error) {
-      console.error('❌ Error al obtener el servicio:', error);
-      this.servicio = 'Error al cargar';
+      console.error('Error al obtener los datos del usuario actual:', error);
     }
+
   }
 
 

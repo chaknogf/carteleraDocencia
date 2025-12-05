@@ -7,7 +7,7 @@ import { Actividades, ActividadesVista, Asistencia, Estados, GruposDeEdad, Lugar
 export class ApiService {
   private api: AxiosInstance;
   public readonly baseUrl = 'https://hgtecpan.duckdns.org/fad';
-  //public readonly baseUrl = 'https://200.12.44.174/fad';
+  // public readonly baseUrl = 'https://200.12.44.174/fad';
   // public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
@@ -125,7 +125,17 @@ export class ApiService {
 
   // ======= USERS =======
 
-
+  async usuarioActual(): Promise<any> {
+    try {
+      const response = await this.api.get('/auth/me');
+       console.log('✅ Usuario autenticado:', response.data);
+      return response.data;
+     
+    } catch (error) {
+      console.error('❌ Error al obtener usuario actual:', error);
+      throw error;
+    }
+  }
 
   async getUsers(filtros: any): Promise<any> {
     try {

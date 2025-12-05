@@ -19,6 +19,9 @@ export interface Currentuser {
   nombre?: string;
   email?: string;
   servicio_id?: number;
+  servicio?: {
+    nombre: string;
+  }
 
 }
 
