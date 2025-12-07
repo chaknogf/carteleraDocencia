@@ -231,4 +231,19 @@ export interface Asistencia {
   fecha_registro: string;
 }
 
+// interface para validador
+export interface VerificadorResponse {
+  valido: boolean;
+  mensaje: string;
+  coincidencias: ActividadCoincidencia[];
+}
+
+export interface ActividadCoincidencia {
+  id: number;
+  tema: string;
+  hora: string;       // formato HH:mm:ss
+  lugar: string;
+  servicio: string;
+}
+
 

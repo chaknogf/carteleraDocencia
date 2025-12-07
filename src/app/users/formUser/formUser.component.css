@@ -1,6 +1,6 @@
 /* Contenedor general */
 .formulario-container {
-  max-width: 500px;      /* Limita ancho para desktop */
+  max-width: 780px;      /* Limita ancho para desktop */
   margin: 1rem auto;
   padding: 0 1rem;
   font-family: 'Altivo', sans-serif;
@@ -54,6 +54,7 @@
   box-sizing: border-box; /* evita overflow */
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
+  background: #011748;
   border: 1px solid #ccc;
   font-size: 1rem;
   outline: none;
@@ -64,7 +65,7 @@
 .form-group select:focus {
   border-color: #2c5ab6;
   color: black;
-  background-color: #ece2e2;
+  background: #011748;
   font-weight: bold;
   box-shadow: 0 0 0 2px rgba(44, 90, 182, 0.2);
 }

@@ -2,7 +2,7 @@ import { mes, actividad, Estado, Meses } from './../interface/enum';
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
-import { Actividades, Detalles, Estados, Lugares, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad } from './../interface/interfaces';
+import { Actividades, Detalles, Estados, Lugares, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad, VerificadorResponse } from './../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
@@ -35,6 +35,7 @@ export class FormularioComponent implements OnInit, OnChanges {
   public tipoActividades: TipoActividad[] = [];
   public lugares: Lugares[] = [];
   public verificado: boolean = false;
+  public showMensaje: boolean = false;
   public coincidencias: any[] = [];
   public mensajeValidacion: string = '';
   encargado: string = '';
@@ -91,6 +92,11 @@ export class FormularioComponent implements OnInit, OnChanges {
     lugar_id: 0
   };
 
+  coincidenciasData: VerificadorResponse = {
+    valido: false,
+    mensaje: '',
+    coincidencias: []
+  };
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
@@ -404,18 +410,15 @@ export class FormularioComponent implements OnInit, OnChanges {
     const filtros = {
       fecha: this.actividad.fecha_programada,
       hora: this.actividad.horario_programado,
-      lugar: this.actividad.lugar_id,
       actividad_id: this.actividad.id,
     };
 
-    const respuesta = await this.api.verificar(filtros);
+    this.coincidenciasData = await this.api.verificar(filtros);
 
-    this.verificado = respuesta.valido;
-    this.mensajeValidacion = respuesta.mensaje;
+    this.verificado = this.coincidenciasData.valido;
+    this.mensajeValidacion = this.coincidenciasData.mensaje;
+    this.showMensaje = true;
 
-    if (!respuesta.valido) {
-      this.coincidencias = respuesta.coincidencias; // id, servicio, tema
-    }
   }
 
 }

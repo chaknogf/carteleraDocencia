@@ -25,7 +25,7 @@ export class TablaDocenciaComponent implements OnInit {
 
   public actividades: ActividadesVista[] = [];
   mensajeEliminado: boolean = false;
-   username: string = '';
+  username: string = '';
   roleUser: string = '';
   subId: any = '';
   servicioId: any = 0;
@@ -74,8 +74,8 @@ export class TablaDocenciaComponent implements OnInit {
     this.roleUser = localStorage.getItem('role') || '';
     this.subId = Number(localStorage.getItem('subId') || '');
     this.servicioId = Number(localStorage.getItem('servicio_id'));
-    console.log('Rol del usuario:', this.roleUser);
-    console.log('ID del servicio del usuario:', this.servicioId);
+    // console.log('Rol del usuario:', this.roleUser);
+    // console.log('ID del servicio del usuario:', this.servicioId);
     this.listarActividades();
     this.meses = mes;
     this.modalidades = modalidad

@@ -29,7 +29,7 @@ export class UsuarioActualComponent implements OnInit {
 
   }
 
- 
+
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
@@ -54,9 +54,9 @@ export class UsuarioActualComponent implements OnInit {
   }
 
   ngOnInit() {
-   this.usuarioActual();
-  
-  
+    this.usuarioActual();
+
+
 
   }
 
@@ -65,11 +65,11 @@ export class UsuarioActualComponent implements OnInit {
     this.router.navigate(['eventos']);
   }
 
-  
+
   async usuarioActual() {
     try {
       this.userData = await this.api.usuarioActual();
-      console.log('Datos del usuario actual:', this.userData);
+      // console.log('Datos del usuario actual:', this.userData);
     } catch (error) {
       console.error('Error al obtener los datos del usuario actual:', error);
     }

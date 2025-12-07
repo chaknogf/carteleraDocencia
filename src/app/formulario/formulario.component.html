@@ -460,7 +460,7 @@
     <div class="form-actions">
       <button
         type="button"
-        class="btn bt-primary bg-primary"
+        class="btn bt-primary bg-success"
         *ngIf="!verificado"
         (click)="validar()"
       >
@@ -473,14 +473,18 @@
   </form>
 </div>
 
-<div *ngIf="mensajeValidacion.length > 0" class="alert alert-warning mt-3">
-  <h4>Conflictos detectados</h4>
-  <p>Estas actividades coinciden con los parámetros ingresados:</p>
-
+<div
+  *ngIf="showMensaje"
+  class="alert bg-warning mt-3 text-dark"
+  [ngClass]="{ 'd-none': verificado }"
+>
+  <h4>{{ mensajeValidacion }}</h4>
   <ul>
-    <li *ngFor="let item of coincidencias">
-      <strong>ID:</strong> {{ item.id }} – <strong>Servicio:</strong>
-      {{ item.servicio }} – <strong>Tema:</strong> {{ item.tema }}
+    <li *ngFor="let item of coincidenciasData.coincidencias">
+      <strong>Servicio:</strong>
+      {{ item.servicio }} – <strong>Tema:</strong> {{ item.tema }} -
+      <strong>Lugar:</strong> {{ item.lugar }} - <strong>Hora:</strong>
+      {{ item.hora }}
     </li>
   </ul>
 </div>
