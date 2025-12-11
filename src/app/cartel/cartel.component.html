@@ -60,7 +60,9 @@
             💻👩🏻‍🏫 {{ evento.modalidad }}
           </p>
           <a
-            href="evento.detalles.link"
+            [href]="evento.detalles.link"
+            target="_blank"
+            rel="noopener noreferrer"
             *ngIf="evento.modalidad != 'Presencial'"
           >
             Link: {{ evento.detalles.link }}
