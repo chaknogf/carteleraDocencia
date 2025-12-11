@@ -200,3 +200,24 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+
+.video-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  background: #ff4d4d;
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.2s ease-in-out;
+}
+
+.video-link:hover {
+  background: #d93636;
+  transform: scale(1.1);
+}

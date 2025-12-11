@@ -1,43 +1,55 @@
-
-
-  <nav class="navbar navbar-container">
-    <div class="logo" [class.active]="menuActivo" (click)="toggleMenu()">
-      <span>DocenciaApp</span>
-      <div class="cinta-titulo justify-content-center">
-  <span class="title1">Ministerio de Salud Pública y Asistencia Social</span>
-  <span class="title2">Hospital General Tipo I de Tecpán Guatemala</span>
-</div>
+<nav class="navbar navbar-container">
+  <div class="logo" [class.active]="menuActivo" (click)="toggleMenu()">
+    <span>DocenciaApp</span>
+    <div class="cinta-titulo justify-content-center">
+      <span class="title1"
+        >Ministerio de Salud Pública y Asistencia Social</span
+      >
+      <span class="title2">Hospital General Tipo I de Tecpán Guatemala</span>
     </div>
+  </div>
 
-    <div class="menu-toggle" [class.active]="menuActivo" (click)="toggleMenu()">
-      &#9776;
-    </div>
+  <div class="menu-toggle" [class.active]="menuActivo" (click)="toggleMenu()">
+    &#9776;
+  </div>
 
-   <ul class="nav-links" [class.active]="mostrarMenu">
+  <ul class="nav-links" [class.active]="mostrarMenu">
     <li>
-      <button class="btn nav-btn register-btn" (click)="registrarse()">Registrarse</button>
+      <a
+        href="https://youtu.be/4UYC7V9sUy4"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="video-link btn nav-btn"
+      >
+        ▶ tutorial
+      </a>
+    </li>
+    <li>
+      <button class="btn nav-btn register-btn" (click)="registrarse()">
+        Registrarse
+      </button>
     </li>
     <li class="bg-info rounded-pill">
-      <button class="btn nav-btn login-btn fa-right-to-bracket" (click)="open()"> Ingresar</button>
+      <button
+        class="btn nav-btn login-btn fa-right-to-bracket"
+        (click)="open()"
+      >
+        Ingresar
+      </button>
     </li>
-
   </ul>
-  </nav>
-
-
-
-
-
+</nav>
 
 <!-- Modal -->
-<div class="modal-backdrop " *ngIf="visible()">
+<div class="modal-backdrop" *ngIf="visible()">
   <div class="modal d-block" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content position-relative">
-        <button class="btn close-button" aria-label="Cerrar" (click)="close()">X</button>
+        <button class="btn close-button" aria-label="Cerrar" (click)="close()">
+          X
+        </button>
         <div class="modal-body">
           <app-login></app-login>
-
         </div>
       </div>
     </div>
