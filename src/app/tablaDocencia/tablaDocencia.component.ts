@@ -30,6 +30,8 @@ export class TablaDocenciaComponent implements OnInit {
   subId: any = '';
   servicioId: any = 0;
   servicio: string = '';
+  confirmacionEliminar = false;
+  textoConfirmacion = '';
 
   meses: Meses[] = []
   modalidades: Modalidad[] = []
@@ -139,17 +141,39 @@ export class TablaDocenciaComponent implements OnInit {
     this.router.navigate(['editarActividad', docencia.id]);
   }
 
+
+
   eliminarDocencia(id: number) {
-    // Lógica para eliminar la docencia
+    // Primera llamada → se activa la confirmación
+    if (!this.confirmacionEliminar) {
+      this.confirmacionEliminar = true;
+      this.textoConfirmacion = '';
+      return;
+    }
+
+    // Si no coincide el texto, no se elimina
+    if (this.textoConfirmacion.trim().toLowerCase() !== 'eliminar') {
+      console.log('La palabra de confirmación no coincide.');
+      return;
+    }
+
+    // Si coincide, procedemos a eliminar
     this.api.deleteActividad(id).then(() => {
       this.listarActividades();
       console.log('Actividad eliminada correctamente');
+
       this.mensajeEliminado = true;
       setTimeout(() => {
         this.mensajeEliminado = false;
       }, 3000);
+
+      // Reiniciamos el estado
+      this.confirmacionEliminar = false;
+      this.textoConfirmacion = '';
     });
   }
+
+
 
   agregarDocencia() {
     // Lógica para agregar una nueva docencia
@@ -210,5 +234,6 @@ export class TablaDocenciaComponent implements OnInit {
   registrarAsistencia(id: number) {
     this.router.navigate(['asistencia', id]);
   }
+
 
 }

@@ -10,6 +10,7 @@ import { IconService } from '../service/icon.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { info } from 'console';
 import { infoIcons } from '../shared/icons/icons';
+import { link } from 'fs';
 
 @Component({
   selector: 'app-formulario',
@@ -194,6 +195,11 @@ export class FormularioComponent implements OnInit, OnChanges {
       deficiente: actividad.detalles?.deficiente ?? 0,
       mes: actividad.detalles?.mes ?? actividad.mes_id ?? 0,
       nota: actividad.detalles?.nota ?? '',
+      link: actividad.detalles?.link ?? '',
+      duracion: actividad.detalles?.duracion ?? '',
+      grupo_dirigido: actividad.detalles?.grupo_dirigido ?? '',
+      contenido: actividad.detalles?.contenido ?? '',
+      fecha_entrega_informe: actividad.detalles?.fecha_entrega_informe ?? '',
     };
 
     const metadatosObj = {

@@ -26,7 +26,10 @@
         <p class="data-info">{{ evento.actividad }}</p>
         <p class="label-info">Servicio Encargado:</p>
         <p class="data-info">🏥 {{ evento.servicio_encargado }}</p>
-        <p class="data-info">Horario: <span> {{evento.horario_programado}}</span> </p>
+        <p class="data-info">
+          <span class="text-info">Horario: </span>
+          {{ evento.horario_programado | horarioFormat }}
+        </p>
 
         <div
           *ngIf="isResponsableValido(evento.persona_responsable)"
@@ -56,23 +59,23 @@
           <p class="data-info" *ngSwitchCase="'Híbrida'">
             💻👩🏻‍🏫 {{ evento.modalidad }}
           </p>
+          <a
+            href="evento.detalles.link"
+            *ngIf="evento.modalidad != 'Presencial'"
+          >
+            Link: {{ evento.detalles.link }}
+          </a>
         </ng-container>
 
         <div class="detalles">
-          <p *ngIf="evento.detalles.link" class="label-info">
-            🔗
-            <a [href]="evento.detalles.link" target="_blank">{{
-              evento.detalles.link
-            }}</a>
-          </p>
           <p class="estado label-info">📄 {{ evento.estado }}</p>
         </div>
 
-        <div class="">
+        <div class="data-info">
           <p>
-            {{evento.detalles.nota}}
+            <span class="text-info">Nota:</span>
+            {{ evento.detalles.nota }}
           </p>
-
         </div>
         <div>
           <!-- <button

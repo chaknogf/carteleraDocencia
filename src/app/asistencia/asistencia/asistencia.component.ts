@@ -1,4 +1,4 @@
-import { ActividadesVista, Asistencia, ServicioResponsables } from './../../interface/interfaces';
+import { ActividadesVista, Asistencia, Currentuser, ServicioResponsables } from './../../interface/interfaces';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,15 +21,7 @@ import { DiscapacidadPipe, GrupoEdadPipe, IdiomaPipe, PertenenciaPipe } from '..
 export class AsistenciaComponent implements OnInit {
 
   public asistencias: Asistencia[] = [];
-  servicioR: ServicioResponsables = {
-    id: 0,
-    nombre: '',
-    descripcion: '',
-    encargado_servicio: '',
-    puesto_funcional: '',
-    activo: false,
-    subdireccion_id: 0
-  }
+
   actividad: ActividadesVista = {
     id: 0,
     tema: '',
@@ -56,6 +48,17 @@ export class AsistenciaComponent implements OnInit {
     detalles: {} as any,
     metadatos: {} as any
   };
+
+  userData: Currentuser = {
+    id: 0,
+    username: '',
+    role: '',
+    nombre: '',
+    email: '',
+    servicio_id: 0,
+    servicio: { nombre: '' }
+
+  }
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
@@ -93,18 +96,10 @@ export class AsistenciaComponent implements OnInit {
               })
           })
 
-        this.api.getServiciosResponsables({ id: this.actividad.servicio_id })
-          .then((data) => {
-            this.servicioR = data[0];
-          })
-
-
-
-
-
           .catch((error) => {
             console.error('❌ Error al cargar actividad para edición:', error);
           });
+        this.usuarioActual();
       } else {
         console.warn('⚠️ ID inválido en la URL:', idParam);
       }
@@ -113,7 +108,15 @@ export class AsistenciaComponent implements OnInit {
 
     }
 
+  }
 
+  async usuarioActual() {
+    try {
+      this.userData = await this.api.usuarioActual();
+      // console.log('Datos del usuario actual:', this.userData);
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario actual:', error);
+    }
 
   }
 

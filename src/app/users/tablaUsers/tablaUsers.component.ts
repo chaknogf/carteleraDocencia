@@ -25,6 +25,9 @@ export class TablaUsersComponent implements OnInit {
   buscarUsername: string = '';
   buscarEmail: string = '';
   buscarEstado: string = '';
+  confirmacionEliminar = false;
+  textoConfirmacion = '';
+
 
   constructor(
     private router: Router,
@@ -81,15 +84,34 @@ export class TablaUsersComponent implements OnInit {
     this.router.navigate(['editarUser', value]);
 
   }
+
   eliminarUsuario(id: number) {
-    // Lógica para eliminar la docencia
+    // Primera llamada → se activa la confirmación
+    if (!this.confirmacionEliminar) {
+      this.confirmacionEliminar = true;
+      this.textoConfirmacion = '';
+      return;
+    }
+
+    // Si no coincide el texto, no se elimina
+    if (this.textoConfirmacion.trim().toLowerCase() !== 'eliminar') {
+      console.log('La palabra de confirmación no coincide.');
+      return;
+    }
+
+    // Si coincide, procedemos a eliminar
     this.api.deleteUser(id).then(() => {
       this.listarUsers();
       console.log('Usuario eliminado correctamente');
+
       this.mensajeEliminado = true;
       setTimeout(() => {
         this.mensajeEliminado = false;
       }, 3000);
+
+      // Reiniciamos el estado
+      this.confirmacionEliminar = false;
+      this.textoConfirmacion = '';
     });
   }
 

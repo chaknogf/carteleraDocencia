@@ -64,7 +64,7 @@
       *ngIf="docencia.servicio_id === servicioId || roleUser === 'admin'"
     >
       <div class="action-panel">
-        <div class="action-row">  
+        <div class="action-row">
           <button
             class="action-btn action-secondary"
             (click)="asistencias(docencia.id)"
@@ -86,6 +86,30 @@
         >
           ✏️ Editar
         </button>
+
+        <button class="btn btn-danger" (click)="eliminarDocencia(docencia.id)">
+          Eliminar
+        </button>
+
+        <div *ngIf="confirmacionEliminar" class="mt-2">
+          <p class="text-danger">
+            Escriba <strong>"eliminar"</strong> para confirmar:
+          </p>
+
+          <input
+            type="text"
+            [(ngModel)]="textoConfirmacion"
+            class="form-control"
+            placeholder="escriba aquí..."
+          />
+
+          <button
+            class="btn btn-danger mt-2"
+            (click)="eliminarDocencia(docencia.id)"
+          >
+            Confirmar eliminación
+          </button>
+        </div>
       </div>
     </div>
   </div>

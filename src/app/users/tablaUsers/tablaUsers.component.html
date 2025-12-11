@@ -5,10 +5,14 @@
 
   <div class="acciones-superiores">
     <button class="btn-c salir" (click)="volver()">Salir</button>
-    <button class="btn-c agregar" (click)="agregarUsuario()">➕ Agregar Usuario</button>
+    <button class="btn-c agregar" (click)="agregarUsuario()">
+      ➕ Agregar Usuario
+    </button>
     <div class="buscar">
       <button class="btn-c" (click)="open()">🔍 Filtrar</button>
-      <button class="btn-c limpiar" (click)="limpiarFiltros()">🧹 Limpiar</button>
+      <button class="btn-c limpiar" (click)="limpiarFiltros()">
+        🧹 Limpiar
+      </button>
     </div>
   </div>
 
@@ -24,18 +28,22 @@
           <h3>{{ usr.nombre }}</h3>
           <p class="username">@{{ usr.username }}</p>
           <p class="email">{{ usr.email }}</p>
-          <p class="rol">Rol: <strong>{{ usr.role }}</strong></p>
-          <p class="estado">Estado:
-            <span [ngClass]="{
-              'estado-activo': usr.estado === 'Activo',
-              'estado-inactivo': usr.estado === 'Inactivo'
-            }">
-            <ng-container >
-              <span *ngIf="usr.estado === 'A'">Activo</span>
-              <span *ngIf="usr.estado === 'I'">Inactivo</span>
+          <p class="rol">
+            Rol: <strong>{{ usr.role }}</strong>
+          </p>
+          <p class="estado">
+            Estado:
+            <span
+              [ngClass]="{
+                'estado-activo': usr.estado === 'Activo',
+                'estado-inactivo': usr.estado === 'Inactivo'
+              }"
+            >
+              <ng-container>
+                <span *ngIf="usr.estado === 'A'">Activo</span>
+                <span *ngIf="usr.estado === 'I'">Inactivo</span>
               </ng-container>
-
-          </span>
+            </span>
           </p>
           <p>id: {{ usr.id }}</p>
         </div>
@@ -43,7 +51,27 @@
 
       <div class="acciones">
         <button class="btn-c editar" (click)="editar(usr.id)">✏️ Editar</button>
-        <!-- <button class="btn-c eliminar" (click)="eliminarUsuario(usr.id)">🗑️ Eliminar</button> -->
+
+        <button class="btn btn-danger" (click)="eliminarUsuario(usr.id)">
+          Eliminar
+        </button>
+
+        <div *ngIf="confirmacionEliminar" class="mt-2">
+          <p class="text-danger">
+            Escriba <strong>"eliminar"</strong> para confirmar:
+          </p>
+
+          <input
+            type="text"
+            [(ngModel)]="textoConfirmacion"
+            class="form-control"
+            placeholder="escriba aquí..."
+          />
+
+          <button class="btn btn-danger mt-2" (click)="eliminarUsuario(usr.id)">
+            Confirmar eliminación
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -53,9 +81,17 @@
   </div>
 
   <div class="paginacion">
-    <button class="btn btn-primary text-dark" [disabled]="paginaActual === 0" (click)="skipMinus()">⬅️ Anterior</button>
+    <button
+      class="btn btn-primary text-dark"
+      [disabled]="paginaActual === 0"
+      (click)="skipMinus()"
+    >
+      ⬅️ Anterior
+    </button>
     <span class="fw-bold text-dark">Página {{ paginaActual + 1 }}</span>
-    <button class="btn btn-primary text-dark" (click)="skipPlus()">Siguiente ➡️</button>
+    <button class="btn btn-primary text-dark" (click)="skipPlus()">
+      Siguiente ➡️
+    </button>
   </div>
 </div>
 

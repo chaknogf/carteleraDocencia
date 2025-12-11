@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { ActividadesVista } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
-import { FechaLargaPipe } from '../pipe/fechas.pipe';
+import { FechaLargaPipe, HorarioFormatPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
 import { HydrationFeatureKind } from '@angular/platform-browser';
 import { NavbarClienteComponent } from "../navs/navbarCliente/navbarCliente.component";
@@ -16,7 +16,7 @@ import { NavbarClienteComponent } from "../navs/navbarCliente/navbarCliente.comp
   templateUrl: './cartel.component.html',
   styleUrls: ['./cartel.component.css'],
   standalone: true,
-  imports: [CommonModule, EnumMesPipe, NavbarClienteComponent]
+  imports: [CommonModule, EnumMesPipe, NavbarClienteComponent, HorarioFormatPipe]
 })
 
 

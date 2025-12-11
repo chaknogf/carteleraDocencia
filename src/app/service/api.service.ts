@@ -86,7 +86,7 @@ export class ApiService {
       // 🔹 Obtenemos subdirección asociada al servicio
       await this.getSub(servicio_id);
 
-      console.log('✅ Usuario autenticado:', response.data);
+      // console.log('✅ Usuario autenticado:', response.data);
       return response.data;
 
     } catch (error) {
