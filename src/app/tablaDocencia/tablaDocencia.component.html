@@ -87,11 +87,11 @@
           ✏️ Editar
         </button>
 
-        <button class="btn btn-danger" (click)="eliminarDocencia(docencia.id)">
+        <button class="btn btn-danger" (click)="eliminarUsuario(docencia.id)">
           Eliminar
         </button>
 
-        <div *ngIf="confirmacionEliminar" class="mt-2">
+        <div *ngIf="actividadAEliminarId === docencia.id" class="mt-2">
           <p class="text-danger">
             Escriba <strong>"eliminar"</strong> para confirmar:
           </p>
@@ -105,7 +105,7 @@
 
           <button
             class="btn btn-danger mt-2"
-            (click)="eliminarDocencia(docencia.id)"
+            (click)="eliminarUsuario(docencia.id)"
           >
             Confirmar eliminación
           </button>

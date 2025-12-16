@@ -1,14 +1,12 @@
 <app-navbar></app-navbar>
 
 <div class="formulario-container">
-
   <button class="btn-volver" (click)="volver()">← Volver</button>
 
   <div class="form-card">
     <h1 class="form-title">Formulario de Usuario</h1>
 
     <form (ngSubmit)="guardar()" class="formulario-dos-columnas">
-
       <div class="form-group">
         <label for="username">Usuario</label>
         <input
@@ -16,7 +14,8 @@
           id="username"
           name="username"
           [(ngModel)]="usuario.username"
-          placeholder="Ingrese el usuario">
+          placeholder="Ingrese el usuario"
+        />
       </div>
 
       <div class="form-group">
@@ -26,7 +25,8 @@
           id="nombre"
           name="nombre"
           [(ngModel)]="usuario.nombre"
-          placeholder="Ingrese el nombre completo">
+          placeholder="Ingrese el nombre completo"
+        />
       </div>
       <div class="form-group">
         <label for="subdireccion">Subdirección</label>
@@ -36,9 +36,14 @@
           class="form-control"
           required
           [(ngModel)]="subdireccion_id"
-          (change)="onSubdireccionChange(subdireccion_id); listarServicios(subdireccion_id)">
-
-          <option value="" disabled selected>Seleccione una subdirección</option>
+          (change)="
+            onSubdireccionChange(subdireccion_id);
+            listarServicios(subdireccion_id)
+          "
+        >
+          <option value="" disabled selected>
+            Seleccione una subdirección
+          </option>
           <option *ngFor="let sub of subdirecciones" [value]="sub.id">
             {{ sub.nombre }}
           </option>
@@ -52,10 +57,14 @@
           name="servicios"
           class="form-control"
           required
-          [(ngModel)]="usuario.servicio_id">
-
+          [(ngModel)]="usuario.servicio_id"
+        >
           <option value="" disabled selected>Seleccione un servicio</option>
-          <option *ngFor="let serv of serviciosResponsables" [value]="serv.id" default="ser.id">
+          <option
+            *ngFor="let serv of serviciosResponsables"
+            [value]="serv.id"
+            default="ser.id"
+          >
             {{ serv.nombre }}
           </option>
         </select>
@@ -68,7 +77,8 @@
           id="email"
           name="email"
           [(ngModel)]="usuario.email"
-          placeholder="ejemplo@correo.com">
+          placeholder="ejemplo@correo.com"
+        />
       </div>
 
       <div class="form-group">
@@ -89,21 +99,9 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="usuario.password"
-          placeholder="Ingrese una contraseña">
-      </div>
-
       <div class="form-actions">
         <button class="btn-guardar" type="submit">💾 Guardar</button>
       </div>
-
     </form>
   </div>
-
 </div>

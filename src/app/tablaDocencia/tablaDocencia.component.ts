@@ -31,6 +31,7 @@ export class TablaDocenciaComponent implements OnInit {
   servicioId: any = 0;
   servicio: string = '';
   confirmacionEliminar = false;
+  actividadAEliminarId: number | null = null;
   textoConfirmacion = '';
 
   meses: Meses[] = []
@@ -143,36 +144,32 @@ export class TablaDocenciaComponent implements OnInit {
 
 
 
-  eliminarDocencia(id: number) {
-    // Primera llamada → se activa la confirmación
-    if (!this.confirmacionEliminar) {
-      this.confirmacionEliminar = true;
+  eliminarUsuario(id: number) {
+    // Primer clic: activar confirmación SOLO para este usuario
+    if (this.actividadAEliminarId !== id) {
+      this.actividadAEliminarId = id;
       this.textoConfirmacion = '';
       return;
     }
 
-    // Si no coincide el texto, no se elimina
+    // Validación de palabra
     if (this.textoConfirmacion.trim().toLowerCase() !== 'eliminar') {
       console.log('La palabra de confirmación no coincide.');
       return;
     }
 
-    // Si coincide, procedemos a eliminar
+    // Eliminación definitiva
     this.api.deleteActividad(id).then(() => {
       this.listarActividades();
-      console.log('Actividad eliminada correctamente');
 
       this.mensajeEliminado = true;
-      setTimeout(() => {
-        this.mensajeEliminado = false;
-      }, 3000);
+      setTimeout(() => this.mensajeEliminado = false, 3000);
 
-      // Reiniciamos el estado
-      this.confirmacionEliminar = false;
+      // Reset total
+      this.actividadAEliminarId = null;
       this.textoConfirmacion = '';
     });
   }
-
 
 
   agregarDocencia() {

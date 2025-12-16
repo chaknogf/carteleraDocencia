@@ -26,6 +26,7 @@ export class TablaUsersComponent implements OnInit {
   buscarEmail: string = '';
   buscarEstado: string = '';
   confirmacionEliminar = false;
+  usuarioAEliminarId: number | null = null;
   textoConfirmacion = '';
 
 
@@ -86,31 +87,28 @@ export class TablaUsersComponent implements OnInit {
   }
 
   eliminarUsuario(id: number) {
-    // Primera llamada → se activa la confirmación
-    if (!this.confirmacionEliminar) {
-      this.confirmacionEliminar = true;
+    // Primer clic: activar confirmación SOLO para este usuario
+    if (this.usuarioAEliminarId !== id) {
+      this.usuarioAEliminarId = id;
       this.textoConfirmacion = '';
       return;
     }
 
-    // Si no coincide el texto, no se elimina
+    // Validación de palabra
     if (this.textoConfirmacion.trim().toLowerCase() !== 'eliminar') {
       console.log('La palabra de confirmación no coincide.');
       return;
     }
 
-    // Si coincide, procedemos a eliminar
+    // Eliminación definitiva
     this.api.deleteUser(id).then(() => {
       this.listarUsers();
-      console.log('Usuario eliminado correctamente');
 
       this.mensajeEliminado = true;
-      setTimeout(() => {
-        this.mensajeEliminado = false;
-      }, 3000);
+      setTimeout(() => this.mensajeEliminado = false, 3000);
 
-      // Reiniciamos el estado
-      this.confirmacionEliminar = false;
+      // Reset total
+      this.usuarioAEliminarId = null;
       this.textoConfirmacion = '';
     });
   }
