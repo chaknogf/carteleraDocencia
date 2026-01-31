@@ -67,11 +67,10 @@
         </div>
 
         <div class="acciones">
-          <button type="button" class="btn-accion primary">🔍 Generar</button>
           <button
             type="button"
             class="btn-accion success"
-            (click)="exportarActividadesExcel()"
+            (click)="descargarReporteTodos()"
           >
             📥 Excel
           </button>
@@ -98,7 +97,7 @@
       >
         <div class="bar-inner">
           <span class="bar-value"
-            >{{ data.ejecutado * 100 | number : "1.0-0" }}%</span
+            >{{ data.ejecutado * 100 | number: "1.0-0" }}%</span
           >
         </div>
         <span class="bar-label">{{ data.servicio_encargado }}</span>

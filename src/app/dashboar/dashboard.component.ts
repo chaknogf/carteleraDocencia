@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
   public subTecnica: Ejecucion[] = [];
   public subGerencia: Ejecucion[] = [];
   public subRH: Ejecucion[] = [];
+  public descargandoReporte = false;
   public resumen: ResumenAnual = {
     anio: 0,
     programadas: 0,
@@ -74,23 +75,6 @@ export class DashboardComponent implements OnInit {
 
   }
 
-
-
-  // async generarReporte() {
-  //   if (this.buscarMes === 0 || this.buscarAnio === 0) {
-  //     alert('Por favor, seleccione un mes y un año válidos.');
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await this.api.getReporteActividades(this.buscarMes, this.buscarAnio);
-  //     this.actividades = response;
-  //     console.log('Actividades obtenidas:', this.actividades);
-  //   } catch (error) {
-  //     console.error('Error al obtener las actividades:', error);
-  //     alert('Error al generar el reporte. Por favor, inténtelo de nuevo más tarde.');
-  //   }
-  // }
 
   async obtenerEjecucion() {
     try {
@@ -135,21 +119,36 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  exportarActividadesExcel(): void {
-    if (!this.actividades || this.actividades.length === 0) {
-      alert('No hay datos para exportar.');
+  // descargarReporteTodos() {
+  //   const filtros = {
+  //     anio: this.buscarAnio,
+  //   };
+  //   this.api.getExcel(filtros);
+  // }
+
+  // Con las mejoras:
+  async descargarReporteTodos() {
+    if (this.descargandoReporte) return;
+
+    if (!this.buscarAnio) {
+      alert('Seleccione un año');
       return;
     }
 
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.actividades);
-    const workbook: XLSX.WorkBook = {
-      Sheets: { 'Actividades': worksheet },
-      SheetNames: ['Actividades']
-    };
+    this.descargandoReporte = true;
 
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    FileSaver.saveAs(blob, `reporte_actividades_${this.buscarMes}_${this.buscarAnio}.xlsx`);
+    try {
+      const filtros: any = { anio: this.buscarAnio };
+      if (this.buscarMes > 0) filtros.mes = this.buscarMes;
+
+      await this.api.getExcel(filtros);
+      console.log('✅ Reporte descargado');
+
+    } catch (error) {
+      console.error('❌ Error:', error);
+    } finally {
+      this.descargandoReporte = false;
+    }
   }
 
   // array de colores

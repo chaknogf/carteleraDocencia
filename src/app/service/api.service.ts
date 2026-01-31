@@ -8,7 +8,7 @@ export class ApiService {
   private api: AxiosInstance;
   public readonly baseUrl = 'https://www.hosptecpan.space/fad';
   // public readonly baseUrl = 'https://200.12.44.174/fad';
-  // public readonly baseUrl = 'http://localhost:8000';
+  // public readonly baseUrl = 'http://localhost:8001';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
@@ -460,6 +460,42 @@ export class ApiService {
     } catch (error) {
       console.error('❌ Error al obtener ejecución de actividades:', error);
       throw error;
+    }
+  }
+
+  async getExcel(filtros: any): Promise<void> {
+    try {
+      const response = await this.api.get('/fad/reporte/excel', {
+        params: limpiarParametros(filtros),
+        responseType: 'blob',
+        timeout: 30000
+      });
+
+      if (!response.data || response.data.size === 0) {
+        throw new Error('Archivo vacío');
+      }
+
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `reporte_actividades_${Date.now()}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+
+      console.log('✅ Reporte Excel descargado');
+
+    } catch (error: any) {
+      const status = error.response?.status;
+
+      if (status === 404) {
+        alert('No hay datos para generar el reporte');
+      } else if (status === 500) {
+        alert('Error interno al generar el reporte');
+      } else {
+        alert('No se pudo descargar el archivo');
+      }
+
+      console.error('❌ Error al descargar Excel:', error);
     }
   }
 
