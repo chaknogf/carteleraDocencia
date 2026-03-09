@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
 
   async obtenerEjecucion() {
     try {
-      this.ejecutados = await this.api.getEjecucion({ ejecutado: 0.01 });
+      this.ejecutados = await this.api.getEjecucion({ ejecutado: 0.01 , anio: this.buscarAnio });
       this.direccion = await this.api.getEjecucion({ sub: 1 });
       this.subEnfermeria = await this.api.getEjecucion({ sub: 2 });
       this.subMedica = await this.api.getEjecucion({ sub: 3 });
