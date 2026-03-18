@@ -48,7 +48,7 @@ export class TablaUsersComponent implements OnInit {
       rol: '',
       estado: '',
       skip: this.paginaActual,
-      limit: 10
+      limit: 100
     }
     try {
       const usuarios = await this.api.getUsers(filtros);
