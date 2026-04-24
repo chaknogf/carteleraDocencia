@@ -39,4 +39,4 @@ sudo nginx -t || { echo "❌ Error en la configuración de Nginx"; exit 1; }
 echo "🔄 Recargando Nginx..."
 sudo systemctl reload nginx
 
-echo "✅ Despliegue completado correctamente. Visite: https://hgtecpan.duckdns.org/cartelera/"
+echo "✅ Despliegue completado correctamente. Visite: https://htecpan.com/cartelera/"
