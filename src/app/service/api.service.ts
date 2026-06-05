@@ -605,23 +605,24 @@ export class ApiService {
     }
   }
 
-  async listaAsistencia(filtros: any): Promise<any> {
+  // api.service.ts — listaAsistencia
+  async listaAsistencia(filtros: any = {}): Promise<any> {
     try {
-      const filtrosLimpiados = limpiarParametros(filtros);
-      const response = await this.api.get<Asistencia[]>('/asistencia/'
-        , {
-          params: filtrosLimpiados
-        });
+      // Asegura que siempre se envíe un limit alto si no viene definido
+      if (!filtros.limit) {
+        filtros.limit = 500;
+      }
 
-      // console.log(response.data);
+      const filtrosLimpiados = limpiarParametros(filtros);
+      const response = await this.api.get<Asistencia[]>('/asistencia/', {
+        params: filtrosLimpiados
+      });
+
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener datos:', error);
       throw error;
     }
-
-
-
   }
 }
 
