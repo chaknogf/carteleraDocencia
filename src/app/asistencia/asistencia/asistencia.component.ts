@@ -81,33 +81,37 @@ export class AsistenciaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      const id = Number(idParam);
-      if (!isNaN(id)) {
+    if (!idParam) return;
 
-        this.api.listaAsistencia({ capacitacion: id })
-          .then((data) => {
-            this.asistencias = data
-            this.api.getActividades({ id: this.asistencias[0].capacitacion_id })
-              .then((data) => {
-                this.actividad = data[0]
-              })
-          })
-
-          .catch((error) => {
-            console.error('❌ Error al cargar actividad para edición:', error);
-          });
-        this.usuarioActual();
-      } else {
-        console.warn('⚠️ ID inválido en la URL:', idParam);
-      }
-
-
-
+    const id = Number(idParam);
+    if (isNaN(id)) {
+      console.warn('⚠️ ID inválido en la URL:', idParam);
+      return;
     }
 
+    this.cargarDatos(id);
+    this.usuarioActual();
+  }
+
+  private async cargarDatos(id: number): Promise<void> {
+    try {
+      const asistencias = await this.api.listaAsistencia({ capacitacion: id, limit: 500 });
+      this.asistencias = asistencias;
+
+      if (this.asistencias.length === 0) {
+        console.warn('⚠️ No hay asistencias para esta capacitación');
+        return;
+      }
+
+      const actividades = await this.api.getActividades({ id: this.asistencias[0].capacitacion_id });
+      if (actividades.length > 0) {
+        this.actividad = actividades[0];
+      }
+
+    } catch (error) {
+      console.error('❌ Error al cargar datos:', error);
+    }
   }
 
   async usuarioActual() {
