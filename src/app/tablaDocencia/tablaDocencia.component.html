@@ -13,10 +13,8 @@
           <th>Tema</th>
           <th>Actividad</th>
           <th>Servicio</th>
-          <th>Fecha</th>
-          <th>Horario</th>
-          <th>Modalidad</th>
-          <th>Estado</th>
+          <th>Fecha y Horario</th>
+          <th>Modalidad y Estado</th>
           <th>Lugar</th>
           <th>Responsable(s)</th>
           <th class="th-acciones">Acciones</th>
@@ -37,12 +35,12 @@
             <span class="fecha-ano">{{
               docencia.fecha_programada | date: "yyyy"
             }}</span>
+            <br />
+            {{ docencia.horario_programado | horarioFormat }}
           </td>
-          <td>{{ docencia.horario_programado | horarioFormat }}</td>
+
           <td>
-            <span class="badge-modalidad">{{ docencia.modalidad }}</span>
-          </td>
-          <td>
+            <span class="badge-modalidad">{{ docencia.modalidad }}</span> <br />
             <span
               class="badge-estado"
               [class.estado-abierto]="docencia.estado === 'Abierto'"
@@ -50,6 +48,7 @@
               >{{ docencia.estado }}</span
             >
           </td>
+
           <td>{{ docencia.lugar }}</td>
           <td>
             <div
@@ -150,7 +149,13 @@
       Anterior
     </button>
     <span class="page-info">Página {{ paginaActual + 1 }}</span>
-    <button class="btn-page" (click)="skipPlus()">Siguiente</button>
+    <button
+      class="btn-page"
+      [disabled]="paginaActual >= maxPagina"
+      (click)="skipPlus()"
+    >
+      Siguiente
+    </button>
   </div>
 </div>
 

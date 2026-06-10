@@ -39,7 +39,9 @@ export class TablaDocenciaComponent implements OnInit {
   modalidades: Modalidad[] = []
   estados: Estado[] = []
   actividadesTipo: ActividadTipo[] = []
-  // En la clase `TablaDocenciaComponent`
+  get maxPagina(): number {
+    return Math.ceil(this.totalActividades / this.actividadesPorPagina) - 1;
+  }
   totalActividades: number = 0;
   paginaActual: number = 0;
   actividadesPorPagina: number = 10;
@@ -112,8 +114,11 @@ export class TablaDocenciaComponent implements OnInit {
     try {
       const data = await this.actividadesService.listar(filtros);
       if (Array.isArray(data)) {
-        this.actividades = data;
         this.totalActividades = data.length;
+        this.actividades = data.slice(
+          this.paginaActual * this.actividadesPorPagina,
+          (this.paginaActual + 1) * this.actividadesPorPagina
+        );
       } else {
         this.actividades = data.actividades;
         this.totalActividades = data.total;
