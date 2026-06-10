@@ -7,9 +7,9 @@ import { Actividades, ActividadesVista, Asistencia, Estados, GruposDeEdad, Lugar
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  public readonly baseUrl = 'https://www.htecpan.com/fad';
+  // public readonly baseUrl = 'https://www.htecpan.com/fad';
   // public readonly baseUrl = 'https://200.12.44.174/fad';
-  // public readonly baseUrl = 'http://localhost:8001';
+  public readonly baseUrl = 'http://localhost:8000';
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
@@ -466,7 +466,7 @@ export class ApiService {
 
   async getExcel(filtros: any): Promise<void> {
     try {
-      const response = await this.api.get('/fad/reporte/excel', {
+      const response = await this.api.get('/reporte/excel', {
         params: limpiarParametros(filtros),
         responseType: 'blob',
         timeout: 30000
@@ -605,24 +605,23 @@ export class ApiService {
     }
   }
 
-  // api.service.ts — listaAsistencia
-  async listaAsistencia(filtros: any = {}): Promise<any> {
+  async listaAsistencia(filtros: any): Promise<any> {
     try {
-      // Asegura que siempre se envíe un limit alto si no viene definido
-      if (!filtros.limit) {
-        filtros.limit = 500;
-      }
-
       const filtrosLimpiados = limpiarParametros(filtros);
-      const response = await this.api.get<Asistencia[]>('/asistencia/', {
-        params: filtrosLimpiados
-      });
+      const response = await this.api.get<Asistencia[]>('/asistencia/'
+        , {
+          params: filtrosLimpiados
+        });
 
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener datos:', error);
       throw error;
     }
+
+
+
   }
 }
 

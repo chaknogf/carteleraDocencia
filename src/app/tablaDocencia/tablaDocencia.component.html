@@ -1,171 +1,195 @@
 <app-navbarPlus></app-navbarPlus>
 
-<div class="container-actividad my-4">
-  <div class="docencia-card" *ngFor="let docencia of actividades">
-    <!-- Encabezado -->
-    <div class="card-header">
-      <h3 class="tema text-uppercase">{{ docencia.tema }}</h3>
-      <span class="estado" [class]="docencia.estado.toLowerCase()">{{
-        docencia.estado
-      }}</span>
-    </div>
-
-    <!-- Contenido principal en dos columnas -->
-    <div class="card-content">
-      <!-- 📅 Columna Izquierda: Agenda -->
-      <div class="calendar-box">
-        <div class="calendar-header">
-          <span class="month">{{
-            docencia.fecha_programada | date : "MMM" | uppercase
-          }}</span>
-        </div>
-        <div class="calendar-day">
-          {{ docencia.fecha_programada | date : "dd" }}
-        </div>
-        <div class="calendar-year">
-          {{ docencia.fecha_programada | date : "yyyy" }}
-        </div>
-      </div>
-
-      <!-- 🧾 Columna Derecha: Información -->
-      <div class="card-body">
-        <p><strong>🏥 Servicio:</strong> {{ docencia.servicio_encargado }}</p>
-        <p><strong>🎯 Actividad:</strong> {{ docencia.actividad }}</p>
-        <p><strong>🧩 Modalidad:</strong> {{ docencia.modalidad }}</p>
-        <p><strong>📅 Mes:</strong> {{ docencia.mes }}</p>
-        <p><strong>🧑🏻‍🏫 Lugar:</strong> {{ docencia.lugar }}</p>
-        <p>
-          <strong>⏰ Horario:</strong>
-          {{ docencia.horario_programado | horarioFormat }}
-        </p>
-        <p><strong>🖱️ Link:</strong> {{ docencia.detalles.link }}</p>
-        <p><strong> Link de Asistencia:</strong></p>
-        <p><strong> Asistencia:</strong></p>
-
-        <div
-          *ngIf="isResponsableValido(docencia.persona_responsable)"
-          class="responsables"
-        >
-          <strong>👩‍⚕️ Responsable(s):</strong>
-          <ul>
-            <li *ngFor="let r of docencia.persona_responsable | keyvalue">
-              <ng-container *ngIf="r.value.nombre">
-                {{ r.value.nombre }} — {{ r.value.puesto }}
-              </ng-container>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Acciones -->
-    <div
-      class="card-actions"
-      *ngIf="docencia.servicio_id === servicioId || roleUser === 'admin'"
-    >
-      <div class="action-panel">
-        <div class="action-row">
-          <button
-            class="action-btn action-secondary"
-            (click)="asistencias(docencia.id)"
-          >
-            Listado de asistencia
-          </button>
-
-          <button
-            class="action-btn action-primary"
-            (click)="registrarAsistencia(docencia.id)"
-          >
-            Link de asistencia
-          </button>
-        </div>
-
-        <button
-          class="action-btn action-edit"
-          (click)="editarDocencia(docencia)"
-        >
-          ✏️ Editar
-        </button>
-
-        <button class="btn btn-danger" (click)="eliminarUsuario(docencia.id)">
-          Eliminar
-        </button>
-
-        <div *ngIf="actividadAEliminarId === docencia.id" class="mt-2">
-          <p class="text-danger">
-            Escriba <strong>"eliminar"</strong> para confirmar:
-          </p>
-
-          <input
-            type="text"
-            [(ngModel)]="textoConfirmacion"
-            class="form-control"
-            placeholder="escriba aquí..."
-          />
-
-          <button
-            class="btn btn-danger mt-2"
-            (click)="eliminarUsuario(docencia.id)"
-          >
-            Confirmar eliminación
-          </button>
-        </div>
-      </div>
-    </div>
+<div class="table-container">
+  <div class="table-header">
+    <h2>Actividades de Docencia</h2>
+    <span class="table-count">{{ actividades.length }} registro(s)</span>
   </div>
 
-  <!-- Paginación inferiror centrado  todo el background con glasformismo-->
-  <div class="d-flex justify-content-center align-items-center mt-3 gap-3">
+  <div class="table-wrapper">
+    <table class="docencia-table">
+      <thead>
+        <tr>
+          <th>Tema</th>
+          <th>Actividad</th>
+          <th>Servicio</th>
+          <th>Fecha y Horario</th>
+          <th>Modalidad y Estado</th>
+          <th>Lugar</th>
+          <th>Responsable(s)</th>
+          <th class="th-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let docencia of actividades">
+          <td class="td-tema">{{ docencia.tema }}</td>
+          <td>{{ docencia.actividad }}</td>
+          <td>{{ docencia.servicio_encargado }}</td>
+          <td class="td-fecha">
+            <span class="fecha-num">{{
+              docencia.fecha_programada | date: "dd"
+            }}</span>
+            <span class="fecha-mes">{{
+              docencia.fecha_programada | date: "MMM" | uppercase
+            }}</span>
+            <span class="fecha-ano">{{
+              docencia.fecha_programada | date: "yyyy"
+            }}</span>
+            <br />
+            {{ docencia.horario_programado | horarioFormat }}
+          </td>
+
+          <td>
+            <span class="badge-modalidad">{{ docencia.modalidad }}</span> <br />
+            <span
+              class="badge-estado"
+              [class.estado-abierto]="docencia.estado === 'Abierto'"
+              [class.estado-cerrado]="docencia.estado === 'Cerrado'"
+              >{{ docencia.estado }}</span
+            >
+          </td>
+
+          <td>{{ docencia.lugar }}</td>
+          <td>
+            <div
+              *ngIf="
+                isResponsableValido(docencia.persona_responsable);
+                else sinResponsable
+              "
+              class="responsables-list"
+            >
+              <span
+                *ngFor="
+                  let r of docencia.persona_responsable | keyvalue;
+                  let last = last
+                "
+                class="responsable-item"
+              >
+                <ng-container *ngIf="r.value.nombre"
+                  >{{ r.value.nombre
+                  }}<span *ngIf="!last">, </span></ng-container
+                >
+              </span>
+            </div>
+            <ng-template #sinResponsable
+              ><span class="text-muted">—</span></ng-template
+            >
+          </td>
+          <td class="td-acciones">
+            <div
+              class="acciones-group"
+              *ngIf="
+                docencia.servicio_id === servicioId || roleUser === 'admin'
+              "
+            >
+              <button
+                class="btn-accion btn-asistencia btn-label"
+                (click)="asistencias(docencia.id)"
+                title="Listado de asistencia"
+                data-label="Listado Asistencia"
+              >
+                📋
+              </button>
+              <button
+                class="btn-accion btn-link-asistencia btn-label"
+                (click)="registrarAsistencia(docencia.id)"
+                title="Link de asistencia"
+                data-label="Link Asistencia"
+              >
+                🔗
+              </button>
+              <button
+                class="btn-accion btn-editar btn-label"
+                (click)="editarDocencia(docencia)"
+                title="Editar"
+                data-label="Editar"
+              >
+                ✏️
+              </button>
+              <button
+                class="btn-accion btn-eliminar"
+                (click)="eliminarUsuario(docencia.id)"
+                title="Eliminar"
+              >
+                🗑️
+              </button>
+            </div>
+            <div
+              *ngIf="actividadAEliminarId === docencia.id"
+              class="confirmacion-box"
+            >
+              <input
+                type="text"
+                [(ngModel)]="textoConfirmacion"
+                placeholder='escriba "eliminar"'
+                class="confirm-input"
+              />
+              <button
+                class="btn-confirmar"
+                (click)="eliminarUsuario(docencia.id)"
+              >
+                Confirmar
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="actividades.length === 0">
+          <td colspan="10" class="td-empty">No se encontraron actividades</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
     <button
-      class="btn btn-outline-secondary"
+      class="btn-page"
       [disabled]="paginaActual === 0"
       (click)="skipMinus()"
     >
       Anterior
     </button>
-    <span class="fw-bold">Página {{ paginaActual + 1 }}</span>
-    <button class="btn btn-outline-secondary" (click)="skipPlus()">
+    <span class="page-info">Página {{ paginaActual + 1 }}</span>
+    <button
+      class="btn-page"
+      [disabled]="paginaActual >= maxPagina"
+      (click)="skipPlus()"
+    >
       Siguiente
     </button>
   </div>
-  <button class="btn-circular" (click)="open()">
-    <svg viewBox="0 0 100 100" class="circular-text">
-      <defs>
-        <path
-          id="circlePath"
-          d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"
-        />
-      </defs>
-      <text fill="#bde8ff" font-size="10" font-weight="500" letter-spacing="2">
-        <textPath href="#circlePath" startOffset="0%">
-          &nbsp; &nbsp; B U S C A R &nbsp;
-        </textPath>
-      </text>
-    </svg>
-    <span [innerHTML]="icons['filter']"></span>
-  </button>
-  <!-- se visualiza inferior derecho con icono de lupa -->
 </div>
 
-<!-- modal de filtro -->
+<button class="btn-filtro-flotante" (click)="open()">
+  <svg viewBox="0 0 100 100" class="circular-text">
+    <defs>
+      <path
+        id="circlePath"
+        d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"
+      />
+    </defs>
+    <text fill="#bde8ff" font-size="10" font-weight="500" letter-spacing="2">
+      <textPath href="#circlePath" startOffset="0%">
+        &nbsp; &nbsp; F I L T R O &nbsp;
+      </textPath>
+    </text>
+  </svg>
+  <span class="lupa-icon" [innerHTML]="icons['filter']"></span>
+</button>
+
 <div
   *ngIf="visible()"
   class="modal-backdrop d-flex align-items-center justify-content-center"
 >
-  <div>
+  <div class="modal-contenido">
     <div class="text-end">
       <button class="btn-close-modal" (click)="close()">×</button>
     </div>
-
     <h5>Filtrar Actividades</h5>
-
     <form
       (ngSubmit)="listarActividades()"
       #docenciaForm="ngForm"
       class="row g-3"
     >
-      <!-- Campos del formulario -->
-      <!-- ejemplo de un campo -->
       <div class="col-md-6">
         <label for="tema" class="form-label">Tema</label>
         <input
@@ -176,56 +200,46 @@
           [(ngModel)]="buscarTema"
         />
       </div>
-
       <div class="col-md-6">
-        <label for="actividad" class="form-label fw-semibold">Actividad</label>
+        <label for="actividad" class="form-label">Actividad</label>
         <select
           id="actividad"
           class="form-select"
           name="actividad"
           [(ngModel)]="buscarActividad"
         >
-          <option
-            *ngFor="let actividad of actividadesTipo"
-            [value]="actividad.value"
-          >
-            {{ actividad.label }}
+          <option *ngFor="let a of actividadesTipo" [value]="a.value">
+            {{ a.label }}
           </option>
         </select>
       </div>
-
       <div class="col-md-6">
-        <label for="mes" class="form-label fw-semibold">Mes</label>
+        <label for="mes" class="form-label">Mes</label>
         <select id="mes" class="form-select" name="mes" [(ngModel)]="buscarMes">
-          <option *ngFor="let mes of meses" [value]="mes.value">
-            {{ mes.label }}
+          <option [value]="0">Todos</option>
+          <option *ngFor="let m of meses" [value]="m.value">
+            {{ m.label }}
           </option>
         </select>
       </div>
-
       <div class="col-md-6">
-        <label for="modalidad" class="form-label fw-semibold">Modalidad</label>
+        <label for="modalidad" class="form-label">Modalidad</label>
         <select
           id="modalidad"
           class="form-select"
           name="modalidad"
           [(ngModel)]="buscarModalidad"
         >
-          <option
-            *ngFor="let modalidad of modalidades"
-            [value]="modalidad.value"
-          >
-            {{ modalidad.label }}
+          <option *ngFor="let m of modalidades" [value]="m.value">
+            {{ m.label }}
           </option>
         </select>
       </div>
-
-      <!-- repetir campos como en tu HTML -->
       <div class="d-flex justify-content-between">
-        <button type="submit" class="btn bg-primary">Buscar</button>
+        <button type="submit" class="btn btn-primary-modal">Buscar</button>
         <button
           type="button"
-          class="btn bg-warning text-white"
+          class="btn btn-limpiar"
           (click)="limpiarFiltros()"
         >
           Limpiar

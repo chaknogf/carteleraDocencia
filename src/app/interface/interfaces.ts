@@ -148,6 +148,10 @@ export interface ActividadesVista {
 
 }
 
+export interface ListaActividades {
+  total: number;
+  actividades: ActividadesVista[];  // ← debe llamarse 'actividades', igual que FastAPI
+}
 
 
 export interface Reportes {

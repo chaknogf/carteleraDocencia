@@ -1,17 +1,11 @@
-
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MesNombrePipe } from '../pipe/fechas.pipe';
-import { Ejecucion, Reportes, ResumenAnual } from '../interface/interfaces';
+import { Ejecucion, ResumenAnual, SubdirecionPertenece } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
 import { ComunicacionService } from '../service/comunicacion.service';
-
-
 
 @Component({
   selector: 'app-dashboard',
@@ -22,137 +16,42 @@ import { ComunicacionService } from '../service/comunicacion.service';
 })
 export class DashboardComponent implements OnInit {
 
+  readonly añoActual = new Date().getFullYear();
+  readonly mesActual = new Date().getMonth() + 1;
 
+  anioSeleccion = this.añoActual;
+  buscarAnio = this.añoActual;
+  buscarMes = 0;
+  buscarSubdireccion = 0;
 
-  public añoActual: number = new Date().getFullYear();
-  public mesActual: number = new Date().getMonth() + 1;
-  public anioSeleccion: number = this.añoActual;
+  buscando = false;
+  descargando = false;
 
-  // 👇 Evento de salida para emitir el valor
-  @Output() anioSeleccionChange = new EventEmitter<number>();
-  public buscarMes: number = 0;
-  public buscarAnio: number = 0;
-  public anio: number = new Date().getFullYear();
-  public completado: number = 0;
-  public programado: number = 0;
-  public porcentajeCompletado: number = 0;
-  public actividades: Reportes[] = [];
-  public ejecutados: Ejecucion[] = [];
-  public direccion: Ejecucion[] = [];
-  public subEnfermeria: Ejecucion[] = [];
-  public subMedica: Ejecucion[] = [];
-  public subTecnica: Ejecucion[] = [];
-  public subGerencia: Ejecucion[] = [];
-  public subRH: Ejecucion[] = [];
-  public descargandoReporte = false;
-  public resumen: ResumenAnual = {
-    anio: 0,
-    programadas: 0,
-    reprogramadas: 0,
-    completadas: 0,
-    anuladas: 0,
-    total: 0
+  ejecutados: Ejecucion[] = [];
+  resumen: ResumenAnual = { anio: 0, programadas: 0, reprogramadas: 0, completadas: 0, anuladas: 0, total: 0 };
+  subdirecciones: SubdirecionPertenece[] = [];
+
+  get aniosDisponibles(): number[] {
+    const a = this.añoActual;
+    return [a, a - 1, a - 2, a - 3, a - 4];
+  }
+  get totalProgramadas(): number {
+    return this.ejecutados.reduce((s, e) => s + (e.programada || 0), 0);
+  }
+  get totalCompletadas(): number {
+    return this.ejecutados.reduce((s, e) => s + (e.completa || 0), 0);
+  }
+  get totalReprogramadas(): number {
+    return this.ejecutados.reduce((s, e) => s + (e.reprogramada || 0), 0);
+  }
+  get totalSuspendidas(): number {
+    return this.ejecutados.reduce((s, e) => s + (e.suspendida || 0), 0);
+  }
+  get totalActividades(): number {
+    return this.ejecutados.reduce((s, e) => s + (e.total || 0), 0);
   }
 
-
-  constructor(
-    private api: ApiService,
-    private router: Router,
-    private comunicacionService: ComunicacionService
-  ) {
-
-  }
-
-  ngOnInit() {
-
-    this.buscarMes = this.mesActual;
-    this.buscarAnio = this.añoActual;
-    // this.generarReporte();
-    this.obtenerEjecucion();
-    this.resumenAnual();
-
-
-
-  }
-
-
-  async obtenerEjecucion() {
-    try {
-      this.ejecutados = await this.api.getEjecucion({ ejecutado: 0.01 , anio: this.buscarAnio });
-      this.direccion = await this.api.getEjecucion({ sub: 1 });
-      this.subEnfermeria = await this.api.getEjecucion({ sub: 2 });
-      this.subMedica = await this.api.getEjecucion({ sub: 3 });
-      this.subTecnica = await this.api.getEjecucion({ sub: 4 });
-      this.subGerencia = await this.api.getEjecucion({ sub: 5 });
-      this.subRH = await this.api.getEjecucion({ sub: 6 });
-      // console.log(this.actividadesEjecucion)
-    } catch (error) {
-      console.error('❌ Error al cargar ejecución:', error);
-    }
-  }
-
-  async resumenAnual() {
-    try {
-      const data = await this.api.getResumenAnual(this.anio);
-      this.resumen = data[0];
-      // console.log(this.resumen)
-    }
-    catch (error) {
-      console.error('❌ Error al cargar ejecución:', error);
-    }
-  }
-
-  cronograma() {
-    this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
-    // console.log(this.anioSeleccion)
-    this.router.navigate(['/autorizado'])
-  }
-
-  volver() {
-    this.router.navigate(['/tabla']);
-  }
-
-  noImprimir() {
-    const noImprimirElements = document.querySelectorAll('.no-imprimir');
-    noImprimirElements.forEach(element => {
-      element.classList.add('d-none');
-    });
-  }
-
-  // descargarReporteTodos() {
-  //   const filtros = {
-  //     anio: this.buscarAnio,
-  //   };
-  //   this.api.getExcel(filtros);
-  // }
-
-  // Con las mejoras:
-  async descargarReporteTodos() {
-    if (this.descargandoReporte) return;
-
-    if (!this.buscarAnio) {
-      alert('Seleccione un año');
-      return;
-    }
-
-    this.descargandoReporte = true;
-
-    try {
-      const filtros: any = { anio: this.buscarAnio };
-      if (this.buscarMes > 0) filtros.mes = this.buscarMes;
-
-      await this.api.getExcel(filtros);
-      console.log('✅ Reporte descargado');
-
-    } catch (error) {
-      console.error('❌ Error:', error);
-    } finally {
-      this.descargandoReporte = false;
-    }
-  }
-
-  // array de colores
-  coloresBarras: string[] = [
+  readonly coloresBarras: string[] = [
     'linear-gradient(180deg,#ff8a65,#ff3d00)',
     'linear-gradient(180deg,#ffd166,#ff9f0d)',
     'linear-gradient(180deg,#6be5b1,#07c19a)',
@@ -184,4 +83,76 @@ export class DashboardComponent implements OnInit {
     'linear-gradient(180deg,#30cfd0,#330867)',
     'linear-gradient(180deg,#5ee7df,#b490ca)'
   ];
+
+  constructor(
+    private api: ApiService,
+    private router: Router,
+    private comunicacionService: ComunicacionService
+  ) {}
+
+  ngOnInit() {
+    this.cargarSubdirecciones();
+    this.generarReportes();
+  }
+
+  async cargarSubdirecciones() {
+    try {
+      this.subdirecciones = await this.api.getSubdirecciones({ activo: true, limit: 30 });
+    } catch {
+      this.subdirecciones = [];
+    }
+  }
+
+  async generarReportes() {
+    this.buscando = true;
+    await Promise.all([
+      this.cargarEjecucion(),
+      this.cargarResumen()
+    ]);
+    this.buscando = false;
+  }
+
+  async cargarEjecucion() {
+    try {
+      const filtros: any = { anio: this.buscarAnio };
+      if (this.buscarSubdireccion) filtros.sub = this.buscarSubdireccion;
+      const data = await this.api.getEjecucion(filtros);
+      this.ejecutados = Array.isArray(data) ? data : [];
+    } catch {
+      this.ejecutados = [];
+    }
+  }
+
+  async cargarResumen() {
+    try {
+      const data = await this.api.getResumenAnual({ anio: this.buscarAnio });
+      this.resumen = data?.[0] || this.resumen;
+    } catch {
+      this.resumen = { anio: 0, programadas: 0, reprogramadas: 0, completadas: 0, anuladas: 0, total: 0 };
+    }
+  }
+
+  async descargarExcel() {
+    if (this.descargando) return;
+    this.descargando = true;
+    try {
+      const filtros: any = { anio: this.buscarAnio };
+      if (this.buscarMes > 0) filtros.mes = this.buscarMes;
+      if (this.buscarSubdireccion) filtros.subdireccion_id = this.buscarSubdireccion;
+      await this.api.getExcel(filtros);
+    } catch (error: any) {
+      if (error?.response?.status === 404) {
+        alert('No hay datos para generar el reporte');
+      } else {
+        alert('Error al descargar el reporte');
+      }
+    } finally {
+      this.descargando = false;
+    }
+  }
+
+  cronograma() {
+    this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
+    this.router.navigate(['/autorizado']);
+  }
 }

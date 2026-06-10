@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
-import { ActividadesVista } from '../interface/interfaces';
+import { ActividadesVista, ListaActividades } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
 import { FechaLargaPipe, HorarioFormatPipe } from '../pipe/fechas.pipe';
 import { EnumActividadPipe, EnumEstadoPipe, EnumMesPipe, EnumModalidadPipe } from '../pipe/tuberias.pipe';
@@ -46,11 +46,10 @@ export class CartelComponent {
 
   async datosCartel() {
     try {
-      this.eventos = await this.api.getActividades({ mes: this.mesActual });
-      // console.log(this.eventos)
+      const data: ListaActividades = await this.api.getActividades({ mes: this.mesActual });
+      this.eventos = data.actividades;
     } catch (error) {
       console.error('❌ Error al obtener actividades:', error);
-      throw error;
     }
   }
 

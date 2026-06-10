@@ -3,8 +3,9 @@ import { estado } from './../interface/enum';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActividadesVista, Currentuser } from '../interface/interfaces';
+import { ActividadesVista, Currentuser, ListaActividades } from '../interface/interfaces';
 import { ApiService } from '../service/api.service';
+import { ActividadesService } from '../service/actividades.service';
 import { FormsModule } from '@angular/forms';
 import { Meses, Modalidad, ActividadTipo, Estado, actividad, modalidad, mes } from '../interface/enum';
 import { IconService } from '../service/icon.service';
@@ -38,7 +39,9 @@ export class TablaDocenciaComponent implements OnInit {
   modalidades: Modalidad[] = []
   estados: Estado[] = []
   actividadesTipo: ActividadTipo[] = []
-  // En la clase `TablaDocenciaComponent`
+  get maxPagina(): number {
+    return Math.ceil(this.totalActividades / this.actividadesPorPagina) - 1;
+  }
   totalActividades: number = 0;
   paginaActual: number = 0;
   actividadesPorPagina: number = 10;
@@ -47,7 +50,7 @@ export class TablaDocenciaComponent implements OnInit {
   buscarModalidad: string = '';
   buscarEstado: string = '';
   buscarPersona: string = '';
-  buscarMes: string = '';
+  buscarMes: number = 0;
   buscarFecha: string = '';
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
@@ -63,6 +66,7 @@ export class TablaDocenciaComponent implements OnInit {
   constructor(
     private router: Router,
     private api: ApiService,
+    private actividadesService: ActividadesService,
     private iconService: IconService,
     private sanitizer: DomSanitizer,
   ) {
@@ -91,26 +95,34 @@ export class TablaDocenciaComponent implements OnInit {
 
 
   async listarActividades() {
-    const filtros = {
-      id: 0,
+    const filtros: any = {
       tema: this.buscarTema,
       actividad: this.buscarActividad,
-      service_encargado: "",
       persona: this.buscarPersona,
       fecha: this.buscarFecha,
       mes: this.buscarMes,
       modalidad: this.buscarModalidad,
       estado: this.buscarEstado,
-      entrega: "",
-      skip: this.paginaActual,
-      limit: 10
+      skip: this.paginaActual * this.actividadesPorPagina,
+      limit: this.actividadesPorPagina
+    }
 
+    if (this.roleUser !== 'admin' && this.servicioId) {
+      filtros.servicio_encargado = this.servicioId;
     }
 
     try {
-      const actividades = await this.api.getActividades(filtros);
-      this.actividades = actividades;
-      this.totalActividades = actividades.length;
+      const data = await this.actividadesService.listar(filtros);
+      if (Array.isArray(data)) {
+        this.totalActividades = data.length;
+        this.actividades = data.slice(
+          this.paginaActual * this.actividadesPorPagina,
+          (this.paginaActual + 1) * this.actividadesPorPagina
+        );
+      } else {
+        this.actividades = data.actividades;
+        this.totalActividades = data.total;
+      }
     } catch (error) {
       console.error('Error al obtener actividades:', error);
     }
@@ -118,21 +130,18 @@ export class TablaDocenciaComponent implements OnInit {
   }
 
   skipPlus() {
-    const skip = this.paginaActual + 1;
-    this.paginaActual = skip;
-    if (this.paginaActual > this.totalActividades) {
-      this.paginaActual = this.totalActividades;
+    const maxPage = Math.ceil(this.totalActividades / this.actividadesPorPagina) - 1;
+    if (this.paginaActual < maxPage) {
+      this.paginaActual++;
+      this.listarActividades();
     }
-    this.listarActividades();
   }
 
   skipMinus() {
-    const skip = this.paginaActual - 1;
-    this.paginaActual = skip;
-    if (this.paginaActual < 0) {
-      this.paginaActual = 0;
+    if (this.paginaActual > 0) {
+      this.paginaActual--;
+      this.listarActividades();
     }
-    this.listarActividades();
   }
   cambiarPagina(direccion: number) {
     this.paginaActual += direccion;
@@ -196,7 +205,7 @@ export class TablaDocenciaComponent implements OnInit {
     this.buscarModalidad = '';
     this.buscarEstado = '';
     this.buscarPersona = '';
-    this.buscarMes = '';
+    this.buscarMes = 0;
     this.buscarFecha = '';
     this.listarActividades();
   }
