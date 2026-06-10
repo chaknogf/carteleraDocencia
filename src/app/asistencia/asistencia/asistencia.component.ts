@@ -96,8 +96,7 @@ export class AsistenciaComponent implements OnInit {
 
   private async cargarDatos(id: number): Promise<void> {
     try {
-      const asistencias = await this.api.listaAsistencia({ capacitacion: id, limit: 500 });
-      this.asistencias = asistencias;
+      this.asistencias = await this.api.listaAsistencia({ capacitacion: id });
 
       if (this.asistencias.length === 0) {
         console.warn('⚠️ No hay asistencias para esta capacitación');

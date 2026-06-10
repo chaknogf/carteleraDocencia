@@ -1,121 +1,117 @@
 <app-navbar></app-navbar>
 
-<section class="dashboard-container">
-  <!-- Título -->
-  <header class="header-section">
-    <h2 class="titulo">📊 Reporte de Actividades de Docencia</h2>
-  </header>
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
 
-  <!-- Filtros y reportes -->
-  <section class="filtros-grid">
-    <!-- Formulario de Autorización -->
-    <form class="filtros glass-panel">
-      <legend>Generar Cronograma de Autorización</legend>
-      <div class="input-row">
-        <div class="input-group">
-          <label for="anio">Año</label>
-          <input
-            type="number"
-            id="anio"
-            [(ngModel)]="anioSeleccion"
-            name="anio"
-            min="2024"
-            max="2100"
-            placeholder="Ej. 2025"
-          />
-        </div>
-        <div class="acciones">
-          <button
-            type="button"
-            class="btn-accion primary"
-            (click)="cronograma()"
-          >
-            📑 Informe
-          </button>
-        </div>
+  <div class="filtros-card">
+    <div class="filtros-grid">
+      <div class="filtro-item">
+        <label for="buscar-anio">Año</label>
+        <select id="buscar-anio" [(ngModel)]="buscarAnio" [disabled]="buscando">
+          <option *ngFor="let a of aniosDisponibles" [ngValue]="a">{{ a }}</option>
+        </select>
       </div>
-    </form>
-
-    <!-- Formulario de Reportes -->
-    <form class="filtros glass-panel">
-      <legend>Generar Reportes</legend>
-      <div class="input-row">
-        <div class="input-group">
-          <label for="anio">Año</label>
-          <input
-            type="number"
-            id="anio"
-            [(ngModel)]="buscarAnio"
-            name="anio"
-            min="2024"
-            max="2100"
-            placeholder="Ej. 2025"
-          />
-        </div>
-
-        <div class="input-group">
-          <label for="mes">Mes</label>
-          <input
-            type="number"
-            id="mes"
-            [(ngModel)]="buscarMes"
-            name="mes"
-            min="1"
-            max="12"
-            placeholder="Ej. 10"
-          />
-        </div>
-
-        <div class="acciones">
-          <button
-            type="button"
-            class="btn-accion success"
-            (click)="descargarReporteTodos()"
-          >
-            📥 Excel
-          </button>
-          <button
-            type="button"
-            class="btn-accion btn-light"
-            (click)="cronograma()"
-          >
-            📑 Informe
-          </button>
-        </div>
+      <div class="filtro-item">
+        <label for="buscar-mes">Mes</label>
+        <select id="buscar-mes" [(ngModel)]="buscarMes" [disabled]="buscando">
+          <option value="0">Todos</option>
+          <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">{{ m }}</option>
+        </select>
       </div>
-    </form>
-  </section>
+      <div class="filtro-item">
+        <label for="buscar-subdireccion">Subdirección</label>
+        <select id="buscar-subdireccion" [(ngModel)]="buscarSubdireccion" [disabled]="buscando">
+          <option value="0">Todas</option>
+          <option *ngFor="let s of subdirecciones" [value]="s.id">{{ s.nombre }}</option>
+        </select>
+      </div>
+      <div class="filtro-acciones">
+        <button class="btn btn-primary" (click)="generarReportes()" [disabled]="buscando">
+          <span *ngIf="buscando" class="spinner"></span>
+          Generar gráfica
+        </button>
+        <button class="btn btn-success" (click)="descargarExcel()" [disabled]="descargando">
+          <span *ngIf="descargando" class="spinner"></span>
+          Descargar Excel
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Gráfico -->
-  <section class="chart-section">
-    <div class="chart">
+  <div class="stats-grid">
+    <div class="stat-card stat-total">
+      <div class="stat-number">{{ resumen.total || totalActividades }}</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-card stat-programadas">
+      <div class="stat-number">{{ resumen.programadas || totalProgramadas }}</div>
+      <div class="stat-label">Programadas</div>
+    </div>
+    <div class="stat-card stat-reprogramadas">
+      <div class="stat-number">{{ resumen.reprogramadas || totalReprogramadas }}</div>
+      <div class="stat-label">Reprogramadas</div>
+    </div>
+    <div class="stat-card stat-completadas">
+      <div class="stat-number">{{ resumen.completadas || totalCompletadas }}</div>
+      <div class="stat-label">Completadas</div>
+    </div>
+    <div class="stat-card stat-suspendidas">
+      <div class="stat-number">{{ totalSuspendidas }}</div>
+      <div class="stat-label">Suspendidas</div>
+    </div>
+    <div class="stat-card stat-anuladas">
+      <div class="stat-number">{{ resumen.anuladas }}</div>
+      <div class="stat-label">Anuladas</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <h2>Actividades ejecutadas por servicio ({{ buscarAnio }})</h2>
+    </div>
+    <div class="barras-contenedor" *ngIf="ejecutados.length > 0">
       <div
-        class="bar"
+        class="barra-wrapper"
         *ngFor="let data of ejecutados; let i = index"
-        [style.--value]="data.ejecutado * 100 + '%'"
-        title="{{ data.servicio_encargado }}"
+        [attr.data-name]="data.servicio_encargado"
       >
-        <div class="bar-inner">
-          <span class="bar-value"
-            >{{ data.ejecutado * 100 | number: "1.0-0" }}%</span
-          >
-        </div>
-        <span class="bar-label">{{ data.servicio_encargado }}</span>
+        <div class="barra-valor">{{ data.ejecutado != null ? (data.ejecutado * 100).toFixed(1) + '%' : '0%' }}</div>
+        <div
+          class="barra"
+          [style.height.%]="(data.ejecutado != null ? data.ejecutado : 0) * 100"
+          [style.background]="coloresBarras[i % coloresBarras.length]"
+        ></div>
       </div>
     </div>
-  </section>
-
-  <!-- Resumen -->
-  <section class="contenido-grid">
-    <div class="glass-panel resumen">
-      <h4 class="panel-title">Resumen</h4>
-      <ul class="resumen-lista">
-        <li><span>✅ Completas:</span> {{ resumen.completadas }}</li>
-        <li><span>📅 Programadas:</span> {{ resumen.programadas }}</li>
-        <li><span>🔁 Reprogramadas:</span> {{ resumen.reprogramadas }}</li>
-        <li><span>🚫 Anuladas:</span> {{ resumen.anuladas }}</li>
-        <li class="total"><span>📊 Total:</span> {{ resumen.total }}</li>
-      </ul>
+    <div class="sin-datos" *ngIf="ejecutados.length === 0 && !buscando">
+      No hay datos disponibles para el año seleccionado
     </div>
-  </section>
-</section>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <h2>Programadas por servicio</h2>
+    </div>
+    <div class="barras-contenedor" *ngIf="ejecutados.length > 0">
+      <div
+        class="barra-wrapper"
+        *ngFor="let data of ejecutados; let i = index"
+        [attr.data-name]="data.servicio_encargado + ' (' + (data.programada || 0) + ' prog.)'"
+      >
+        <div class="barra-valor">{{ data.programada || 0 }}</div>
+        <div
+          class="barra barra-programada"
+          [style.height.%]="totalProgramadas > 0 ? (data.programada || 0) / totalProgramadas * 100 : 0"
+          [style.background]="coloresBarras[i % coloresBarras.length]"
+        ></div>
+      </div>
+    </div>
+    <div class="sin-datos" *ngIf="ejecutados.length === 0 && !buscando">
+      No hay datos disponibles
+    </div>
+  </div>
+
+  <button class="btn btn-secondary informe-btn" (click)="cronograma()">
+    📑 Informe de actividades
+  </button>
+</div>
