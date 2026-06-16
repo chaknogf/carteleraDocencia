@@ -1,0 +1,17 @@
+<div class="options-grid">
+  <label
+    class="option-chip"
+    *ngFor="let item of items"
+    [class.active]="isSelected(item)"
+  >
+    <input
+      type="radio"
+      [name]="name"
+      [value]="item.id"
+      [checked]="isSelected(item)"
+      [disabled]="disabled"
+      (change)="onSelect(item.id)"
+    />
+    <span>{{ item.nombre }}</span>
+  </label>
+</div>
