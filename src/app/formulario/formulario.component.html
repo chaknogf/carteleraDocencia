@@ -12,7 +12,7 @@
         <span class="arrow" [class.open]="mostrarServicios">▾</span>
       </legend>
 
-      <div class="form-grid" id="servicios" [class.open]="mostrarServicios">
+      <div class="form-flex" id="servicios" [class.open]="mostrarServicios">
         <!-- SUBDIRECCIONES -->
         <div class="form-group">
           <label>Seleccione Dirección o Subdirección Perteneciente</label>
@@ -21,6 +21,7 @@
             [(selectedValue)]="actividad.subdireccion_id"
             name="subdireccion"
             [disabled]="localServicioId > 2 && role === 'estandar'"
+            [vertical]="true"
             (selectedValueChange)="onSubdireccionChange($event)"
           ></app-options-grid>
         </div>
@@ -33,6 +34,8 @@
             [(selectedValue)]="actividad.servicio_id"
             name="servicio"
             [disabled]="localServicioId > 2 && role === 'estandar'"
+            [vertical]="true"
+            [columns]="3"
             (selectedValueChange)="onServicioSeleccionado()"
           ></app-options-grid>
         </div>
