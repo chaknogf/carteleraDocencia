@@ -118,11 +118,13 @@ export class FormularioAsistenciaComponent implements OnInit {
     if (idParam) {
       const id = Number(idParam);
       if (!isNaN(id)) {
-        this.api.getActividad(id)
-          .then((data) => {
-            this.actividadAsignada = data;
-            this.asistencia.capacitacion_id = this.actividadAsignada.id;
-
+        this.api.getActividades({ id })
+          .then((data: any) => {
+            const actividad = Array.isArray(data) ? data[0] : data.actividades?.[0];
+            if (actividad) {
+              this.actividadAsignada = actividad;
+              this.asistencia.capacitacion_id = this.actividadAsignada.id;
+            }
           })
           .catch((error) => {
             console.error('❌ Error al cargar actividad para edición:', error);

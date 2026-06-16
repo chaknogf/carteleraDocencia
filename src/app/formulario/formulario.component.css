@@ -144,6 +144,17 @@
 }
 
 /* ── Grid Layout ── */
+.form-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.form-flex > .form-group {
+  flex: 1 1 260px;
+  min-width: 200px;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

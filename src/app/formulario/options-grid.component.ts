@@ -14,6 +14,8 @@ export class OptionsGridComponent {
   @Input() selectedValue: any;
   @Input() name: string = '';
   @Input() disabled: boolean = false;
+  @Input() vertical: boolean = false;
+  @Input() columns: number = 0;
   @Output() selectedValueChange = new EventEmitter<any>();
   @Output() selectionChange = new EventEmitter<any>();
 

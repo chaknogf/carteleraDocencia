@@ -103,8 +103,9 @@ export class AsistenciaComponent implements OnInit {
         return;
       }
 
-      const actividades = await this.api.getActividades({ id: this.asistencias[0].capacitacion_id });
-      if (actividades.length > 0) {
+      const data = await this.api.getActividades({ id: this.asistencias[0].capacitacion_id });
+      const actividades = Array.isArray(data) ? data : data.actividades;
+      if (actividades && actividades.length > 0) {
         this.actividad = actividades[0];
       }
 

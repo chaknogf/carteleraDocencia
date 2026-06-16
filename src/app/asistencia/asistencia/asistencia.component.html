@@ -27,7 +27,9 @@
       <td>{{ actividad.servicio_encargado }}</td>
       <th>Persona responsable:</th>
       <td>
-        {{ userData.nombre }}
+        <span *ngFor="let r of actividad.persona_responsable | keyvalue; let last = last">
+          {{ r.value.nombre }}<ng-container *ngIf="!last">, </ng-container>
+        </span>
       </td>
     </tr>
 

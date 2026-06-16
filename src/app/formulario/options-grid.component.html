@@ -1,17 +1,23 @@
-<div class="options-grid">
+<div
+  class="options-grid"
+  [class.vertical]="vertical"
+  [class.grid-columns]="vertical && columns > 0"
+  [style.--columns]="columns || 1"
+>
   <label
-    class="option-chip"
+    class="checkbox-item"
     *ngFor="let item of items"
     [class.active]="isSelected(item)"
   >
     <input
-      type="radio"
+      type="checkbox"
       [name]="name"
       [value]="item.id"
       [checked]="isSelected(item)"
       [disabled]="disabled"
       (change)="onSelect(item.id)"
     />
-    <span>{{ item.nombre }}</span>
+    <span class="checkmark"></span>
+    <span class="label-text">{{ item.nombre }}</span>
   </label>
 </div>
