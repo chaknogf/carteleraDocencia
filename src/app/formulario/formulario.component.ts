@@ -1,23 +1,22 @@
-import { mes, actividad, Estado, Meses } from './../interface/enum';
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { mes, Meses } from './../interface/enum';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
 import { Actividades, Detalles, Estados, Lugares, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad, VerificadorResponse } from './../interface/interfaces';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
+import { OptionsGridComponent } from './options-grid.component';
 import { IconService } from '../service/icon.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { info } from 'console';
 import { infoIcons } from '../shared/icons/icons';
-import { link } from 'fs';
 
 @Component({
   selector: 'app-formulario',
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent]
+  imports: [CommonModule, FormsModule, NavbarComponent, OptionsGridComponent]
 })
 export class FormularioComponent implements OnInit, OnChanges {
 
@@ -101,6 +100,13 @@ export class FormularioComponent implements OnInit, OnChanges {
 
   options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
 
+  private serviciosMap: { [key: number]: ServicioResponsables[] } = {};
+
+  get serviciosPorSubdireccion(): ServicioResponsables[] {
+    if (!this.actividad.subdireccion_id) return [];
+    return this.serviciosMap[this.actividad.subdireccion_id] || [];
+  }
+
   private sanitizarSvg(svg: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
@@ -135,14 +141,27 @@ export class FormularioComponent implements OnInit, OnChanges {
     this.actividad.subdireccion_id = this.localSub;
     this.onServicioSeleccionado();
 
+    this.serviciosMap = {
+      1: this.direccion,
+      2: this.subEnfermeria,
+      3: this.subMedica,
+      4: this.subTecnica,
+      5: this.subGerencia,
+      6: this.subRH
+    };
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const id = Number(idParam);
       if (!isNaN(id)) {
-        this.api.getActividad(id)
-          .then((data) => {
-            this.actividad = data;
+        this.api.getActividades({ id })
+          .then((data: any) => {
+            const actividad = Array.isArray(data) ? data[0] : data.actividades?.[0];
+            if (!actividad) {
+              console.error('❌ No se encontró actividad con id:', id);
+              return;
+            }
+            this.actividad = actividad;
             this.actividad.detalles = this.actividad.detalles || {};
             this.actividad.detalles.nota = this.actividad.detalles.nota || '';
             this.detalle = this.actividad.detalles;
@@ -326,6 +345,14 @@ export class FormularioComponent implements OnInit, OnChanges {
       this.direccion = await this.api.getServiciosResponsables({ sub: 1 });
 
 
+      this.serviciosMap = {
+        1: this.direccion,
+        2: this.subEnfermeria,
+        3: this.subMedica,
+        4: this.subTecnica,
+        5: this.subGerencia,
+        6: this.subRH
+      };
     } catch (error) {
       console.error('Error al listar servicios:', error);
     }
@@ -395,8 +422,8 @@ export class FormularioComponent implements OnInit, OnChanges {
   }
 
 
-  mostrarServicios = false;
-  mostrarActividad = false;
+  mostrarServicios = true;
+  mostrarActividad = true;
   mostrarDetalle = false;
 
   toggleServicios(): void {
