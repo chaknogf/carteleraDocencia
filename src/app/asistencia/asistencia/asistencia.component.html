@@ -1,19 +1,20 @@
 <app-navbar class="no-print"></app-navbar>
 <div class="informe-container">
-  <button class="no-print btn btn-primary" (click)="print()">
+  <button class="no-print btn-print" (click)="print()">
     <span [innerHTML]="icons['print']"></span>
   </button>
+
   <!-- Encabezado -->
   <header class="encabezado">
     <div class="logo">
       <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
     </div>
-
     <div class="titulo">
       <h1 class="titulo-informe">Listado de Asistencia</h1>
     </div>
   </header>
 
+  <!-- Datos generales -->
   <table class="tabla-informe">
     <tr>
       <th>Tema:</th>
@@ -21,7 +22,6 @@
       <th>Fecha:</th>
       <td>{{ actividad.fecha_programada | date : "dd-MM-yyyy" }}</td>
     </tr>
-
     <tr>
       <th>Servicio:</th>
       <td>{{ actividad.servicio_encargado }}</td>
@@ -32,48 +32,53 @@
         </span>
       </td>
     </tr>
-
-    <!-- Fila combinada Servicio + Fecha -->
-    <tr></tr>
   </table>
 
-  <hr />
+  <hr class="linea-separadora" />
 
-  <table class="tabla-listado">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Nombre completo</th>
-        <th>Sexo</th>
-        <th>Edad</th>
-        <th>CUI</th>
-        <th>Puesto</th>
-        <th>Nombre de Unidad Administrativa</th>
-        <th>Código Empleado</th>
-        <th>Pertenencia Cultural</th>
-        <th>Comunidad Linguistica</th>
-        <th>Discapacidad</th>
-        <th>Contacto</th>
-      </tr>
-    </thead>
+  <!-- Tabla de asistentes -->
+  <div class="tabla-contenedor">
+    <table class="tabla-listado">
+      <thead>
+        <tr>
+          <th class="th-numero">#</th>
+          <th class="th-nombre">Nombre completo</th>
+          <th class="th-sexo">Sexo</th>
+          <th class="th-edad">Edad</th>
+          <th class="th-cui">CUI</th>
+          <th class="th-puesto">Puesto</th>
+          <th class="th-unidad">Unidad Administrativa</th>
+          <th class="th-codigo">Código Empl.</th>
+          <th class="th-pertenencia">Pertenencia Cultural</th>
+          <th class="th-idioma">Comunidad Lingüística</th>
+          <th class="th-discapacidad">Discapacidad</th>
+          <th class="th-contacto">Contacto</th>
+          <th class="th-fecha">Fecha Registro</th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr *ngFor="let a of asistencias; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td class="text-capitalize">{{ a.nombre_completo }}</td>
+      <tbody>
+        <tr *ngFor="let a of asistencias; let i = index">
+          <td class="td-numero">{{ i + 1 }}</td>
+          <td class="td-nombre text-capitalize">{{ a.nombre_completo }}</td>
+          <td>{{ a.sexo_id == 1 ? "Hombre" : "Mujer" }}</td>
+          <td>{{ a.grupo_edad_id | grupoEdad }}</td>
+          <td>{{ a.cui }}</td>
+          <td>{{ a.puesto_funcional }}</td>
+          <td>{{ a.datos_extras.unidad_administrativa }}</td>
+          <td>{{ a.datos_extras.codigo_empleado }}</td>
+          <td>{{ a.pertenencia_cultural_id | pertenencia }}</td>
+          <td>{{ a.datos_extras.idioma | idioma }}</td>
+          <td>{{ a.datos_extras.discapacidad | discapacidad }}</td>
+          <td>{{ a.telefono_email }}</td>
+          <td class="td-fecha">{{ a.fecha_registro | date: 'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-        <td>{{ a.sexo_id == 1 ? "Hombre" : "Mujer" }}</td>
-        <td>{{ a.grupo_edad_id | grupoEdad }}</td>
-
-        <td>{{ a.cui }}</td>
-        <td>{{ a.puesto_funcional }}</td>
-        <td>{{ a.datos_extras.unidad_administrativa }}</td>
-        <td>{{ a.datos_extras.codigo_empleado }}</td>
-        <td>{{ a.pertenencia_cultural_id | pertenencia }}</td>
-        <td>{{ a.datos_extras.idioma | idioma }}</td>
-        <td>{{ a.datos_extras.discapacidad | discapacidad }}</td>
-        <td>{{ a.telefono_email }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- Pie de informe -->
+  <footer class="pie-informe">
+    <p>Total de asistentes: <strong>{{ asistencias.length }}</strong></p>
+  </footer>
 </div>

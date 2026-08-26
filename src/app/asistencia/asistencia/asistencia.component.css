@@ -1,275 +1,340 @@
-/* Opciones de tamaño: Carta, Oficio o Automático */
-/* Puedes activar una u otra según necesidad */
-
 @page {
-  /* size: letter landscape;   Carta horizontal */
-  /* size: letter portrait;    Carta vertical */
-  /* size: legal landscape;    Oficio horizontal */
-  /* size: legal portrait;     Oficio vertical */
   size: auto;
-  margin: 1in;
+  margin: 0.8in;
 }
 
-/* Contenedor principal del informe */
+/* ==================== CONTENEDOR PRINCIPAL ==================== */
 .informe-container {
   width: 100%;
-  max-width: 13.5in;
-  font-family: 'Inter', sans-serif;
-  color: #333;
-  background-color: white;
-  margin: 0 auto; /* Centrado de la ficha */
-  padding: 0.5in;
+  max-width: 14in;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: #1a1a2e;
+  background-color: #ffffff;
+  margin: 0 auto;
+  padding: 0.6in;
   box-sizing: border-box;
 }
 
-
-/* Subtítulo del listado */
-.subtitulo-listado {
-  font-size: 20px;
+/* ==================== BOTÓN DE IMPRESIÓN ==================== */
+.btn-print {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
   font-weight: 600;
   color: #1e3a8a;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.linea-separadora {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 25px 0;
-}
-
-.tabla-informe {
-  width: auto;
-  border-collapse: collapse; /* Quita espacios entre celdas */
-  border: 1px solid #ccc;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  border: 1px solid #a5b4fc;
   border-radius: 8px;
-  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
 }
 
-.tabla-informe th,
-.tabla-informe td {
-  padding: 2px 3px;
-  border-bottom: 1px solid #ddd;
-}
-
-.tabla-informe tr:last-child th,
-.tabla-informe tr:last-child td {
-  border-bottom: none; /* Última fila sin borde */
-}
-
-.tabla-informe th {
-  background: #e0e7ff;
+.btn-print:hover {
+  background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%);
   color: #1e3a8a;
-  font-weight: 600;
-  text-align: left;
-  border-right: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.15);
+  transform: translateY(-1px);
 }
 
-.tabla-informe tr {
-  text-align: center;
+.btn-print span {
+  display: inline-flex;
+  font-size: 16px;
 }
 
-.tabla-informe td {
-  background: #fafafa;
-  width: 50%;
-}
-
-/* Tabla del listado de asistentes */
-.tabla-listado {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 12px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.tabla-listado th,
-.tabla-listado td {
-  border: 1px solid #ccc;
-  padding: 8px 10px;
-  text-align: center; /* Mejor presentación de datos */
-}
-
-.tabla-listado th {
-  background: #3730a3;
-  color: white;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 11px;
-}
-
-.tabla-listado tr {
-  font-size: 12px;
-}
-
-/* Ajustes visuales para filas */
-.tabla-listado tr:nth-child(even) {
-  background-color: #f9fafb;
-}
-
-/* Opiniones con tonalidades más suaves */
-.opinion-badge {
-  display: inline-block;
-  padding: 4px 7px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  min-width: 70px;
-}
-
-.opinion-Excelente { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-.opinion-Bueno { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-.opinion-Regular { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-.opinion-Malo { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-
-/* Forzar buenos saltos de página */
-@media print {
-
-  .tabla-listado tr {
-    page-break-inside: avoid;
-  }
-
-  .titulo-informe,
-  .tabla-informe,
-  .subtitulo-listado {
-    page-break-after: avoid;
-  }
-}
-
-/* Adaptación para impresión */
-@media print {
-  body {
-    margin: 0;
-
-  }
-
-  .informe-container {
-    margin: 0;
-    padding: 0;
-  }
-
-  .no-print {
-      display: none;
-    }
-
-}
-
-/* ENCABEZADO */
+/* ==================== ENCABEZADO ==================== */
 .encabezado {
-  position: relative; /* Necesario para centrar el título respecto a este contenedor */
+  position: relative;
   display: flex;
   align-items: center;
-  border-bottom: 2px solid #444;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-  height: 120px; /* Asegura espacio visual armonioso */
+  border-bottom: 3px solid #1e3a8a;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  height: 110px;
 }
 
 .logo img {
-  width: 280px;
+  width: 260px;
   height: auto;
 }
 
-/* TITULO CENTRADO EN LA HOJA */
 .titulo-informe {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
   text-align: center;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 2px;
   color: #1e3a8a;
-  padding-bottom: 12px;
+  padding-bottom: 10px;
   width: max-content;
   white-space: nowrap;
+  border-bottom: 2px solid #a5b4fc;
 }
 
-.r90 {
-  transform: rotate(-90deg);
-  transform-origin: center;
-  white-space: nowrap;
-  line-height: 1;            /* evita estiramiento */
-  /* display: inline-block; */
-  height: 2;                 /* truco clave */
-  padding: 0;
-  margin: 0;
-}
-.tabla-listado tbody tr {
-  height: 32px; /* o el valor que quieras */
-  text-transform: uppercase;
-}
-
-.tabla-listado thead tr {
-  height: 40px; /* ajusta según tu gusto */
-}
-.tabla-listado {
+/* ==================== TABLA DE INFORMACIÓN GENERAL ==================== */
+.tabla-informe {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* Control total */
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-.tabla-listado th:nth-child(1),
-.tabla-listado td:nth-child(1) {
-  width: 3%;
+.tabla-informe th,
+.tabla-informe td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.tabla-listado th:nth-child(2),
-.tabla-listado td:nth-child(2) {
+.tabla-informe tr:last-child th,
+.tabla-informe tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-informe th {
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+  color: #1e3a8a;
+  font-weight: 700;
+  text-align: left;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-right: 1px solid #c7d2fe;
   width: 18%;
 }
 
-.tabla-listado th:nth-child(3),
-.tabla-listado td:nth-child(3),
-.tabla-listado th:nth-child(4),
-.tabla-listado td:nth-child(4) {
-  width: 6%;
-
+.tabla-informe th:last-child {
+  border-right: none;
 }
 
-.tabla-listado th:nth-child(5),
-.tabla-listado td:nth-child(5) {
-  width: 10%;
+.tabla-informe td {
+  background: #fafbff;
+  color: #1a1a2e;
+  font-size: 13px;
 }
 
-.tabla-listado th:nth-child(6),
-.tabla-listado td:nth-child(6) {
-  width: 8%;
+.tabla-informe tr:nth-child(even) td {
+  background: #f0f2ff;
 }
 
-.tabla-listado th:nth-child(7),
-.tabla-listado td:nth-child(7) {
-  width: 8%;
+/* ==================== LÍNEA SEPARADORA ==================== */
+.linea-separadora {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 20px 0 24px;
 }
 
-.tabla-listado th:nth-child(8),
-.tabla-listado td:nth-child(8) {
-  width: 8%;
+/* ==================== CONTENEDOR DE TABLA DE ASISTENTES ==================== */
+.tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 4px rgba(30, 58, 138, 0.06);
 }
 
-.tabla-listado th:nth-child(9),
-.tabla-listado td:nth-child(9) {
-  width: 8%;
+/* ==================== TABLA DE LISTADO DE ASISTENTES ==================== */
+.tabla-listado {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 1100px;
 }
 
-.tabla-listado th:nth-child(10),
-.tabla-listado td:nth-child(10) {
-  width: 8%;
-}
-.tabla-listado th:nth-child(11),
-.tabla-listado td:nth-child(11) {
-  width: 8%;
-}
-.tabla-listado th:nth-child(12),
-.tabla-listado td:nth-child(12) {
-  width: 12%;
+/* ---- Cabecera ---- */
+.tabla-listado thead {
+  background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
 }
 
-.tabla-informe th:nth-child(4),
-.tabla-informe td:nth-child(4) {
-  width: 28%;
+.tabla-listado thead tr {
+  height: 44px;
+}
+
+.tabla-listado th {
+  padding: 0 8px;
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.tabla-listado th:last-child {
+  border-right: none;
+}
+
+/* ---- Cuerpo ---- */
+.tabla-listado tbody tr {
+  height: 34px;
+  text-transform: uppercase;
+  transition: background 0.15s ease;
+}
+
+.tabla-listado tbody tr:hover {
+  background-color: #e0e7ff !important;
+}
+
+.tabla-listado td {
+  padding: 6px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #f0f0f0;
+  font-size: 11px;
+  color: #374151;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.tabla-listado td:last-child {
+  border-right: none;
+}
+
+.tabla-listado tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.tabla-listado tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* ---- Columnas específicas ---- */
+.th-numero, .td-numero {
+  width: 4%;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.th-nombre, .td-nombre {
+  text-align: left !important;
+  padding-left: 10px !important;
+  font-weight: 600;
+}
+
+.th-fecha, .td-fecha {
+  font-size: 10px;
+  font-weight: 600;
+  color: #1e3a8a;
+  white-space: nowrap;
+}
+
+.td-fecha {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+}
+
+/* ==================== PIE DE INFORME ==================== */
+.pie-informe {
+  margin-top: 24px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+  border-radius: 8px;
+  border: 1px solid #c7d2fe;
+  text-align: right;
+  font-size: 13px;
+  color: #1e3a8a;
+}
+
+.pie-informe strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* ==================== UTILIDADES ==================== */
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* ==================== IMPRESIÓN ==================== */
+@media print {
+  @page {
+    size: landscape;
+    margin: 0.4in;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .informe-container {
+    margin: 0;
+    padding: 0.15in;
+    max-width: 100%;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .tabla-listado {
+    font-size: 9px;
+    min-width: 100%;
+  }
+
+  .tabla-listado thead {
+    background: #1e3a8a !important;
+  }
+
+  .tabla-listado th {
+    color: #ffffff !important;
+    font-size: 8px;
+  }
+
+  .tabla-listado tbody tr {
+    page-break-inside: avoid;
+    height: 28px;
+  }
+
+  .tabla-listado td {
+    font-size: 9px;
+    padding: 4px 5px;
+  }
+
+  .td-fecha {
+    background: #e0e7ff !important;
+  }
+
+  .titulo-informe,
+  .tabla-informe,
+  .linea-separadora {
+    page-break-after: avoid;
+  }
+
+  .tabla-informe th {
+    background: #e0e7ff !important;
+    color: #1e3a8a !important;
+  }
+
+  .tabla-informe td {
+    background: #fafbff !important;
+  }
+
+  .pie-informe {
+    background: #e0e7ff !important;
+    border: 1px solid #c7d2fe !important;
+  }
 }
