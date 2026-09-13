@@ -1,0 +1,83 @@
+<app-navbar></app-navbar>
+
+<div class="reporte-container">
+  <h1>Reporte de actividades</h1>
+
+  <div class="filtros-card">
+    <div class="filtros-grid">
+      <div class="filtro-item">
+        <label for="sel-subdireccion">Subdirección</label>
+        <select id="sel-subdireccion" [(ngModel)]="subdireccionId" (ngModelChange)="onSubdireccionChange()">
+          <option [ngValue]="0" disabled>Seleccione</option>
+          <option *ngFor="let s of subdirecciones" [ngValue]="s.id">{{ s.nombre }}</option>
+        </select>
+      </div>
+      <div class="filtro-item">
+        <label for="sel-servicio">Servicio</label>
+        <select id="sel-servicio" [(ngModel)]="servicioId" [disabled]="!subdireccionId">
+          <option [ngValue]="0" disabled>&mdash; Elija un servicio &mdash;</option>
+          <option *ngFor="let sv of servicios" [ngValue]="sv.id">{{ sv.nombre }}</option>
+        </select>
+      </div>
+      <div class="filtro-item">
+        <label for="sel-anio">Año</label>
+        <select id="sel-anio" [(ngModel)]="anioSeleccion">
+          <option *ngFor="let a of aniosDisponibles" [ngValue]="a">{{ a }}</option>
+        </select>
+      </div>
+      <div class="filtro-item">
+        <label for="sel-mes">Mes (opcional)</label>
+        <select id="sel-mes" [(ngModel)]="mesSeleccionado">
+          <option [ngValue]="0">Todos</option>
+          <option *ngFor="let m of meses" [ngValue]="m.value">{{ m.label }}</option>
+        </select>
+      </div>
+      <div class="filtro-acciones">
+        <button class="btn btn-primary" (click)="generar()" [disabled]="!puedeGenerar || buscando">
+          <span *ngIf="buscando" class="spinner"></span>
+          Generar reporte
+        </button>
+        <button class="btn btn-secondary" (click)="irCronograma()" [disabled]="!puedeGenerar">
+          Ver cronograma (/autorizado)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mensaje" class="mensaje">{{ mensaje }}</div>
+
+  <div *ngIf="hayReporte && reporte.length > 0" class="tabla-card">
+    <div class="tabla-header">
+      <h2>Cronograma {{ anioSeleccion }} &mdash; {{ nombreServicio(servicioId) }}</h2>
+      <span>{{ reporte.length }} actividad(es)</span>
+    </div>
+    <div class="tabla-scroll">
+      <table class="tabla-reporte">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Tema</th>
+            <th>Actividad</th>
+            <th>Fecha Programada</th>
+            <th>Mes</th>
+            <th>Modalidad</th>
+            <th>Estado</th>
+            <th>Nota</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of reporte; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.tema }}</td>
+            <td>{{ item.actividad }}</td>
+            <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
+            <td>{{ item.mes }}</td>
+            <td>{{ item.modalidad }}</td>
+            <td>{{ item.estado }}</td>
+            <td>{{ item.nota }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -503,7 +503,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 768px) {
   .formulario-container {
-    padding: 0 1rem;
+    padding: 0 1rem 104px;
     margin: 1rem auto;
   }
 
@@ -521,6 +521,19 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     padding: 1rem 1.25rem;
   }
 
+  .fieldset-card legend {
+    width: 100%;
+    justify-content: space-between;
+    min-height: 46px;
+    padding: 0.6rem 0.9rem;
+  }
+
+  #servicios.open,
+  #actividad.open,
+  #detalle.open {
+    max-height: none;
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -535,8 +548,15 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
   }
 
   .option-chip {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
+    min-height: 42px;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px;
   }
 
   .responsable-row {
@@ -553,13 +573,25 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
   }
 
   .form-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
   }
 
   .form-actions .btn {
     width: 100%;
     justify-content: center;
+    min-height: 48px;
     padding: 0.7rem 1.5rem;
   }
 }
@@ -577,7 +609,6 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
   .form-group input,
   .form-group select,
   .form-group textarea {
-    font-size: 0.85rem;
     padding: 0.5rem 0.75rem;
   }
 }

@@ -1,0 +1,62 @@
+<app-navbar></app-navbar>
+
+<div class="sud-container">
+
+  <header class="head">
+    <div>
+      <span class="kicker">Administración · Solo admin</span>
+      <h1>Gestor de Subdirecciones</h1>
+    </div>
+    <div class="buscar">
+      <input
+        type="text"
+        [(ngModel)]="buscarNombre"
+        (keyup.enter)="listar()"
+        placeholder="Buscar por nombre…"
+      />
+      <button class="btn-filtro" (click)="listar()">&#128269; Buscar</button>
+      <button class="btn-filtro btn-limpiar" (click)="limpiarFiltros()">&#128465; Limpiar</button>
+    </div>
+  </header>
+
+  <div class="bar-acciones">
+    <button class="btn-agregar" (click)="agregar()">&#10133; Agregar subdirección</button>
+    <span class="conteo" *ngIf="!cargando"><b>{{ subdirecciones.length }}</b> subdireccion(es)</span>
+  </div>
+
+  <div class="mensaje" *ngIf="mensaje">{{ mensaje }}</div>
+
+  <div class="grid">
+    <div class="card-sub" *ngFor="let sub of subdirecciones">
+      <div class="card-encabezado">
+        <div class="sigla">{{ sub.nombre.charAt(0) | uppercase }}</div>
+        <h3>{{ sub.nombre }}</h3>
+        <span class="estado" [class.est-inactivo]="!sub.activo">
+          {{ sub.activo ? 'Activa' : 'Inactiva' }}
+        </span>
+      </div>
+
+      <p class="descripcion">{{ sub.descripcion || 'Sin descripción' }}</p>
+
+      <div class="info-linea">
+        <span>Responsable</span>
+        <b>{{ sub.persona_encargada || '—' }}</b>
+      </div>
+      <div class="info-linea">
+        <span>ID</span>
+        <b>#{{ sub.id }}</b>
+      </div>
+
+      <div class="acciones">
+        <button class="btn-editar" (click)="editar(sub.id)">&#9998; Editar</button>
+        <button class="btn-eliminar" (click)="eliminar(sub)">&#128465; Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="vacio" *ngIf="!cargando && subdirecciones.length === 0">
+    No hay subdirecciones para mostrar.
+  </div>
+
+  <button class="btn-volver" (click)="volver()">&#8592; Volver al panel</button>
+</div>

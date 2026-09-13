@@ -1,14 +1,15 @@
-import { estado } from './../../interface/enum';
-import { Component, input, OnInit, Input } from '@angular/core';
-import { ApiService } from '../../service/api.service';
-import { Router } from '@angular/router';
-import { ActividadesVista, Reportes, ServicioResponsables } from '../../interface/interfaces';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from "../../navs/navbar/navbar.component";
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { IconService } from '../../service/icon.service';
-import { printicon } from '../../shared/icons/icons';
+import { Router } from '@angular/router';
+import { ApiService } from '../../service/api.service';
 import { ComunicacionService } from '../../service/comunicacion.service';
+import { ServicioResponsables } from '../../interface/interfaces';
+import { estado, mes } from '../../interface/enum';
+import { NavbarComponent } from "../../navs/navbar/navbar.component";
+import { skip } from 'rxjs';
+
+const ICON_IMPRIMIR = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`;
+const ICON_VOLVER = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
 
 @Component({
   selector: 'app-autorizado',
@@ -18,8 +19,17 @@ import { ComunicacionService } from '../../service/comunicacion.service';
   imports: [CommonModule, NavbarComponent]
 })
 export class AutorizadoComponent implements OnInit {
+  readonly fechaGeneracion = new Date();
   anioSeleccion: number = 0;
-  public resumen: any[] = [];
+  mesSeleccion: number = 0;
+  subId: number = 0;
+  resumen: any[] = [];
+  cargando = true;
+  printIcon = ICON_IMPRIMIR;
+  volverIcon = ICON_VOLVER;
+  meses = mes;
+  estados = estado;
+
   servicioR: ServicioResponsables = {
     id: 0,
     nombre: '',
@@ -28,57 +38,99 @@ export class AutorizadoComponent implements OnInit {
     puesto_funcional: '',
     activo: false,
     subdireccion_id: 0
-  }
-  options: { nombre: string; descripcion: string; ruta: string; icon: string }[] = [];
-  private sanitizarSvg(svg: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(svg);
-  }
-  // iconos
-  icons: { [key: string]: any } = {};
-
-  printicon: SafeHtml = printicon
+  };
 
   constructor(
     private api: ApiService,
     private router: Router,
-    private iconService: IconService,
-    private sanitizer: DomSanitizer,
     private comunicacionService: ComunicacionService
-  ) {
+  ) {}
 
-    this.icons = {
-      print: this.iconService.getIcon('printicon')
+  async ngOnInit() {
+    const localServid = Number(localStorage.getItem('servicio_id')) || null;
+    const config = this.comunicacionService.getReporteConfig();
 
-    }
-  }
+    const servicioId = config?.todos ? null : config?.servicioId ?? localServid;
+    this.subId = config?.subId ?? 0;
+    this.mesSeleccion = config?.mes ?? 0;
+    this.anioSeleccion = config?.anio ?? this.comunicacionService.getAnioSeleccionado();
 
-  ngOnInit() {
-    this.comunicacionService.anioSeleccionado$.subscribe(anio => {
+    this.comunicacionService.anioSeleccionado$.pipe(skip(1)).subscribe(anio => {
       this.anioSeleccion = anio;
-      // console.log('📅 Año recibido:', anio);
+      this.getDatos(servicioId, anio);
     });
-    const localServid = Number(localStorage.getItem('servicio_id'))
-    // console.log(localServid, this.anioSeleccion)
-    this.getDatos(localServid, this.anioSeleccion);
 
-    this.api.getServiciosResponsables({ id: localServid })
-      .then((data) => {
-        this.servicioR = data[0];
-      })
+    await this.getDatos(servicioId, this.anioSeleccion);
 
+    if (servicioId) {
+      try {
+        const data = await this.api.getServiciosResponsables({ id: servicioId });
+        if (data?.length) this.servicioR = data[0];
+      } catch {
+        /* sin datos del servicio */
+      }
+    }
+    this.cargando = false;
   }
 
-  async getDatos(value: number, anio: number) {
+  async getDatos(servicioId: number | null, anio: number) {
     try {
-      this.resumen = await this.api.getReporteActividades({ servicioId: value, anio: anio })
+      const filtros: any = { anio: anio };
+      if (servicioId) filtros.servicioId = servicioId;
+      if (this.subId) filtros.subId = this.subId;
+      if (this.mesSeleccion > 0) filtros.mes = this.mesSeleccion;
+      this.resumen = await this.api.getReporteActividades(filtros);
     } catch (error) {
-      console.error('Error al cargar informacion', error)
+      console.error('Error al cargar informacion', error);
+      this.resumen = [];
     }
+  }
+
+  get nombreSubdireccion(): string {
+    return this.servicioR.subdireccion?.nombre || '';
+  }
+
+  get periodo(): string {
+    if (this.mesSeleccion > 0) {
+      return `${this.mesLabel(this.mesSeleccion)} ${this.anioSeleccion}`;
+    }
+    return `Año ${this.anioSeleccion}`;
+  }
+
+  get totales() {
+    const t = { total: this.resumen.length, programadas: 0, completadas: 0, suspendidas: 0, reprogramadas: 0, anuladas: 0 };
+    for (const item of this.resumen) {
+      const s = item?.estado;
+      if (s === 'P') t.programadas++;
+      else if (s === 'C') t.completadas++;
+      else if (s === 'S') t.suspendidas++;
+      else if (s === 'R') t.reprogramadas++;
+      else if (s === 'A') t.anuladas++;
+    }
+    return t;
+  }
+
+  mesLabel(value: number): string {
+    return this.meses.find(m => m.value === value)?.label || '';
+  }
+
+  estadoInfo(value: string): { label: string; css: string } {
+    const e = this.estados.find(s => s.value === value);
+    const cssMap: Record<string, string> = {
+      P: 'est-programada',
+      C: 'est-completada',
+      S: 'est-suspendida',
+      R: 'est-reprogramada',
+      A: 'est-anulada'
+    };
+    return { label: e?.label || value || '—', css: cssMap[value] || 'est-default' };
+  }
+
+  regresar() {
+    this.router.navigate(['/reporte']);
   }
 
   print() {
     window.print();
   }
-
 }
- 

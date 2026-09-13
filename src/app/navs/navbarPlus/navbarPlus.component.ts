@@ -42,8 +42,16 @@ export class NavbarPlusComponent implements OnInit {
     this.router.navigate(['dashboard']);
   }
 
+  reporteSelector() {
+    this.router.navigate(['reporte']);
+  }
+
   servicios() {
     this.router.navigate(['servicioRes'])
+  }
+
+  subdirecciones() {
+    this.router.navigate(['subdirecciones']);
   }
 
   agregarDocencia() {

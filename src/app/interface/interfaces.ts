@@ -34,6 +34,7 @@ export interface SubdirecionPertenece {
   id: number;
   nombre: string;
   descripcion: string;
+  persona_encargada?: string;
   activo: boolean;
 }
 

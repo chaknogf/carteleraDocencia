@@ -1,5 +1,5 @@
 import { mes, Meses } from './../interface/enum';
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
 import { Actividades, Detalles, Estados, Lugares, Metadatos, Modalidades, PersonaResponsable, ServicioResponsables, SubdirecionPertenece, TipoActividad, VerificadorResponse } from './../interface/interfaces';
@@ -18,7 +18,7 @@ import { infoIcons } from '../shared/icons/icons';
   standalone: true,
   imports: [CommonModule, FormsModule, NavbarComponent, OptionsGridComponent]
 })
-export class FormularioComponent implements OnInit, OnChanges {
+export class FormularioComponent implements OnInit, OnChanges, OnDestroy {
 
   public enEdicion: boolean = false;
   public mesActividad: number = 0;
@@ -188,8 +188,28 @@ export class FormularioComponent implements OnInit, OnChanges {
     this.listarEstados();
     this.getLugares();
 
+    this.sincronizarAcordeonMovil();
+    this.mqMovil?.addEventListener('change', this.onBreakpointCambio);
 
+  }
 
+  ngOnDestroy(): void {
+    this.mqMovil?.removeEventListener('change', this.onBreakpointCambio);
+  }
+
+  private onBreakpointCambio = (ev: MediaQueryListEvent): void => {
+    if (ev.matches) {
+      this.mostrarActividad = false;
+      this.mostrarDetalle = false;
+    }
+  };
+
+  private sincronizarAcordeonMovil(): void {
+    if (this.mqMovil?.matches) {
+      // En móvil la sección de actividad arranca colapsada (acordeón).
+      this.mostrarActividad = false;
+      this.mostrarDetalle = false;
+    }
   }
 
 
@@ -314,6 +334,14 @@ export class FormularioComponent implements OnInit, OnChanges {
     this.detalle.mes = fecha.getMonth() + 1;
   }
 
+  onFechaProgramadaChange() {
+    const fecha = new Date(this.actividad.fecha_programada);
+    if (!isNaN(fecha.getTime())) {
+      this.actividad.mes_id = fecha.getMonth() + 1;
+      this.detalle.mes = fecha.getMonth() + 1;
+    }
+  }
+
   ngAfterViewInit() {
     document.addEventListener('mousemove', (e) => {
       document.body.style.setProperty('--mouse-x', e.clientX + 'px');
@@ -425,6 +453,9 @@ export class FormularioComponent implements OnInit, OnChanges {
   mostrarServicios = true;
   mostrarActividad = true;
   mostrarDetalle = false;
+
+  private mqMovil: MediaQueryList | null =
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)') : null;
 
   toggleServicios(): void {
     this.mostrarServicios = !this.mostrarServicios;

@@ -1,94 +1,196 @@
 <app-navbarCliente></app-navbarCliente>
 
-<section class="cartelera">
-  <header class="cartelera-header">
-    <h2 class="titulo">🗓️ Calendario de Actividades de Docencia</h2>
-    <p class="subtitulo">
-      Mes de {{ mes | mes }} {{ anio }} — Hospital General Tipo I de Tecpán
-      Guatemala
-    </p>
-  </header>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <span class="hero-logo">🩺</span>
+      <div class="hero-institucion">
+        <span>Ministerio de Salud Pública y Asistencia Social</span>
+        <span>Hospital General Tipo I de Tecpán Guatemala</span>
+      </div>
+    </div>
 
-  <div class="eventos-lista">
-    <div
-      class="evento-card"
-      *ngFor="let evento of eventos"
-      [class.hoy]="evento.fecha_programada === hoy"
-    >
-      <div class="fecha">
-        <span class="dia">{{ evento.fecha_programada | date : "dd" }}</span>
-        <span class="mes">{{ evento.fecha_programada | date : "MMM" }}</span>
+    <h1 class="hero-titulo">Cartelera de Docencia</h1>
+    <p class="hero-sub">Capacitaciones, charlas y jornadas de formación para todo el personal de salud.</p>
+
+    <div class="hero-nav">
+      <button class="nav-btn" (click)="cambiarMes(-1)" aria-label="Mes anterior">&#8249;</button>
+      <button class="nav-mes" (click)="irHoy()">
+        <span class="nav-mes-nombre">{{ mesLabel }}</span>
+        <span class="nav-mes-anio">{{ anioSeleccionado }}</span>
+      </button>
+      <button class="nav-btn" (click)="cambiarMes(1)" aria-label="Mes siguiente">&#8250;</button>
+      <span *ngIf="!esMesActual()" class="chip-hoy-cta" (click)="irHoy()">Ir al mes actual</span>
+    </div>
+
+    <p class="hero-fecha">Hoy es {{ fechaLargaHoy }}</p>
+  </div>
+</header>
+
+<section class="cuerpo">
+  <!-- Estadísticas -->
+  <div class="stats">
+    <div class="stat"><b>{{ conteoTotales }}</b><span>{{ conteoTotales === 1 ? 'Actividad' : 'Actividades' }}</span></div>
+    <div class="stat" [class.stat-resaltada]="conteoHoy > 0"><b>{{ conteoHoy }}</b><span>Para hoy</span></div>
+    <div class="stat"><b>{{ conteoProximos }}</b><span>Próximas</span></div>
+  </div>
+
+  <!-- Barra de filtros -->
+  <div class="toolbar">
+    <div class="buscador">
+      <span class="buscador-icono">&#128269;</span>
+      <input
+        type="search"
+        [(ngModel)]="busqueda"
+        placeholder="Buscar por tema, servicio, paciente…"
+      />
+      <span class="buscador-limpiar" *ngIf="busqueda" (click)="busqueda = ''">&#10005;</span>
+    </div>
+
+    <div class="filtros">
+      <span class="filtros-titulo">Modalidad</span>
+      <button
+        class="chip"
+        *ngFor="let m of modalidades"
+        [class.activa]="filtroModalidad === m"
+        (click)="filtroModalidad = m"
+      >
+        {{ m }}
+      </button>
+      <span class="filtros-titulo">Estado</span>
+      <button
+        class="chip"
+        *ngFor="let e of estadosDisponibles"
+        [class.activa]="filtroEstado === e"
+        (click)="filtroEstado = e"
+      >
+        {{ e }}
+      </button>
+      <button class="chip chip-borrar" *ngIf="hayFiltrosActivos()" (click)="limpiarFiltros()">Quitar filtros</button>
+    </div>
+  </div>
+
+  <!-- Carga -->
+  <div class="estado-capa" *ngIf="cargando">
+    <div class="skel" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+      <div class="skel-fecha"></div>
+      <div class="skel-linea ancho-60"></div>
+      <div class="skel-linea ancho-80"></div>
+      <div class="skel-linea ancho-40"></div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="estado-capa" *ngIf="!cargando && error">
+    <div class="estado-bloque">
+      <span class="estado-icono" style="font-size: 38px">&#128736;&#65039;</span>
+      <h3>Oops, algo salió mal</h3>
+      <p>{{ error }}</p>
+      <button class="btn-primario" (click)="cargar()">Reintentar</button>
+    </div>
+  </div>
+
+  <!-- Sin resultados -->
+  <div class="estado-capa" *ngIf="!cargando && !error && eventosFiltrados.length === 0">
+    <div class="estado-bloque">
+      <span class="estado-icono" style="font-size: 38px">&#128220;</span>
+      <h3>{{ eventos.length === 0 ? 'Sin actividades este mes' : 'Sin coincidencias con tus filtros' }}</h3>
+      <p *ngIf="eventos.length === 0">Explora otro mes o vuelve al calendario actual para ver la programación.</p>
+      <p *ngIf="eventos.length > 0">Prueba con otra palabra o restablece los filtros.</p>
+      <button class="btn-primario" (click)="hayFiltrosActivos() ? limpiarFiltros() : irHoy()">
+        {{ hayFiltrosActivos() ? 'Limpiar filtros' : 'Ir al mes actual' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Agenda -->
+  <div *ngIf="!cargando && !error && eventosFiltrados.length > 0">
+    <section class="dia-seccion" *ngFor="let dia of agenda">
+      <div class="dia-cab">
+        <div class="dia-fecha">
+          <b>{{ dia.dia }}</b>
+          <span>{{ dia.mesCorto }}</span>
+        </div>
+        <div class="dia-info">
+          <h2>{{ dia.semana }}</h2>
+          <span>{{ dia.eventos.length }} {{ dia.eventos.length === 1 ? 'actividad' : 'actividades' }}</span>
+        </div>
+        <span class="dia-relativo" [class.rel-hoy]="dia.relativo === 'Hoy'" [class.rel-pasado]="esPasado(dia.fecha)" *ngIf="dia.relativo">
+          {{ dia.relativo }}
+        </span>
       </div>
 
-      <div class="contenido">
-        <h3 class="tema">{{ evento.tema }}</h3>
-        <p class="label-info">🧪 Tipo de Actividad:</p>
-        <p class="data-info">{{ evento.actividad }}</p>
-        <p class="label-info">Servicio Encargado:</p>
-        <p class="data-info">🏥 {{ evento.servicio_encargado }}</p>
-        <p class="data-info">
-          <span class="text-info">Horario: </span>
-          {{ evento.horario_programado | horarioFormat }}
-        </p>
+      <div class="grid-eventos">
+        <article class="evento-card" *ngFor="let evento of dia.eventos" [class.hoy-card]="esHoy(evento.fecha_programada)">
+          <div class="card-top">
+            <div class="fecha-box">
+              <b>{{ evento.fecha_programada | date : "dd" }}</b>
+              <span>{{ evento.fecha_programada | date : "MMM" }}</span>
+            </div>
+            <span class="badge-modalidad">{{ modalidadIcono(evento.modalidad) }} {{ evento.modalidad }}</span>
+          </div>
 
-        <div
-          *ngIf="isResponsableValido(evento.persona_responsable)"
-          class="capacitadores"
-        >
-          <p class="label-info">😎 Capacitador</p>
-          <ul>
-            <li *ngFor="let r of evento.persona_responsable | keyvalue">
-              <ng-container *ngIf="r.value.nombre">
-                <p class="data-info">
-                  {{ r.value.nombre }} — {{ r.value.puesto }}
-                </p>
-              </ng-container>
-            </li>
-          </ul>
-        </div>
-        <p class="label-info">⏳ Duración</p>
-        <p class="data-info">{{ evento.tiempo_aproximado }}</p>
-        <p class="label-info">Modalidad:</p>
-        <ng-container [ngSwitch]="evento.modalidad">
-          <p class="data-info" *ngSwitchCase="'Virtual'">
-            💻 {{ evento.modalidad }}
+          <h3 class="tema">{{ evento.tema }}</h3>
+
+          <p class="meta-linea">
+            <span>&#128337; {{ evento.horario_programado | horarioFormat }} hrs</span>
+            <span class="meta-sep" aria-hidden="true">&#183;</span>
+            <span>&#9201; {{ evento.tiempo_aproximado }}</span>
+            <span class="meta-sep" aria-hidden="true">&#183;</span>
+            <span *ngIf="evento.lugar">&#128205; {{ evento.lugar }}</span>
+            <span class="meta-sep" aria-hidden="true">&#183;</span>
+            <span *ngIf="evento.detalles?.grupo_dirigido">&#127968; {{ evento.detalles.grupo_dirigido }}</span>
           </p>
-          <p class="data-info" *ngSwitchCase="'Presencial'">
-            👩🏻‍🏫 {{ evento.modalidad }}
-          </p>
-          <p class="data-info" *ngSwitchCase="'Híbrida'">
-            💻👩🏻‍🏫 {{ evento.modalidad }}
-          </p>
+
+          <div class="bloque-servicio">
+            <span class="bloque-titulo">Servicio encargado</span>
+            <span class="bloque-valor">
+              {{ evento.servicio_encargado }}<i *ngIf="evento.subdireccion"> · {{ evento.subdireccion }}</i>
+            </span>
+          </div>
+
+          <div class="capacitadores" *ngIf="isResponsableValido(evento.persona_responsable)">
+            <span class="cap-titulo">Capacitadores</span>
+            <ul>
+              <li *ngFor="let r of evento.persona_responsable | keyvalue">
+                <ng-container *ngIf="r.value.nombre">
+                  <span class="avatar">{{ iniciales(r.value.nombre) }}</span>
+                  <span class="cap-nombre">{{ r.value.nombre }}<i>{{ r.value.puesto }}</i></span>
+                </ng-container>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nota" *ngIf="evento.detalles?.nota">
+            <span>&#128221;</span>
+            <p>{{ evento.detalles.nota }}</p>
+          </div>
+
           <a
+            class="link-enlace"
+            *ngIf="evento.detalles?.link && evento.modalidad !== 'Presencial'"
             [href]="evento.detalles.link"
             target="_blank"
             rel="noopener noreferrer"
-            *ngIf="evento.modalidad != 'Presencial'"
           >
-            Link: {{ evento.detalles.link }}
+            Unirse a la sesión &rarr;
           </a>
-        </ng-container>
 
-        <div class="detalles">
-          <p class="estado label-info">📄 {{ evento.estado }}</p>
-        </div>
-
-        <div class="data-info">
-          <p>
-            <span class="text-info">Nota:</span>
-            {{ evento.detalles.nota }}
-          </p>
-        </div>
-        <div>
-          <!-- <button
-            type="button"
-            class="link-btn"
-            (click)="asistencia(evento.id)"
-          >
-            Asistencia
-          </button> -->
-        </div>
+          <div class="card-foot">
+            <span class="badge-estado {{ estadoClase(evento.estado) }}">
+              {{ estadoLabel(evento.estado) }}
+            </span>
+            <button class="btn-asistencia" *ngIf="puedeAsistir(evento)" (click)="asistencia(evento.id)">
+              Registrar asistencia
+            </button>
+          </div>
+        </article>
       </div>
-    </div>
+    </section>
   </div>
 </section>
+
+<footer class="pie">
+  <span>Hospital General Tipo I de Tecpán Guatemala · Unidad de Docencia e Investigación</span>
+  <span>Cartelera pública de actividades — {{ mesLabel }} {{ anioSeleccionado }}</span>
+</footer>

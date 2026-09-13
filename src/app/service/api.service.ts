@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { Router } from '@angular/router';
 import { Actividades, ActividadesVista, Asistencia, Estados, GruposDeEdad, Lugares, Modalidades, ResumenAnual, ServicioResponsables, SubdirecionPertenece, TipoActividad, Usuarios } from '../interface/interfaces';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private api: AxiosInstance;
-  public readonly baseUrl = 'https://www.htecpan.com/fad';
-  // public readonly baseUrl = 'https://200.12.44.174/fad';
-  // public readonly baseUrl = 'http://localhost:8000';
+  public readonly baseUrl = environment.apiUrl;
   public token: string | null = null;
   public username: string | null = null;
   public role: string | null = null;
@@ -120,6 +119,38 @@ export class ApiService {
     window.location.reload();
 
 
+  }
+
+  /**
+   * Solicita el enlace de recuperación de contraseña al correo del usuario.
+   * @param email Correo del usuario
+   */
+  async solicitarRecuperacion(email: string): Promise<any> {
+    const response = await this.api.post(
+      '/user/recuperar-contrasena',
+      JSON.stringify({ email }),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    return response.data;
+  }
+
+  /**
+   * Restablece la contraseña usando el token de recuperación.
+   * @param token Token enviado por correo
+   * @param new_password Nueva contraseña
+   * @param confirm_password Confirmación de la nueva contraseña
+   */
+  async restablecerContrasena(
+    token: string,
+    new_password: string,
+    confirm_password: string
+  ): Promise<any> {
+    const response = await this.api.post(
+      '/user/restablecer-contrasena',
+      JSON.stringify({ token, new_password, confirm_password }),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    return response.data;
   }
 
 
@@ -301,6 +332,66 @@ export class ApiService {
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener datos:', error);
+      throw error;
+    }
+  }
+
+  async createSubdireccion(data: any): Promise<any> {
+    try {
+      const response = await this.api.post(
+        '/subdireccion/', data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        alert('Acceso denegado: solo los administradores pueden crear subdirecciones');
+      } else {
+        const detail = error?.response?.data?.detail || error?.message || 'Error desconocido';
+        alert(`Error al crear la subdirección: ${detail}`);
+      }
+      throw error;
+    }
+  }
+
+  async updateSubdireccion(dataId: number | string, data: any): Promise<any> {
+    try {
+      const response = await this.api.put(
+        `/subdireccion/${dataId}`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        alert('Acceso denegado: solo los administradores pueden editar subdirecciones');
+      } else {
+        const detail = error?.response?.data?.detail || error?.message || 'Error desconocido';
+        alert(`Error al actualizar la subdirección: ${detail}`);
+      }
+      throw error;
+    }
+  }
+
+  async deleteSubdireccion(dataId: number | string): Promise<any> {
+    try {
+      const response = await this.api.delete(`/subdireccion/${dataId}`);
+      return response.data;
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        alert('Acceso denegado: solo los administradores pueden eliminar subdirecciones');
+      } else {
+        const detail = error?.response?.data?.detail || error?.message || 'Error desconocido';
+        alert(`Error al eliminar la subdirección: ${detail}`);
+      }
       throw error;
     }
   }

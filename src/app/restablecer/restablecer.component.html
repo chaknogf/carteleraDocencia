@@ -1,0 +1,127 @@
+<div class="reset-page">
+  <main class="reset-card">
+    <!-- Enlace inválido -->
+    <section *ngIf="!token" class="panel">
+      <span class="panel-icono" aria-hidden="true">!</span>
+      <h1 class="panel-titulo">Enlace inválido</h1>
+      <p class="panel-texto">
+        El enlace de recuperación no es válido o ya expiró. Solicita uno nuevo desde
+        la opción "¿Olvidaste tu contraseña?" en el inicio de sesión.
+      </p>
+      <button class="btn-principal" type="button" (click)="irLogin()">
+        Ir a iniciar sesión
+      </button>
+    </section>
+
+    <!-- Éxito -->
+    <section *ngIf="exito" class="panel">
+      <span class="panel-icono ok" aria-hidden="true">✓</span>
+      <h1 class="panel-titulo">¡Contraseña restablecida!</h1>
+      <p class="panel-texto">
+        Tu contraseña se actualizó correctamente. Ya puedes iniciar sesión con tu
+        nueva contraseña.
+      </p>
+      <button class="btn-principal" type="button" (click)="irLogin()">
+        Ir a iniciar sesión
+      </button>
+    </section>
+
+    <!-- Formulario -->
+    <section *ngIf="token && !exito">
+      <header class="reset-head">
+        <span class="reset-logo" aria-hidden="true">DOC</span>
+        <h1 class="reset-titulo">Restablecer contraseña</h1>
+        <p class="reset-sub">Define una nueva contraseña para tu cuenta.</p>
+      </header>
+
+      <form
+        class="reset-form"
+        [formGroup]="form"
+        (ngSubmit)="restablecer()"
+        novalidate
+      >
+        <div class="campo">
+          <label class="campo-label" for="nueva-password">Nueva contraseña</label>
+          <div class="pass-wrap">
+            <input
+              class="campo-input pass-input"
+              id="nueva-password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              formControlName="password"
+              (input)="onPasswordCambia()"
+              (keydown.space)="bloquearEspacio($event)"
+              placeholder="Crea una contraseña"
+              autocomplete="new-password"
+            />
+            <button
+              class="pass-eye"
+              type="button"
+              (click)="mostrarPassword = !mostrarPassword"
+              [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <svg *ngIf="!mostrarPassword" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg *ngIf="mostrarPassword" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"></path>
+                <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"></path>
+                <path d="M14.12 14.12a3 3 0 11-4.24-4.24"></path>
+                <path d="M1 1l22 22"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <ul class="pass-check">
+          <li class="check-item" [class.ok]="reqSinEspacios">
+            <span class="check-ico" aria-hidden="true">✓</span>
+            Sin espacios: una sola palabra
+          </li>
+          <li class="check-item" [class.ok]="reqLargo">
+            <span class="check-ico" aria-hidden="true">✓</span>
+            Mínimo 8 caracteres
+          </li>
+          <li class="check-item" [class.ok]="reqMayuscula">
+            <span class="check-ico" aria-hidden="true">✓</span>
+            Una letra mayúscula
+          </li>
+          <li class="check-item" [class.ok]="reqNumero">
+            <span class="check-ico" aria-hidden="true">✓</span>
+            Un número
+          </li>
+          <li class="check-item" [class.ok]="reqSimbolo">
+            <span class="check-ico" aria-hidden="true">✓</span>
+            Un símbolo (@, #, $…)
+          </li>
+        </ul>
+
+        <div class="campo">
+          <label class="campo-label" for="confirmar-password">Confirmar contraseña</label>
+          <input
+            class="campo-input"
+            id="confirmar-password"
+            [type]="mostrarPassword ? 'text' : 'password'"
+            formControlName="confirm"
+            placeholder="Repite la contraseña"
+            autocomplete="new-password"
+          />
+          <span class="campo-error" *ngIf="form.get('confirm')?.touched && !confirmOk">
+            Las contraseñas no coinciden
+          </span>
+        </div>
+
+        <p class="reset-error" *ngIf="error" role="alert">{{ error }}</p>
+
+        <button
+          class="btn-principal"
+          type="submit"
+          [disabled]="enviando || !passwordValida || !confirmOk"
+        >
+          <span *ngIf="enviando" class="btn-spinner" aria-hidden="true"></span>
+          {{ enviando ? 'Guardando…' : 'Restablecer contraseña' }}
+        </button>
+      </form>
+    </section>
+  </main>
+</div>

@@ -96,6 +96,7 @@
             type="date"
             id="fecha"
             [(ngModel)]="actividad.fecha_programada"
+            (ngModelChange)="onFechaProgramadaChange()"
             name="fecha"
           />
         </div>

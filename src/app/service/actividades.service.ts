@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { ActividadesVista, ListaActividades } from '../interface/interfaces';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ActividadesService {
   private api: AxiosInstance;
-  private readonly baseUrl = 'https://www.htecpan.com/fad';
+  private readonly baseUrl = environment.apiUrl;
 
   constructor() {
     this.api = axios.create({

@@ -83,3 +83,19 @@
 .options-grid.vertical.grid-columns .checkbox-item {
   padding: 0.5rem 0.75rem;
 }
+
+@media (max-width: 768px) {
+  .checkbox-item {
+    min-height: 44px;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .options-grid.vertical.grid-columns {
+    grid-template-columns: 1fr;
+  }
+}

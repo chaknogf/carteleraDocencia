@@ -1,170 +1,501 @@
-/* Configuración de página para impresión horizontal tamaño oficio */
 @page {
-  size: 13.5in 8.5in landscape;
-  margin: 1in;
-
+  size: A4 landscape;
+  margin: 12mm;
 }
 
-
-.informe-container {
-  /* width: 100dvw; */
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  padding: 1rem;
-  background-color: white;
-
-
-
+.preview {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  min-height: 100%;
 }
 
-/* ENCABEZADO */
-.encabezado {
+/* ===== Barra de herramientas ===== */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #444;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.18);
+  margin-bottom: 14px;
+}
+
+.toolbar-izq {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.toolbar-titulo {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar-titulo strong {
+  font-size: 14px;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.toolbar-titulo span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.btn-volver, .btn-imprimir {
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.btn-volver {
+  background: #fff;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  color: #334155;
+  padding: 9px 14px;
+}
+
+.btn-volver:hover {
+  background: #f1f5f9;
+}
+
+.btn-imprimir {
+  background: linear-gradient(135deg, #4338ca, #7c3aed);
+  color: #fff;
+  border-radius: 10px;
+  padding: 11px 18px;
+  box-shadow: 0 10px 20px -8px rgba(67, 56, 202, 0.6);
+}
+
+.btn-imprimir:hover {
+  box-shadow: 0 14px 26px -8px rgba(67, 56, 202, 0.7);
+}
+
+.btn-volver:active:not(:disabled), .btn-imprimir:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* ===== Chips de resumen ===== */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chip {
+  background: #fff;
+  border: 1px solid #dbe2ea;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  color: #334155;
+}
+
+.chip b {
+  color: #0f172a;
+}
+
+.chip-acento {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4338ca;
+}
+
+/* ===== Hoja del documento ===== */
+.hoja {
+  background: #fff;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 42px 48px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 18px 50px -24px rgba(15, 23, 42, 0.35);
+}
+
+/* ===== Membrete ===== */
+.membrete {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: end;
+  border-bottom: 2px solid #0f2a5f;
+  padding-bottom: 12px;
 }
 
 .logo img {
-  width: 280px;
+  width: 190px;
   height: auto;
 }
 
-.titulo {
-  flex: 1;
+.membrete-texto {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.m-linea1 {
+  font-weight: 800;
+  font-size: 13.5px;
+  color: #0f2a5f;
+  letter-spacing: 0.4px;
+}
+
+.m-linea2 {
+  font-weight: 700;
+  font-size: 12.5px;
+  color: #1e3a8a;
+}
+
+.m-linea3 {
+  font-size: 11.5px;
+  color: #475569;
+}
+
+/* ===== Título ===== */
+.titulo-doc {
   text-align: center;
+  margin: 24px 0 20px;
 }
 
-.titulo h2 {
+.titulo-doc h1 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 21px;
   text-transform: uppercase;
-  font-weight: bold;
+  letter-spacing: 0.6px;
+  color: #0f2a5f;
 }
 
-.titulo p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #555;
+.periodo-doc {
+  margin: 6px 0 0;
+  font-weight: 600;
+  font-size: 13px;
+  color: #475569;
 }
 
-/* TABLA */
-.tabla-reporte {
+/* ===== Datos del servicio ===== */
+.datos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.dato span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.dato b {
+  font-size: 13.5px;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== Tabla ===== */
+.tabla {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
-  border-radius: 4px;
-  text-align: center;
-
+  font-size: 11.5px;
+  color: #1e293b;
 }
 
-.tabla-reporte th, .tabla-reporte td {
-  border: 1px solid #666;
-  padding: 6px;
-  text-align: center;
+.tabla th {
+  background: #eef2f7;
+  border: 1px solid #cfd8e3;
+  padding: 8px 6px;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #334155;
+  white-space: nowrap;
 }
 
-.tabla-reporte th {
-  background-color: #f0f0f0;
-  font-weight: bold;
+.tabla td {
+  border: 1px solid #cfd8e3;
+  padding: 7px 6px;
   text-align: center;
+  vertical-align: middle;
 }
 
-.tabla-reporte tbody, .tabla-reporte tr {
-  text-align: center;
+.tabla tbody tr:nth-child(odd) {
+  background: #fafbfc;
 }
 
-/* PIE DE FIRMA */
+.izq {
+  text-align: left;
+}
+
+.num {
+  color: #64748b;
+}
+
+.nota {
+  color: #475569;
+  font-style: italic;
+}
+
+.col-num { width: 3.5%; }
+.col-tema { width: 20%; }
+.col-ct { width: 14%; }
+.col-nota { width: 12%; }
+
+.estado {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.est-programada { background: #dbeafe; color: #1d4ed8; }
+.est-completada { background: #d1fae5; color: #047857; }
+.est-reprogramada { background: #ede9fe; color: #7c3aed; }
+.est-suspendida { background: #fef3c7; color: #b45309; }
+.est-anulada { background: #fee2e2; color: #b91c1c; }
+.est-default { background: #f1f5f9; color: #475569; }
+
+.tabla tfoot .totales {
+  text-align: left;
+  background: #f8fafc;
+  border-top: 2px solid #0f2a5f;
+  font-size: 12px;
+  color: #334155;
+}
+
+.totales b {
+  color: #4338ca;
+}
+
+/* ===== Conteo por estado ===== */
+.resumen-estado {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.se {
+  flex: 1;
+  text-align: center;
+  border: 1px solid #dfe6ee;
+  border-radius: 10px;
+  padding: 9px 6px;
+  background: #fafbfc;
+}
+
+.se b {
+  display: block;
+  font-size: 19px;
+  line-height: 1.1;
+}
+
+.se span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.se-programadas b { color: #2563eb; }
+.se-completadas b { color: #059669; }
+.se-reprogramadas b { color: #7c3aed; }
+.se-suspendidas b { color: #d97706; }
+.se-anuladas b { color: #dc2626; }
+
+/* ===== Firmas ===== */
 .firmas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin: 48px 40px 0;
+  text-align: center;
+}
+
+.firma .linea {
+  border-top: 1.5px solid #334155;
+  width: 72%;
+  margin: 0 auto 10px;
+}
+
+.firma .nombre {
+  margin: 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #111827;
+}
+
+.firma .cargo {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #475569;
+}
+
+.firma .rol {
+  margin: 8px 0 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* ===== Pie institucional ===== */
+.pie {
   display: flex;
   justify-content: space-between;
-  margin-top: 2rem;
-  font-size: 0.9rem;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 10px;
+  border-top: 1px solid #dbe2ea;
+  font-size: 11px;
+  color: #64748b;
 }
 
-.firma {
-  width: 45%;
+/* ===== Estado vacío ===== */
+.empty {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 56px 20px;
   text-align: center;
-  margin-top: 4rem;
+  color: #64748b;
 }
 
-/* Adaptación para impresión */
-@media print {
-  body {
-    margin: 0;
+.empty-ico {
+  font-size: 34px;
+  margin-bottom: 10px;
+}
 
+.empty p {
+  margin: 0 0 18px;
+  font-size: 14px;
+}
+
+/* ===== Responsive (pantalla) ===== */
+@media (max-width: 860px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .datos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hoja {
+    padding: 26px 18px;
+  }
+  .firmas {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin: 36px 10px 0;
+  }
+  .membrete {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .membrete-texto {
+    text-align: left;
+  }
+  .logo img {
+    width: 140px;
+  }
+  .resumen-estado {
+    flex-wrap: wrap;
+  }
+  .se {
+    flex: 1 1 40%;
+  }
+}
+
+/* ===== Impresión ===== */
+@media print {
+  .no-print {
+    display: none !important;
   }
 
-  .informe-container {
+  .preview {
+    max-width: none;
     margin: 0;
     padding: 0;
   }
 
-  .no-print {
-      display: none;
-    }
+  .hoja {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
 
-  .tabla-reporte th {
-    background-color: #ddd !important;
+  .tabla {
+    font-size: 10px;
+  }
+
+  .tabla thead {
+    display: table-header-group;
+  }
+
+  .tabla th {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
-  .firmas {
+  .estado {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .tabla tbody tr {
+    break-inside: avoid;
     page-break-inside: avoid;
   }
 
-}
+  .tabla td {
+    padding: 5px 4px;
+  }
 
-.tabla-reporte th:nth-child(1),
-.tabla-reporte td:nth-child(1) {
-  width: 3%;
-}
+  .resumen-estado,
+  .firmas,
+  .pie {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 
-
-.tabla-reporte th:nth-child(2),
-.tabla-reporte td:nth-child(2) {
-  width: 18%;
-}
-
-.tabla-reporte th:nth-child(3),
-.tabla-reporte td:nth-child(3) {
-  width: 6%;
-}
-
-.tabla-reporte th:nth-child(4),
-.tabla-reporte td:nth-child(4) {
-  width: 6%;
-}
-.tabla-reporte th:nth-child(5),
-.tabla-reporte td:nth-child(5) {
-  width: 6%;
-}
-.tabla-reporte th:nth-child(6),
-.tabla-reporte td:nth-child(6) {
-  width: 6%;
-}
-.tabla-reporte th:nth-child(7),
-.tabla-reporte td:nth-child(7) {
-  width: 6%;
-}
-.tabla-reporte th:nth-child(8),
-.tabla-reporte td:nth-child(8) {
-  width: 9%;
-}
-.tabla-reporte th:nth-child(9),
-.tabla-reporte td:nth-child(9) {
-  width: 6%;
-}
-
-.tabla-reporte th:nth-child(10),
-.tabla-reporte td:nth-child(10) {
-  width: 6%;
-}
-.tabla-reporte th:nth-child(11),
-.tabla-reporte td:nth-child(11) {
-  width: 10%;
+  .titulo-doc {
+    margin: 14px 0;
+  }
 }

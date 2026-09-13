@@ -1,250 +1,618 @@
 <app-navbarPlus></app-navbarPlus>
 
-<div class="table-container">
-  <div class="table-header">
-    <h2>Actividades de Docencia</h2>
-    <span class="table-count">{{ actividades.length }} registro(s)</span>
-  </div>
-
-  <div class="table-wrapper">
-    <table class="docencia-table">
-      <thead>
-        <tr>
-          <th>Tema</th>
-          <th>Actividad</th>
-          <th>Servicio</th>
-          <th>Fecha y Horario</th>
-          <th>Modalidad y Estado</th>
-          <th>Lugar</th>
-          <th>Responsable(s)</th>
-          <th class="th-acciones">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let docencia of actividades">
-          <td class="td-tema">{{ docencia.tema }}</td>
-          <td>{{ docencia.actividad }}</td>
-          <td>{{ docencia.servicio_encargado }}</td>
-          <td class="td-fecha">
-            <span class="fecha-num">{{
-              docencia.fecha_programada | date: "dd"
-            }}</span>
-            <span class="fecha-mes">{{
-              docencia.fecha_programada | date: "MMM" | uppercase
-            }}</span>
-            <span class="fecha-ano">{{
-              docencia.fecha_programada | date: "yyyy"
-            }}</span>
-            <br />
-            {{ docencia.horario_programado | horarioFormat }}
-          </td>
-
-          <td>
-            <span class="badge-modalidad">{{ docencia.modalidad }}</span> <br />
-            <span
-              class="badge-estado"
-              [class.estado-abierto]="docencia.estado === 'Abierto'"
-              [class.estado-cerrado]="docencia.estado === 'Cerrado'"
-              >{{ docencia.estado }}</span
-            >
-          </td>
-
-          <td>{{ docencia.lugar }}</td>
-          <td>
-            <div
-              *ngIf="
-                isResponsableValido(docencia.persona_responsable);
-                else sinResponsable
-              "
-              class="responsables-list"
-            >
-              <span
-                *ngFor="
-                  let r of docencia.persona_responsable | keyvalue;
-                  let last = last
-                "
-                class="responsable-item"
-              >
-                <ng-container *ngIf="r.value.nombre"
-                  >{{ r.value.nombre
-                  }}<span *ngIf="!last">, </span></ng-container
-                >
-              </span>
-            </div>
-            <ng-template #sinResponsable
-              ><span class="text-muted">—</span></ng-template
-            >
-          </td>
-          <td class="td-acciones">
-            <div
-              class="acciones-group"
-              *ngIf="
-                docencia.servicio_id === servicioId || roleUser === 'admin'
-              "
-            >
-              <button
-                class="btn-accion btn-asistencia btn-label"
-                (click)="asistencias(docencia.id)"
-                title="Listado de asistencia"
-                data-label="Listado Asistencia"
-              >
-                📋
-              </button>
-              <button
-                class="btn-accion btn-link-asistencia btn-label"
-                (click)="registrarAsistencia(docencia.id)"
-                title="Link de asistencia"
-                data-label="Link Asistencia"
-              >
-                🔗
-              </button>
-              <button
-                class="btn-accion btn-editar btn-label"
-                (click)="editarDocencia(docencia)"
-                title="Editar"
-                data-label="Editar"
-              >
-                ✏️
-              </button>
-              <button
-                class="btn-accion btn-eliminar"
-                (click)="eliminarUsuario(docencia.id)"
-                title="Eliminar"
-              >
-                🗑️
-              </button>
-            </div>
-            <div
-              *ngIf="actividadAEliminarId === docencia.id"
-              class="confirmacion-box"
-            >
-              <input
-                type="text"
-                [(ngModel)]="textoConfirmacion"
-                placeholder='escriba "eliminar"'
-                class="confirm-input"
-              />
-              <button
-                class="btn-confirmar"
-                (click)="eliminarUsuario(docencia.id)"
-              >
-                Confirmar
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="actividades.length === 0">
-          <td colspan="10" class="td-empty">No se encontraron actividades</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="table-footer">
-    <button
-      class="btn-page"
-      [disabled]="paginaActual === 0"
-      (click)="skipMinus()"
-    >
-      Anterior
-    </button>
-    <span class="page-info">Página {{ paginaActual + 1 }}</span>
-    <button
-      class="btn-page"
-      [disabled]="paginaActual >= maxPagina"
-      (click)="skipPlus()"
-    >
-      Siguiente
-    </button>
-  </div>
-</div>
-
-<button class="btn-filtro-flotante" (click)="open()">
-  <svg viewBox="0 0 100 100" class="circular-text">
-    <defs>
-      <path
-        id="circlePath"
-        d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"
-      />
-    </defs>
-    <text fill="#bde8ff" font-size="10" font-weight="500" letter-spacing="2">
-      <textPath href="#circlePath" startOffset="0%">
-        &nbsp; &nbsp; F I L T R O &nbsp;
-      </textPath>
-    </text>
-  </svg>
-  <span class="lupa-icon" [innerHTML]="icons['filter']"></span>
-</button>
-
-<div
-  *ngIf="visible()"
-  class="modal-backdrop d-flex align-items-center justify-content-center"
->
-  <div class="modal-contenido">
-    <div class="text-end">
-      <button class="btn-close-modal" (click)="close()">×</button>
-    </div>
-    <h5>Filtrar Actividades</h5>
-    <form
-      (ngSubmit)="listarActividades()"
-      #docenciaForm="ngForm"
-      class="row g-3"
-    >
-      <div class="col-md-6">
-        <label for="tema" class="form-label">Tema</label>
-        <input
-          type="text"
-          id="tema"
-          class="form-control"
-          name="tema"
-          [(ngModel)]="buscarTema"
-        />
+<div class="tabla-page">
+  <div class="contenedor">
+    <!-- Encabezado -->
+    <header class="page-head">
+      <div class="head-titulo">
+        <h1>Actividades de Docencia</h1>
+        <p>Gestión y seguimiento de las capacitaciones del hospital</p>
       </div>
-      <div class="col-md-6">
-        <label for="actividad" class="form-label">Actividad</label>
-        <select
-          id="actividad"
-          class="form-select"
-          name="actividad"
-          [(ngModel)]="buscarActividad"
-        >
-          <option *ngFor="let a of actividadesTipo" [value]="a.value">
-            {{ a.label }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="mes" class="form-label">Mes</label>
-        <select id="mes" class="form-select" name="mes" [(ngModel)]="buscarMes">
-          <option [value]="0">Todos</option>
-          <option *ngFor="let m of meses" [value]="m.value">
-            {{ m.label }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="modalidad" class="form-label">Modalidad</label>
-        <select
-          id="modalidad"
-          class="form-select"
-          name="modalidad"
-          [(ngModel)]="buscarModalidad"
-        >
-          <option *ngFor="let m of modalidades" [value]="m.value">
-            {{ m.label }}
-          </option>
-        </select>
-      </div>
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary-modal">Buscar</button>
-        <button
-          type="button"
-          class="btn btn-limpiar"
-          (click)="limpiarFiltros()"
-        >
-          Limpiar
+      <div class="head-acciones">
+        <button class="btn-nueva" (click)="agregarDocencia()">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Nueva actividad
         </button>
       </div>
-    </form>
+    </header>
+
+    <!-- Filtros -->
+    <section class="filtros">
+      <button
+        type="button"
+        class="filtro-toggle"
+        (click)="toggleFiltros()"
+        [attr.aria-expanded]="filtrosAbiertos"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path
+            d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"
+          />
+        </svg>
+        <span class="filtro-toggle-texto">Filtros</span>
+        @if (numeroFiltrosActivos) {
+          <span class="filtro-toggle-conteo">{{ numeroFiltrosActivos }}</span>
+        }
+        <svg
+          class="filtro-toggle-chevron"
+          [class.abierto]="filtrosAbiertos"
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      <div class="filtros-cuerpo" [class.abierto]="filtrosAbiertos">
+        <div class="filtro-busq">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Buscar por tema…"
+            [(ngModel)]="buscarTema"
+            (ngModelChange)="onBuscar()"
+          />
+        </div>
+        <div class="filtro-busq">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Responsable…"
+            [(ngModel)]="buscarPersona"
+            (ngModelChange)="onBuscar()"
+          />
+        </div>
+        <select
+          class="filtro-select"
+          [(ngModel)]="buscarMes"
+          (ngModelChange)="cambiarFiltro()"
+        >
+          <option [ngValue]="0">Todos los meses</option>
+          @for (m of meses; track m.value) {
+            <option [ngValue]="m.value">{{ m.label }}</option>
+          }
+        </select>
+        <select
+          class="filtro-select"
+          [(ngModel)]="buscarModalidad"
+          (ngModelChange)="cambiarFiltro()"
+        >
+          <option value="">Todas las modalidades</option>
+          @for (m of modalidadesFiltro; track m) {
+            <option [ngValue]="m">{{ m }}</option>
+          }
+        </select>
+        <select
+          class="filtro-select"
+          [(ngModel)]="buscarEstado"
+          (ngModelChange)="cambiarFiltro()"
+        >
+          <option value="">Todos los estados</option>
+          @for (e of estadosFiltro; track e) {
+            <option [ngValue]="e">{{ e }}</option>
+          }
+        </select>
+        <select
+          class="filtro-select"
+          [(ngModel)]="buscarActividad"
+          (ngModelChange)="cambiarFiltro()"
+        >
+          <option value="">Tipo de actividad</option>
+          @for (a of actividadesFiltro; track a) {
+            <option [ngValue]="a">{{ a }}</option>
+          }
+        </select>
+        <label class="filtro-fecha">
+          <span>Desde</span>
+          <input
+            type="date"
+            [(ngModel)]="buscarFechaDesde"
+            (ngModelChange)="cambiarFiltro()"
+          />
+        </label>
+        <label class="filtro-fecha">
+          <span>Hasta</span>
+          <input
+            type="date"
+            [(ngModel)]="buscarFechaHasta"
+            (ngModelChange)="cambiarFiltro()"
+          />
+        </label>
+        @if (hayFiltros) {
+          <button
+            class="btn-limpiar"
+            (click)="limpiarFiltros()"
+            title="Limpiar filtros"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+            Limpiar
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Tabla -->
+    <section class="tarjeta-tabla">
+      <div class="tabla-toolbar">
+        <span class="resultados">
+          @if (totalActividades > 0) {
+            Mostrando
+            <strong>{{ desdeRegistro }}–{{ hastaRegistro }}</strong> de
+            <strong>{{ totalActividades }}</strong> actividades
+          } @else {
+            Sin resultados
+          }
+        </span>
+        <label class="por-pagina">
+          Filas
+          <select
+            [(ngModel)]="actividadesPorPagina"
+            (ngModelChange)="cambiarPorPagina()"
+          >
+            @for (n of opcionesPorPagina; track n) {
+              <option [ngValue]="n">{{ n }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div class="tabla-scroll">
+        <table class="docencia-table">
+          <thead>
+            <tr>
+              <th scope="col">Actividad</th>
+              <th scope="col">Fecha y hora</th>
+              <th scope="col">Modalidad</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Lugar</th>
+              <th scope="col">Responsables</th>
+              <th scope="col" class="th-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (cargando) {
+              @for (s of [1, 2, 3, 4, 5]; track s) {
+                <tr class="fila-skeleton">
+                  <td>
+                    <div class="skel" style="width: 190px; height: 14px"></div>
+                    <div
+                      class="skel"
+                      style="width: 120px; height: 10px; margin-top: 7px"
+                    ></div>
+                  </td>
+                  <td>
+                    <div class="skel" style="width: 52px; height: 40px"></div>
+                  </td>
+                  <td>
+                    <div class="skel" style="width: 88px; height: 22px"></div>
+                  </td>
+                  <td>
+                    <div class="skel" style="width: 88px; height: 22px"></div>
+                  </td>
+                  <td>
+                    <div class="skel" style="width: 90px; height: 12px"></div>
+                  </td>
+                  <td>
+                    <div class="skel" style="width: 130px; height: 20px"></div>
+                  </td>
+                  <td>
+                    <div
+                      class="skel"
+                      style="width: 92px; height: 22px; margin: 0 auto"
+                    ></div>
+                  </td>
+                </tr>
+              }
+            } @else if (errorAlCargar) {
+              <tr>
+                <td colspan="7" class="td-vacio">
+                  <div class="vacio-icono">⚠️</div>
+                  <p>No se pudieron cargar las actividades.</p>
+                  <button class="btn-reintentar" (click)="listarActividades()">
+                    Reintentar
+                  </button>
+                </td>
+              </tr>
+            } @else if (actividades.length === 0) {
+              <tr>
+                <td colspan="7" class="td-vacio">
+                  <div class="vacio-icono">📋</div>
+                  <p>No se encontraron actividades con los filtros actuales.</p>
+                  @if (hayFiltros) {
+                    <button class="btn-reintentar" (click)="limpiarFiltros()">
+                      Limpiar filtros
+                    </button>
+                  }
+                </td>
+              </tr>
+            } @else {
+              @for (docencia of actividades; track docencia.id) {
+                @let rel = relativoFecha(docencia.fecha_programada);
+                @let resp = responsablesLista(docencia);
+                <tr>
+                  <td>
+                    <div class="celda-tema">
+                      <span class="tema-titulo">{{ docencia.tema }}</span>
+                      <span class="tema-sub"
+                        >{{ docencia.actividad }} ·
+                        {{ docencia.subdireccion || "Sin subdirección" }}</span
+                      >
+                    </div>
+                  </td>
+                  <td>
+                    <div class="celda-fecha">
+                      <span class="fecha-bloque">
+                        <b>{{ diaNum(docencia.fecha_programada) }}</b>
+                        <i>{{ mesCorto(docencia.fecha_programada) }}</i>
+                      </span>
+                      <span class="fecha-info">
+                        <b>{{ docencia.horario_programado | horarioFormat }}</b>
+                        <i>
+                          {{ docencia.fecha_programada | date: "yyyy" }}
+                          @if (rel) {
+                            · <em [class.rel-hoy]="rel === 'Hoy'">{{ rel }}</em>
+                          }
+                        </i>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      class="chip mod-chip {{
+                        claseModalidad(docencia.modalidad)
+                      }}"
+                      >{{ docencia.modalidad }}</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      class="chip est-chip {{ claseEstado(docencia.estado) }}"
+                      >{{ docencia.estado }}</span
+                    >
+                  </td>
+                  <td>
+                    <span class="celda-lugar">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="13"
+                        height="13"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      >
+                        <path
+                          d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"
+                        />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                      {{ docencia.lugar || "Por definir" }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (isResponsableValido(docencia.persona_responsable)) {
+                      <div class="celda-resp">
+                        <div class="avatares">
+                          @for (r of resp; track $index) {
+                            <span class="avatar">{{ iniciales(r) }}</span>
+                          }
+                        </div>
+                        <span class="resp-nombres">{{ resp.join(" · ") }}</span>
+                      </div>
+                    } @else {
+                      <span class="sin-dato">—</span>
+                    }
+                  </td>
+                  <td class="td-acciones">
+                    @if (
+                      docencia.estado === "Completada" ||
+                      puedeGestionar(docencia)
+                    ) {
+                      <div class="acciones-group">
+                        @if (docencia.estado === "Completada") {
+                          <button
+                            class="btn-icono btn-indigo"
+                            (click)="informe(docencia.id)"
+                            data-label="Informe de actividad"
+                            aria-label="Informe de actividad"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path
+                                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"
+                              />
+                              <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+                            </svg>
+                          </button>
+                        }
+                        @if (puedeGestionar(docencia)) {
+                          <button
+                            data-label="Listado de asistencia"
+                            class="btn-icono btn-azul"
+                            (click)="asistencias(docencia.id)"
+                            aria-label="Listado de asistencia"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            >
+                              <path
+                                d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="btn-icono btn-verde"
+                            (click)="registrarAsistencia(docencia.id)"
+                            data-label="Link de asistencia pública"
+                            aria-label="Link de asistencia pública"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            >
+                              <path
+                                d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"
+                              />
+                              <path
+                                d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="btn-icono btn-ambar"
+                            (click)="editarDocencia(docencia)"
+                            data-label="Editar actividad"
+                            aria-label="Editar actividad"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path
+                                d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            class="btn-icono btn-rojo"
+                            (click)="solicitarEliminar(docencia)"
+                            data-label="Eliminar actividad"
+                            aria-label="Eliminar actividad"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                            >
+                              <path
+                                d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"
+                              />
+                            </svg>
+                          </button>
+                        }
+                      </div>
+                    } @else {
+                      <span class="sin-dato">—</span>
+                    }
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      @if (totalActividades > 0) {
+        <nav class="paginacion">
+          <button
+            class="btn-pagina"
+            [disabled]="paginaActual === 0"
+            (click)="skipMinus()"
+            aria-label="Página anterior"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="15"
+              height="15"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          @for (p of paginasVisibles; track $index) {
+            @if (p === "…") {
+              <span class="puntos">…</span>
+            } @else {
+              <button
+                class="btn-pagina num"
+                [class.activa]="p === paginaActual"
+                (click)="irPagina($any(p))"
+              >
+                {{ $any(p) + 1 }}
+              </button>
+            }
+          }
+          <button
+            class="btn-pagina"
+            [disabled]="paginaActual >= maxPagina"
+            (click)="skipPlus()"
+            aria-label="Página siguiente"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="15"
+              height="15"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </nav>
+      }
+    </section>
   </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  @if (confirmarVisible) {
+    <div class="modal-backdrop" (click)="cerrarConfirmar()">
+      <div
+        class="modal-confirmar"
+        (click)="$event.stopPropagation()"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="modal-icono">
+          <svg
+            viewBox="0 0 24 24"
+            width="26"
+            height="26"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <path
+              d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"
+            />
+          </svg>
+        </div>
+        <h3>¿Eliminar esta actividad?</h3>
+        <p>
+          Esta acción no se puede deshacer. Escribe
+          <strong>eliminar</strong> para confirmar.
+        </p>
+        <input
+          type="text"
+          [(ngModel)]="textoConfirmacion"
+          placeholder='escriba "eliminar"'
+          [class.invalido]="errorConfirmacion"
+          (ngModelChange)="errorConfirmacion = false"
+          (keyup.enter)="confirmarEliminar()"
+        />
+        @if (errorConfirmacion) {
+          <span class="error-texto"
+            >Debes escribir «eliminar» exactamente.</span
+          >
+        }
+        <div class="modal-botones">
+          <button class="btn-modal-cancelar" (click)="cerrarConfirmar()">
+            Cancelar
+          </button>
+          <button class="btn-modal-eliminar" (click)="confirmarEliminar()">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Toast -->
+  @if (mensajeEliminado) {
+    <div class="toast-exito">
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
+      Actividad eliminada correctamente
+    </div>
+  }
 </div>

@@ -1,0 +1,59 @@
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <button class="btn-volver" (click)="volver()">&#8592; Volver</button>
+
+  <div class="form-card">
+    <span class="kicker">Administración · Solo admin</span>
+    <h1>{{ enEdicion ? 'Editar subdirección' : 'Nueva subdirección' }}</h1>
+
+    <form (ngSubmit)="guardar()">
+      <div class="form-group">
+        <label>Nombre de la subdirección</label>
+        <input
+          type="text"
+          [(ngModel)]="subdireccion.nombre"
+          name="nombre"
+          required
+          placeholder="Ej: Subdirección de Enfermería"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Persona encargada</label>
+        <input
+          type="text"
+          [(ngModel)]="subdireccion.persona_encargada"
+          name="persona"
+          placeholder="Nombre de la autoridad a cargo"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea
+          [(ngModel)]="subdireccion.descripcion"
+          name="descripcion"
+          rows="3"
+          placeholder="Breve descripción de la subdirección"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Activo</label>
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="subdireccion.activo" name="activo" />
+          <span class="switch-track"></span>
+          <span class="switch-text">{{ subdireccion.activo ? 'Sí, subdirección activa' : 'No, subdirección inactiva' }}</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="volver()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="guardando">
+          {{ guardando ? 'Guardando…' : (enEdicion ? '&#128190; Actualizar' : '&#128190; Crear') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

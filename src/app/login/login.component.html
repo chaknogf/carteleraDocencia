@@ -1,59 +1,141 @@
-<div class="container mt-3 text-dark" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <h2 class="text-center mb-4 fw-bold text-white">Iniciar Sesión</h2>
+<!-- ============ INICIAR SESIÓN ============ -->
+<form
+  *ngIf="vista === 'login'"
+  class="login-widget"
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit()"
+  novalidate
+>
+  <header class="login-head">
+    <span class="login-logo" aria-hidden="true">DOC</span>
+    <h2 class="login-title">Bienvenido de nuevo</h2>
+    <p class="login-sub">Inicia sesión para gestionar tus actividades</p>
+  </header>
 
-  <form class="mx-auto p-4 border rounded shadow-sm bg-white form-container" style="max-width: 400px;">
-
-    <div class="input-group">
-      <label for="username">Usuario</label>
-      <input type="text" id="username" formControlName="username" placeholder="Ingresa tu usuario">
-    </div>
-
-   <div class="input-group">
-  <label for="password">Contraseña</label>
-
-  <div class="password-wrapper input-group">
+  <div class="campo">
+    <label class="campo-label" for="login-username">Usuario</label>
     <input
-      [type]="mostrarPassword ? 'text' : 'password'"
-      id="password"
-      formControlName="password"
-      placeholder="Ingresa tu contraseña"
-    >
-
-    <span class="toggle-eye" (click)="mostrarPassword = !mostrarPassword">
-      {{ mostrarPassword ? '🙈' : '👁️' }}
-    </span>
+      class="campo-input"
+      id="login-username"
+      type="text"
+      formControlName="username"
+      placeholder="Ingresa tu usuario"
+      autocomplete="username"
+    />
   </div>
-</div>
 
+  <div class="campo">
+    <label class="campo-label" for="login-password">Contraseña</label>
+    <div class="pass-wrap">
+      <input
+        class="campo-input pass-input"
+        id="login-password"
+        [type]="mostrarPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="Ingresa tu contraseña"
+        autocomplete="current-password"
+      />
+      <button
+        class="pass-eye"
+        type="button"
+        (click)="mostrarPassword = !mostrarPassword"
+        [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      >
+        <svg *ngIf="!mostrarPassword" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <svg *ngIf="mostrarPassword" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"></path>
+          <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"></path>
+          <path d="M14.12 14.12a3 3 0 11-4.24-4.24"></path>
+          <path d="M1 1l22 22"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
 
-    <!-- <div class="forgot">
-      <a href="#">¿Olvidaste tu contraseña?</a>
-    </div> -->
-
-    <button class="sign" type="submit" [disabled]="loading">
-      <ng-container *ngIf="!loading; else cargando">
-        Iniciar sesión
-      </ng-container>
-      <ng-template #cargando>
-        <div class="spinner"></div>
-        Cargando...
-      </ng-template>
+  <div class="login-aux">
+    <button class="link-boton" type="button" (click)="irRecuperar()">
+      ¿Olvidaste tu contraseña?
     </button>
-
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-
-    <div class="signup">
-      ¿No tienes cuenta? <a  (click)="registrarse()">Regístrate</a>
-    </div>
-  </form>
-
-  <!-- Overlay de carga -->
-  <div class="overlay" *ngIf="loading">
-    <div class="loader">
-      <div class="spinner"></div>
-      <p>Autenticando...</p>
-    </div>
   </div>
-</div>
+
+  <p class="login-error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+
+  <button class="btn-principal" type="submit" [disabled]="loading">
+    <span *ngIf="loading" class="btn-spinner" aria-hidden="true"></span>
+    {{ loading ? 'Ingresando…' : 'Iniciar sesión' }}
+  </button>
+
+  <div class="login-footer">
+    ¿No tienes cuenta?
+    <a class="link-boton" (click)="registrarse()">Regístrate</a>
+  </div>
+</form>
+
+<!-- ============ RECUPERAR CONTRASEÑA ============ -->
+<form
+  *ngIf="vista === 'recuperar'"
+  class="login-widget"
+  [formGroup]="recuperacionForm"
+  (ngSubmit)="enviarRecuperacion()"
+  novalidate
+>
+  <button class="btn-volver" type="button" (click)="volverLogin()">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 12H5"></path>
+      <path d="M12 19l-7-7 7-7"></path>
+    </svg>
+    Volver al inicio de sesión
+  </button>
+
+  <div class="rec-succeso" *ngIf="enviadoCorreo">
+    <span class="rec-icono" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2L11 13"></path>
+        <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+      </svg>
+    </span>
+    <h3 class="rec-titulo">Revisa tu correo</h3>
+    <p class="rec-texto">
+      Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.
+      El enlace es válido por 30 minutos.
+    </p>
+    <button class="btn-principal" type="button" (click)="volverLogin()">
+      Ir a iniciar sesión
+    </button>
+  </div>
+
+  <ng-container *ngIf="!enviadoCorreo">
+    <header class="login-head">
+      <span class="login-logo" aria-hidden="true">DOC</span>
+      <h2 class="login-title">Recuperar contraseña</h2>
+      <p class="login-sub">
+        Ingresa el correo de tu cuenta y te enviaremos un enlace para restablecerla.
+      </p>
+    </header>
+
+    <div class="campo">
+      <label class="campo-label" for="rec-email">Correo electrónico</label>
+      <input
+        class="campo-input"
+        id="rec-email"
+        type="email"
+        formControlName="email"
+        placeholder="nombre@correo.com"
+        autocomplete="email"
+      />
+      <span class="campo-error" *ngIf="correoInvalido">
+        Ingresa un correo electrónico válido
+      </span>
+    </div>
+
+    <p class="login-error" *ngIf="mensajeRecuperacion" role="alert">{{ mensajeRecuperacion }}</p>
+
+    <button class="btn-principal" type="submit" [disabled]="recuperando">
+      <span *ngIf="recuperando" class="btn-spinner" aria-hidden="true"></span>
+      {{ recuperando ? 'Enviando…' : 'Enviar enlace' }}
+    </button>
+  </ng-container>
+</form>

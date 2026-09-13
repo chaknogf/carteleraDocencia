@@ -13,6 +13,11 @@ import { SignupComponent } from '../signup/signup.component';
 import { SerResponsablesComponent } from './servicios_responsables/serResponsables/serResponsables.component';
 import { ModificarServicioComponent } from './servicios_responsables/modificarServicio/modificarServicio.component';
 import { AsistenciaComponent } from './asistencia/asistencia/asistencia.component';
+import { InformeActividadComponent } from './informeActividad/informeActividad.component';
+import { ReporteSelectorComponent } from './reports/reporteSelector/reporteSelector.component';
+import { RestablecerComponent } from './restablecer/restablecer.component';
+import { SerSubdireccionesComponent } from './subdirecciones/serSubdirecciones/serSubdirecciones.component';
+import { ModificarSubdireccionComponent } from './subdirecciones/modificarSubdireccion/modificarSubdireccion.component';
 
 export const routes: Routes = [
   { path: '', component: CartelComponent, pathMatch: 'full' },
@@ -25,12 +30,18 @@ export const routes: Routes = [
   { path: 'editarUser/:id', component: FormUserComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'restablecer', component: RestablecerComponent },
   { path: 'autorizado', component: AutorizadoComponent },
+  { path: 'reporte', component: ReporteSelectorComponent },
   { path: 'servicioRes', component: SerResponsablesComponent },
+  { path: 'subdirecciones', component: SerSubdireccionesComponent },
+  { path: 'addSubdireccion', component: ModificarSubdireccionComponent },
+  { path: 'modificarSub/:id', component: ModificarSubdireccionComponent },
   { path: 'modificarSer/:id', component: ModificarServicioComponent },
   { path: 'addServicio', component: ModificarServicioComponent },
   { path: 'asistencia/:id', component: FormularioAsistenciaComponent },
   { path: 'asistencias/:id', component: AsistenciaComponent },
+  { path: 'informeActividad/:id', component: InformeActividadComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 
 ];

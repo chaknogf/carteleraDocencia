@@ -1,0 +1,245 @@
+<app-navbar class="no-print"></app-navbar>
+
+@if (cargando) {
+  <div class="estado-carga no-print">
+    <div class="spinner"></div>
+    <p>Generando informe...</p>
+  </div>
+} @else if (errorCarga) {
+  <div class="estado-error no-print">
+    <div class="error-icono">
+      <svg
+        viewBox="0 0 24 24"
+        width="42"
+        height="42"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      >
+        <path
+          d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"
+        />
+        <path d="M12 9v4M12 17h.01" />
+      </svg>
+    </div>
+    <p>No se pudo generar el informe de esta actividad.</p>
+    <div class="acciones-error">
+      <button class="btn-tonal" (click)="volver()">Volver a la tabla</button>
+      <button class="btn-tonal" (click)="reintentar()">Reintentar</button>
+    </div>
+  </div>
+} @else {
+  <div class="herramienta no-print">
+    <button
+      class="btn-herramienta btn-volver"
+      (click)="volver()"
+      title="Volver a la tabla"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="15"
+        height="15"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+      >
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+      Volver
+    </button>
+    <button
+      class="btn-herramienta btn-imprimir"
+      (click)="print()"
+      title="Imprimir informe"
+    >
+      <span [innerHTML]="icons['print']"></span>
+      Imprimir
+    </button>
+  </div>
+
+  <div class="informe-hoja">
+    <!-- Encabezado institucional -->
+    <header class="encabezado">
+      <div class="logo">
+        <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
+      </div>
+      <div class="datos-encabezado">
+        <span class="institucion">HOSPITAL NACIONAL DE SISTEMA</span>
+        <span class="area">{{ subdireccionNombre || "Subdirección" }}</span>
+        <span class="servicio">Servicio: {{ servicioNombre || "---" }}</span>
+      </div>
+    </header>
+
+    <div class="membrete">
+      <div class="membrete-fila">
+        <span class="ref"
+          >Ref. No.:
+          <strong
+            >INF-{{ actividad.id || "____" }}-{{
+              actividad.anio || "2026"
+            }}</strong
+          ></span
+        >
+        <span class="fecha-emision"
+          >Fecha de emisión:
+          <strong>{{
+            fechaEmision | date: "dd 'de' MMMM 'de' yyyy"
+          }}</strong></span
+        >
+      </div>
+      <h1 class="titulo-informe">Informe de Actividad</h1>
+    </div>
+
+    <!-- I. Datos generales -->
+    <section class="seccion">
+      <h2 class="seccion-titulo">I. Datos generales de la actividad</h2>
+      <table class="tabla-campos">
+        <tr>
+          <th class="th-campo">Tema</th>
+          <td class="td-campo td-texto text-uppercase">
+            {{ actividad.tema || "---" }}
+          </td>
+          <th class="th-campo">Tipo de actividad</th>
+          <td class="td-campo">{{ actividad.actividad || "---" }}</td>
+        </tr>
+        <tr>
+          <th class="th-campo">Modalidad</th>
+          <td class="td-campo">{{ actividad.modalidad || "---" }}</td>
+          <th class="th-campo">Estado</th>
+          <td class="td-campo">{{ actividad.estado || "---" }}</td>
+        </tr>
+        <tr>
+          <th class="th-campo">Fecha(s) desarrollada(s)</th>
+          <td class="td-campo">
+            {{ actividad.fecha_programada | date: "dd/MM/yyyy" }}
+          </td>
+          <th class="th-campo">Horario</th>
+          <td class="td-campo">{{ actividad.horario_programado || "---" }}</td>
+        </tr>
+        <tr>
+          <th class="th-campo">Lugar</th>
+          <td class="td-campo">{{ actividad.lugar || "Por definir" }}</td>
+          <th class="th-campo">Tiempo aproximado</th>
+          <td class="td-campo">{{ actividad.tiempo_aproximado || "---" }}</td>
+        </tr>
+      </table>
+
+      <div class="responsables-block">
+        <span class="etiqueta">Persona(s) responsable(s) de la actividad:</span>
+        @if (responsables().length > 0) {
+          <ul class="lista-responsables">
+            @for (r of responsables(); track $index) {
+              <li>
+                <strong>{{ r.nombre }}</strong>
+                @if (r.puesto) {
+                  · <span>{{ r.puesto }}</span>
+                }
+              </li>
+            }
+          </ul>
+        } @else {
+          <span class="sin-dato">No se registraron responsables.</span>
+        }
+      </div>
+    </section>
+
+    <!-- II. Desarrollo -->
+    <section class="seccion">
+      <h2 class="seccion-titulo">II. Desarrollo de la actividad</h2>
+      <table class="tabla-campos">
+        <tr>
+          <th class="th-campo">Grupo dirigido</th>
+          <td class="td-campo" colspan="3">
+            {{ det.grupo_dirigido || "---" }}
+          </td>
+        </tr>
+        <tr>
+          <th class="th-campo">Duración real</th>
+          <td class="td-campo">{{ det.duracion || "---" }}</td>
+          <th class="th-campo">Fecha de entrega de informe</th>
+          <td class="td-campo">
+            {{ det.fecha_entrega_informe || "" | date: "dd/MM/yyyy" }}
+          </td>
+        </tr>
+      </table>
+
+      <div class="campo-amplio">
+        <span class="etiqueta">Contenido</span>
+        <p class="texto-contenido">
+          {{ det.contenido || actividad.descripcion_actividad || "---" }}
+        </p>
+      </div>
+
+      <div class="campo-amplio">
+        <span class="etiqueta">Participación</span>
+        <table class="tabla-campos mini">
+          <tr>
+            <th class="th-campo">Asistencias</th>
+            <td class="td-campo">{{ asistentesConteo }}</td>
+            <th class="th-campo">Inasistencias</th>
+            <td class="td-campo">{{ det.inasistencia || 0 }}</td>
+            <th class="th-campo">Total</th>
+            <td class="td-campo">{{ totalParticipantes() }}</td>
+          </tr>
+        </table>
+      </div>
+
+      @if (hayEvaluacion()) {
+        <div class="campo-amplio">
+          <span class="etiqueta">Evaluación de los participantes</span>
+          <table class="tabla-evaluacion">
+            <thead>
+              <tr>
+                <th>Excelente</th>
+                <th>Bueno</th>
+                <th>Regular</th>
+                <th>Deficiente</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ det.excelente ?? 0 }}</td>
+                <td>{{ det.bueno ?? 0 }}</td>
+                <td>{{ det.regular ?? 0 }}</td>
+                <td>{{ det.deficiente ?? 0 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- III. Observaciones -->
+    <section class="seccion">
+      <h2 class="seccion-titulo">III. Observaciones y medio de verificación</h2>
+      <p class="texto-contenido">
+        {{ det.nota || "Sin observaciones registradas." }}
+      </p>
+    </section>
+
+    <!-- Firmas -->
+    <section class="firmas">
+      <div class="firma">
+        <div class="firma-linea"></div>
+        <strong>{{
+          firmanteServicio.nombre || "______________________________"
+        }}</strong>
+        <span>{{ firmanteServicio.puesto || "Responsable del Servicio" }}</span>
+        <span class="firma-servicio">{{ servicioNombre }}</span>
+      </div>
+      <div class="firma">
+        <div class="firma-linea"></div>
+        <strong> secretario(a) </strong>
+        <span>Comité de Docencia y Desarrollo</span>
+        <span>Recibido</span>
+      </div>
+    </section>
+
+    <footer class="pie-hoja">
+      <span>Generado por {{ meta.user || "sistema" }}</span>
+      <span>{{ fechaEmision | date: "dd/MM/yyyy HH:mm" }}</span>
+    </footer>
+  </div>
+}

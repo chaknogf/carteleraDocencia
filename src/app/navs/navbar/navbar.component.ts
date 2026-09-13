@@ -47,6 +47,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['servicioRes'])
   }
 
+  subdirecciones() {
+    this.router.navigate(['subdirecciones']);
+  }
+
   agregarDocencia() {
     // Lógica para agregar una nueva docencia
     this.router.navigate(['formulario']);
@@ -57,6 +61,10 @@ export class NavbarComponent implements OnInit {
 
   irActividades() {
     this.router.navigate(['tabla']);
+  }
+
+  reporteSelector() {
+    this.router.navigate(['reporte']);
   }
 
   logout() {

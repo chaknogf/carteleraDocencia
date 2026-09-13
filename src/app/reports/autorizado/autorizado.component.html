@@ -1,76 +1,155 @@
 <app-navbar class="no-print"></app-navbar>
 
-<div class="informe-container">
-  <button class="no-print btn btn-primary" (click)="print()">
-    <span [innerHTML]="icons['print']"></span>
-  </button>
-  <!-- Encabezado -->
-  <header class="encabezado">
-    <div class="logo">
-      <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
-    </div>
-    <div class="titulo">
-      <h2>Cronograma de Capacitaciones y Charlas</h2>
-      {{ resumen[0].anio }}
-      <p class="text-uppercase">
-        Actividades Programadas del Servicio de
-        {{ servicioR.nombre }}
-      </p>
-    </div>
-  </header>
+<div class="preview">
 
-  <!-- Tabla principal -->
-  <table class="tabla-reporte">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th>Tema</th>
-        <th>Actividad</th>
-        <th>Fecha Programada</th>
-        <th>Mes</th>
-        <th>Año</th>
-        <th>Modalidad</th>
-        <th>Lugar</th>
-        <th>Horario</th>
-        <th>Estado</th>
-        <th>Nota</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of resumen; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ item.tema }}</td>
-        <td>{{ item.actividad }}</td>
-        <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
-        <td>{{ item.mes }}</td>
-        <td>{{ item.anio }}</td>
-        <td>{{ item.modalidad }}</td>
-        <td>{{ item.lugar }}</td>
-        <td>{{ item.horario_programado }}</td>
-        <td>{{ item.estado }}</td>
-        <td>{{ item.nota }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- ===== Barra de herramientas (solo pantalla) ===== -->
+  <div class="toolbar no-print">
+    <div class="toolbar-izq">
+      <button class="btn-volver" (click)="regresar()">
+        <span [innerHTML]="volverIcon"></span>
+        Volver al generador
+      </button>
+      <div class="toolbar-titulo">
+        <strong>Previsualización del cronograma</strong>
+        <span>Documento institucional listo para imprimir</span>
+      </div>
+    </div>
+    <button class="btn-imprimir" (click)="print()">
+      <span [innerHTML]="printIcon"></span>
+      Imprimir / PDF
+    </button>
+  </div>
 
-  <!-- Pie de página con firmas -->
-  <footer class="firmas">
-    <div class="firma">
-      <p>__________________________________</p>
-      <p class="m-0">
-        <strong></strong>
-        {{ servicioR.encargado_servicio }}
-      </p>
-      <p class="m-0"><strong></strong> {{ servicioR.puesto_funcional }}</p>
-      <p>Hospital General Tipo I de Tecpán Guatemala</p>
+  <!-- ===== Resumen de filtros (solo pantalla) ===== -->
+  <div class="chips no-print" *ngIf="!cargando">
+    <span class="chip"><b>Servicio:</b> {{ servicioR.nombre || '—' }}</span>
+    <span class="chip"><b>Subdirección:</b> {{ nombreSubdireccion || '—' }}</span>
+    <span class="chip" [class.chip-acento]="mesSeleccion > 0"><b>Período:</b> {{ periodo }}</span>
+    <span class="chip"><b>Actividades:</b> {{ totales.total }}</span>
+  </div>
+
+  <!-- ===== Hoja del documento ===== -->
+  <div class="hoja" *ngIf="!cargando">
+
+    <!-- Membrete institucional -->
+    <header class="membrete">
+      <div class="logo">
+        <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
+      </div>
+      <div class="membrete-texto">
+        <span class="m-linea1">Ministerio de Salud Pública y Asistencia Social</span>
+        <span class="m-linea2">Hospital General Tipo I de Tecpán Guatemala</span>
+        <span class="m-linea3">Departamento de Docencia e Investigación</span>
+      </div>
+    </header>
+
+    <!-- Título del documento -->
+    <div class="titulo-doc">
+      <h1>Cronograma de Capacitaciones y Charlas</h1>
+      <p class="periodo-doc">Período: {{ periodo }}</p>
     </div>
-    <div class="firma">
-      <p>__________________________________</p>
-      <p class="m-0">
-        <strong>Vo.Bo.:</strong> {{ servicioR.subdireccion?.persona_encargada }}
-      </p>
-      <p class="m-0"><strong></strong> {{ servicioR.subdireccion?.nombre }}</p>
-      <p>Hospital General Tipo I de Tecpán Guatemala</p>
+
+    <!-- Datos del servicio -->
+    <div class="datos">
+      <div class="dato">
+        <span>Servicio</span>
+        <b>{{ servicioR.nombre || '—' }}</b>
+      </div>
+      <div class="dato">
+        <span>Subdirección</span>
+        <b>{{ nombreSubdireccion || '—' }}</b>
+      </div>
+      <div class="dato">
+        <span>Encargado(a) del servicio</span>
+        <b>{{ servicioR.encargado_servicio || '—' }}</b>
+      </div>
+      <div class="dato">
+        <span>Puesto funcional</span>
+        <b>{{ servicioR.puesto_funcional || '—' }}</b>
+      </div>
     </div>
-  </footer>
+
+    <!-- Plan de actividades -->
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="col-num">No.</th>
+          <th class="col-tema">Tema</th>
+          <th class="col-ct">Actividad</th>
+          <th>Fecha</th>
+          <th>Mes</th>
+          <th>Año</th>
+          <th>Modalidad</th>
+          <th>Lugar</th>
+          <th>Horario</th>
+          <th>Estado</th>
+          <th class="col-nota">Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of resumen; let i = index">
+          <td class="num">{{ i + 1 }}</td>
+          <td class="izq">{{ item.tema }}</td>
+          <td class="izq">{{ item.actividad }}</td>
+          <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
+          <td>{{ item.mes }}</td>
+          <td>{{ item.anio }}</td>
+          <td>{{ item.modalidad }}</td>
+          <td>{{ item.lugar }}</td>
+          <td>{{ item.horario_programado }}</td>
+          <td><span class="estado" [ngClass]="estadoInfo(item.estado).css">{{ estadoInfo(item.estado).label }}</span></td>
+          <td class="izq nota">{{ item.nota }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="11" class="totales">
+            Total de actividades programadas: <b>{{ totales.total }}</b>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Conteo por estado -->
+    <div class="resumen-estado">
+      <div class="se se-programadas"><b>{{ totales.programadas }}</b><span>Programadas</span></div>
+      <div class="se se-completadas"><b>{{ totales.completadas }}</b><span>Completadas</span></div>
+      <div class="se se-reprogramadas"><b>{{ totales.reprogramadas }}</b><span>Reprogramadas</span></div>
+      <div class="se se-suspendidas"><b>{{ totales.suspendidas }}</b><span>Suspendidas</span></div>
+      <div class="se se-anuladas"><b>{{ totales.anuladas }}</b><span>Anuladas</span></div>
+    </div>
+
+    <!-- Firmas -->
+    <div class="firmas">
+      <div class="firma">
+        <p class="linea"></p>
+        <p class="nombre">{{ servicioR.encargado_servicio || '________' }}</p>
+        <p class="cargo">{{ servicioR.puesto_funcional }}</p>
+        <p class="rol">Elaborado por</p>
+      </div>
+      <div class="firma">
+        <p class="linea"></p>
+        <p class="nombre">{{ servicioR.subdireccion?.persona_encargada || '________' }}</p>
+        <p class="cargo">{{ servicioR.subdireccion?.nombre }}</p>
+        <p class="rol">Vo. Bo.</p>
+      </div>
+    </div>
+
+    <!-- Pie institucional -->
+    <footer class="pie">
+      <span>Hospital General Tipo I de Tecpán Guatemala</span>
+      <span>Generado el {{ fechaGeneracion | date : "dd/MM/yyyy 'a las' HH:mm" }}</span>
+    </footer>
+  </div>
+
+  <!-- Estado vacío -->
+  <div class="empty no-print" *ngIf="!cargando && resumen.length === 0">
+    <div class="empty-ico">&#128218;</div>
+    <p>No hay actividades registradas para esta selección.</p>
+    <button class="btn-volver" (click)="regresar()">
+      <span [innerHTML]="volverIcon"></span>
+      Ajustar filtros del reporte
+    </button>
+  </div>
+
 </div>

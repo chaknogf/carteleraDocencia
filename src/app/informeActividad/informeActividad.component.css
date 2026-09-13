@@ -1,0 +1,416 @@
+@page {
+  size: letter;
+  margin: 0.7in;
+}
+
+/* ==================== BARRA DE HERRAMIENTAS ==================== */
+.herramienta {
+  position: fixed;
+  top: 88px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-herramienta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-herramienta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+}
+
+.btn-volver {
+  background: #fff;
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+.btn-imprimir {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  color: #fff;
+}
+
+/* ==================== HOJA DEL INFORME ==================== */
+.informe-hoja {
+  width: 8.5in;
+  min-height: 11in;
+  margin: 24px auto 48px;
+  padding: 0.55in;
+  background: #ffffff;
+  color: #1a1a2e;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.55;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.14);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* ==================== ENCABEZADO INSTITUCIONAL ==================== */
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #1e3a8a;
+}
+
+.logo img {
+  width: 230px;
+  height: auto;
+}
+
+.datos-encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  color: #1e3a8a;
+  text-align: right;
+}
+
+.institucion {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.area {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.servicio {
+  font-size: 11px;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* ==================== MEMBRETE ==================== */
+.membrete {
+  margin-top: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.membrete-fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #475569;
+}
+
+.titulo-informe {
+  margin: 14px 0 6px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #1e3a8a;
+}
+
+/* ==================== SECCIONES ==================== */
+.seccion {
+  margin-top: 20px;
+  page-break-inside: avoid;
+}
+
+.seccion-titulo {
+  margin: 0 0 10px;
+  padding: 7px 12px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+  color: #1e3a8a;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-left: 4px solid #1e3a8a;
+  border-radius: 3px;
+}
+
+/* ==================== TABLAS DE CAMPOS ==================== */
+.tabla-campos {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+}
+
+.tabla-campos th,
+.tabla-campos td {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+  vertical-align: top;
+}
+
+.tabla-campos .th-campo {
+  width: 20%;
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.4px;
+}
+
+.tabla-campos .td-campo {
+  width: 30%;
+  background: #fff;
+}
+
+.tabla-campos.mini {
+  width: 100%;
+}
+
+.tabla-campos.mini .th-campo,
+.tabla-campos.mini .td-campo {
+  width: 16.6%;
+  text-align: center;
+}
+
+.tabla-campos.mini .th-campo {
+  font-size: 10px;
+}
+
+/* ==================== CAMPOS AMPLIOS ==================== */
+.campo-amplio {
+  margin-top: 14px;
+}
+
+.etiqueta {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1e3a8a;
+}
+
+.texto-contenido {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: #fafbff;
+  white-space: pre-line;
+  text-align: justify;
+}
+
+/* ==================== RESPONSABLES ==================== */
+.responsables-block {
+  margin-top: 14px;
+}
+
+.lista-responsables {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.lista-responsables li {
+  margin-bottom: 3px;
+}
+
+/* ==================== EVALUACIÓN ==================== */
+.tabla-evaluacion {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.tabla-evaluacion th,
+.tabla-evaluacion td {
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+}
+
+.tabla-evaluacion th {
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+}
+
+.tabla-evaluacion td {
+  background: #fafbff;
+  font-weight: 700;
+}
+
+/* ==================== FIRMAS ==================== */
+.firmas {
+  display: flex;
+  gap: 40px;
+  margin-top: 46px;
+  page-break-inside: avoid;
+}
+
+.firma {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.firma-linea {
+  width: 100%;
+  max-width: 300px;
+  border-top: 1.5px solid #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.firma strong {
+  font-size: 12.5px;
+  color: #1a1a2e;
+}
+
+.firma span {
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.firma-servicio {
+  font-weight: 700;
+}
+
+/* ==================== PIE ==================== */
+.pie-hoja {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 26px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* ==================== ESTADOS DE CARGA ==================== */
+.estado-carga,
+.estado-error {
+  max-width: 8.5in;
+  margin: 60px auto;
+  padding: 48px 24px;
+  text-align: center;
+  color: #475569;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 14px;
+  border: 3px solid #e0e7ff;
+  border-top-color: #1e3a8a;
+  border-radius: 50%;
+  animation: giro 0.8s linear infinite;
+}
+
+@keyframes giro {
+  to { transform: rotate(360deg); }
+}
+
+.error-icono {
+  margin-bottom: 10px;
+  color: #b91c1c;
+}
+
+.acciones-error {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-tonal {
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e3a8a;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.btn-tonal:hover {
+  background: #e0e7ff;
+}
+
+/* ==================== UTILIDADES ==================== */
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.si-dato,
+.sin-dato {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ==================== IMPRESIÓN ==================== */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.55in;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .informe-hoja {
+    width: 100%;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .herramienta,
+  .estado-carga,
+  .estado-error {
+    display: none !important;
+  }
+
+  .seccion,
+  .firmas {
+    page-break-inside: avoid;
+  }
+}

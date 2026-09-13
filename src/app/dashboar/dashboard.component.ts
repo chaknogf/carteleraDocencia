@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Ejecucion, ResumenAnual, SubdirecionPertenece } from '../interface/interfaces';
+import { Ejecucion, Reportes, ResumenAnual, ServicioResponsables, SubdirecionPertenece } from '../interface/interfaces';
+import { estado, mes } from '../interface/enum';
 import { ApiService } from '../service/api.service';
 import { NavbarComponent } from "../navs/navbar/navbar.component";
 import { ComunicacionService } from '../service/comunicacion.service';
@@ -16,25 +17,43 @@ import { ComunicacionService } from '../service/comunicacion.service';
 })
 export class DashboardComponent implements OnInit {
 
-  readonly añoActual = new Date().getFullYear();
-  readonly mesActual = new Date().getMonth() + 1;
+  readonly anioActual = new Date().getFullYear();
+  readonly fechaHoy = new Date();
+  meses = mes;
+  estados = estado;
 
-  anioSeleccion = this.añoActual;
-  buscarAnio = this.añoActual;
-  buscarMes = 0;
-  buscarSubdireccion = 0;
+  // ===== Generador de reporte (/reporte/vista) =====
+  subdirecciones: SubdirecionPertenece[] = [];
+  servicios: ServicioResponsables[] = [];
+  subdireccionId = 0;
+  servicioId = 0;
+  anioSeleccion = this.anioActual;
+  mesSeleccionado = 0;
+  reporteTodos = false;
 
-  buscando = false;
+  reporte: Reportes[] = [];
+  generando = false;
   descargando = false;
+  reporteGenerado = false;
+  mensajeReporte = '';
 
+  // ===== Analítica =====
+  anioAnalitica = this.anioActual;
+  subAnalitica = 0;
+  servicioAnalitica = 0;
   ejecutados: Ejecucion[] = [];
   resumen: ResumenAnual = { anio: 0, programadas: 0, reprogramadas: 0, completadas: 0, anuladas: 0, total: 0 };
-  subdirecciones: SubdirecionPertenece[] = [];
+  cargandoAnalitica = false;
 
   get aniosDisponibles(): number[] {
-    const a = this.añoActual;
+    const a = this.anioActual;
     return [a, a - 1, a - 2, a - 3, a - 4];
   }
+
+  get puedeReporte(): boolean {
+    return this.reporteTodos || (this.subdireccionId > 0 && this.servicioId > 0);
+  }
+
   get totalProgramadas(): number {
     return this.ejecutados.reduce((s, e) => s + (e.programada || 0), 0);
   }
@@ -52,36 +71,26 @@ export class DashboardComponent implements OnInit {
   }
 
   readonly coloresBarras: string[] = [
-    'linear-gradient(180deg,#ff8a65,#ff3d00)',
-    'linear-gradient(180deg,#ffd166,#ff9f0d)',
-    'linear-gradient(180deg,#6be5b1,#07c19a)',
-    'linear-gradient(180deg,#7cc0ff,#0088ff)',
-    'linear-gradient(180deg,#b39cff,#7a5cff)',
-    'linear-gradient(180deg,#ff5fa3,#ff1f7a)',
-    'linear-gradient(180deg,#9be7ff,#34c1ff)',
-    'linear-gradient(180deg,#84fab0,#8fd3f4)',
-    'linear-gradient(180deg,#f6d365,#fda085)',
-    'linear-gradient(180deg,#a1c4fd,#c2e9fb)',
-    'linear-gradient(180deg,#fccb90,#d57eeb)',
-    'linear-gradient(180deg,#f093fb,#f5576c)',
-    'linear-gradient(180deg,#43e97b,#38f9d7)',
-    'linear-gradient(180deg,#fa709a,#fee140)',
-    'linear-gradient(180deg,#30cfd0,#330867)',
-    'linear-gradient(180deg,#5ee7df,#b490ca)',
-    'linear-gradient(180deg,#a8edea,#fed6e3)',
-    'linear-gradient(180deg,#fbc2eb,#a6c1ee)',
-    'linear-gradient(180deg,#ffecd2,#fcb69f)',
-    'linear-gradient(180deg,#c2e59c,#64b3f4)',
-    'linear-gradient(180deg,#ff9a9e,#fad0c4)',
-    'linear-gradient(180deg,#a18cd1,#fbc2eb)',
-    'linear-gradient(180deg,#fbc2eb,#a6c1ee)',
-    'linear-gradient(180deg,#f6d365,#fda085)',
-    'linear-gradient(180deg,#84fab0,#8fd3f4)',
-    'linear-gradient(180deg,#cfd9df,#e2ebf0)',
-    'linear-gradient(180deg,#43e97b,#38f9d7)',
-    'linear-gradient(180deg,#fa709a,#fee140)',
-    'linear-gradient(180deg,#30cfd0,#330867)',
-    'linear-gradient(180deg,#5ee7df,#b490ca)'
+    'linear-gradient(90deg,#8b5cf6,#6366f1)',
+    'linear-gradient(90deg,#06b6d4,#3b82f6)',
+    'linear-gradient(90deg,#10b981,#34d399)',
+    'linear-gradient(90deg,#f59e0b,#fbbf24)',
+    'linear-gradient(90deg,#ef4444,#f87171)',
+    'linear-gradient(90deg,#ec4899,#f472b6)',
+    'linear-gradient(90deg,#14b8a6,#2dd4bf)',
+    'linear-gradient(90deg,#8b5cf6,#d946ef)',
+    'linear-gradient(90deg,#f43f5e,#fb7185)',
+    'linear-gradient(90deg,#0ea5e9,#38bdf8)',
+    'linear-gradient(90deg,#10b981,#059669)',
+    'linear-gradient(90deg,#f59e0b,#ef4444)',
+    'linear-gradient(90deg,#6366f1,#8b5cf6)',
+    'linear-gradient(90deg,#06b6d4,#0891b2)',
+    'linear-gradient(90deg,#f472b6,#ec4899)',
+    'linear-gradient(90deg,#84cc16,#a3e635)',
+    'linear-gradient(90deg,#22d3ee,#06b6d4)',
+    'linear-gradient(90deg,#eab308,#facc15)',
+    'linear-gradient(90deg,#a855f7,#d946ef)',
+    'linear-gradient(90deg,#f97316,#fb923c)'
   ];
 
   constructor(
@@ -92,8 +101,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.cargarSubdirecciones();
-    this.generarReportes();
+    this.cargarAnalitica();
   }
+
+  // ===================== GENERADOR DE REPORTE =====================
 
   async cargarSubdirecciones() {
     try {
@@ -103,42 +114,99 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  async generarReportes() {
-    this.buscando = true;
-    await Promise.all([
-      this.cargarEjecucion(),
-      this.cargarResumen()
-    ]);
-    this.buscando = false;
-  }
-
-  async cargarEjecucion() {
+  async onSubdireccionChange() {
+    this.servicios = [];
+    this.servicioId = 0;
+    this.limpiarResultado();
+    if (!this.subdireccionId) return;
     try {
-      const filtros: any = { anio: this.buscarAnio };
-      if (this.buscarSubdireccion) filtros.sub = this.buscarSubdireccion;
-      const data = await this.api.getEjecucion(filtros);
-      this.ejecutados = Array.isArray(data) ? data : [];
+      this.servicios = await this.api.getServiciosResponsables({ sub: this.subdireccionId, activo: true, limit: 100 });
+      if (this.servicios.length === 1) {
+        this.servicioId = this.servicios[0].id;
+      }
     } catch {
-      this.ejecutados = [];
+      this.servicios = [];
     }
   }
 
-  async cargarResumen() {
-    try {
-      const data = await this.api.getResumenAnual({ anio: this.buscarAnio });
-      this.resumen = data?.[0] || this.resumen;
-    } catch {
-      this.resumen = { anio: 0, programadas: 0, reprogramadas: 0, completadas: 0, anuladas: 0, total: 0 };
+  seleccionarModoReporte(todos: boolean): void {
+    if (this.reporteTodos === todos) return;
+    this.reporteTodos = todos;
+    this.limpiarResultado();
+  }
+
+  private limpiarResultado(): void {
+    this.reporte = [];
+    this.reporteGenerado = false;
+    this.mensajeReporte = '';
+  }
+
+  private buildFiltrosReporte(): any {
+    const filtros: any = { anio: this.anioSeleccion };
+    if (this.mesSeleccionado > 0) filtros.mes = this.mesSeleccionado;
+    if (!this.reporteTodos) {
+      filtros.subId = this.subdireccionId;
+      filtros.servicioId = this.servicioId;
     }
+    return filtros;
+  }
+
+  async generarReporte() {
+    if (!this.puedeReporte || this.generando) return;
+    this.generando = true;
+    this.reporteGenerado = false;
+    this.mensajeReporte = '';
+    try {
+      const data = await this.api.getReporteActividades(this.buildFiltrosReporte());
+      this.reporte = Array.isArray(data) ? (data as Reportes[]) : [];
+      this.reporteGenerado = true;
+      if (this.reporte.length === 0) {
+        this.mensajeReporte = 'No se encontraron actividades para los filtros seleccionados.';
+      }
+    } catch (error: any) {
+      this.reporte = [];
+      this.reporteGenerado = true;
+      this.mensajeReporte = error?.response?.status === 404
+        ? 'No se encontraron actividades para los filtros seleccionados.'
+        : 'Ocurrió un error al generar el reporte.';
+    } finally {
+      this.generando = false;
+    }
+  }
+
+  irCronograma() {
+    if (this.reporteTodos) {
+      this.comunicacionService.setReporteConfig({
+        servicioId: null,
+        subId: null,
+        anio: this.anioSeleccion,
+        mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null,
+        todos: true
+      });
+    } else if (this.puedeReporte) {
+      this.comunicacionService.setReporteConfig({
+        servicioId: this.servicioId,
+        subId: this.subdireccionId,
+        anio: this.anioSeleccion,
+        mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null
+      });
+    } else {
+      this.comunicacionService.clearReporteConfig();
+      this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
+    }
+    this.router.navigate(['/autorizado']);
   }
 
   async descargarExcel() {
-    if (this.descargando) return;
+    if (this.descargando || !this.puedeReporte) return;
     this.descargando = true;
     try {
-      const filtros: any = { anio: this.buscarAnio };
-      if (this.buscarMes > 0) filtros.mes = this.buscarMes;
-      if (this.buscarSubdireccion) filtros.subdireccion_id = this.buscarSubdireccion;
+      const filtros: any = { anio: this.anioSeleccion };
+      if (this.mesSeleccionado > 0) filtros.mes = this.mesSeleccionado;
+      if (!this.reporteTodos) {
+        filtros.subdireccion_id = this.subdireccionId;
+        filtros.servicio_id = this.servicioId;
+      }
       await this.api.getExcel(filtros);
     } catch (error: any) {
       if (error?.response?.status === 404) {
@@ -151,8 +219,66 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  cronograma() {
-    this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
-    this.router.navigate(['/autorizado']);
+  // ===================== ANALÍTICA =====================
+
+  async cargarAnalitica() {
+    this.cargandoAnalitica = true;
+    await Promise.all([
+      this.cargarEjecucion(),
+      this.cargarResumen()
+    ]);
+    this.cargandoAnalitica = false;
+  }
+
+  async cargarEjecucion() {
+    try {
+      const filtros: any = { anio: this.anioAnalitica };
+      if (this.subAnalitica > 0) filtros.sub = this.subAnalitica;
+      if (this.servicioAnalitica > 0) filtros.servicio_id = this.servicioAnalitica;
+      const data = await this.api.getEjecucion(filtros);
+      this.ejecutados = Array.isArray(data) ? data : [];
+    } catch {
+      this.ejecutados = [];
+    }
+  }
+
+  async cargarResumen() {
+    try {
+      const data = await this.api.getResumenAnual({ anio: this.anioAnalitica });
+      this.resumen = data?.[0] || this.resumen;
+    } catch {
+      this.resumen = { anio: 0, programadas: 0, reprogramadas: 0, completadas: 0, anuladas: 0, total: 0 };
+    }
+  }
+
+  // ===================== HELPERS =====================
+
+  nombreSubdireccion(id: number): string {
+    return this.subdirecciones.find(s => s.id === id)?.nombre || '';
+  }
+
+  nombreServicio(id: number): string {
+    return this.servicios.find(s => s.id === id)?.nombre || '';
+  }
+
+  mesLabel(value: number): string {
+    return this.meses.find(m => m.value === value)?.label || '';
+  }
+
+  estadoInfo(value: string): { label: string; css: string } {
+    const e = this.estados.find(s => s.value === value);
+    const label = e?.label || value || '—';
+    const cssMap: Record<string, string> = {
+      P: 'badge-programada',
+      C: 'badge-completada',
+      S: 'badge-suspendida',
+      R: 'badge-reprogramada'
+    };
+    return { label, css: cssMap[value] || 'badge-default' };
+  }
+
+  ejecucionPorcentaje(data: Ejecucion): number {
+    const pct = (data.ejecutado ?? 0) * 100;
+    return Math.min(pct, 100);
   }
 }
