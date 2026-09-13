@@ -158,10 +158,6 @@
         <tr>
           <th class="th-campo">Duración real</th>
           <td class="td-campo">{{ det.duracion || "---" }}</td>
-          <th class="th-campo">Fecha de entrega de informe</th>
-          <td class="td-campo">
-            {{ det.fecha_entrega_informe || "" | date: "dd/MM/yyyy" }}
-          </td>
         </tr>
       </table>
 
@@ -220,7 +216,7 @@
     </section>
 
     <!-- Firmas -->
-    <section class="firmas">
+    <section class="firmas" style="margin-top: 90px">
       <div class="firma">
         <div class="firma-linea"></div>
         <strong>{{
@@ -234,6 +230,7 @@
         <strong> secretario(a) </strong>
         <span>Comité de Docencia y Desarrollo</span>
         <span>Recibido</span>
+        <span>Fecha:___________________ Hora: __________________</span>
       </div>
     </section>
 
