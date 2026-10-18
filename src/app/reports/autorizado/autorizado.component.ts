@@ -30,6 +30,18 @@ export class AutorizadoComponent implements OnInit {
   meses = mes;
   estados = estado;
 
+  // Overrides de encabezado/firmas
+  servicioNombreOverride = '';
+  atencionUsuario = '';
+  subdireccionNombreOverride = '';
+  subdireccionTecnica = '';
+  encargadoServicioOverride = '';
+  puestoFuncionalOverride = '';
+  elaboradoPorNombre = 'Mgtr. Ana Cecilia Colón Gaspar';
+  elaboradoPorCargo = 'Subdirección Técnica';
+  voBoNombreOverride = '';
+  voBoCargoOverride = '';
+
   servicioR: ServicioResponsables = {
     id: 0,
     nombre: '',
@@ -54,6 +66,17 @@ export class AutorizadoComponent implements OnInit {
     this.subId = config?.subId ?? 0;
     this.mesSeleccion = config?.mes ?? 0;
     this.anioSeleccion = config?.anio ?? this.comunicacionService.getAnioSeleccionado();
+
+    this.servicioNombreOverride = config?.servicioNombre || '';
+    this.atencionUsuario = config?.atencionUsuario || '';
+    this.subdireccionNombreOverride = config?.subdireccionNombre || '';
+    this.subdireccionTecnica = config?.subdireccionTecnica || '';
+    this.encargadoServicioOverride = config?.encargadoServicio || '';
+    this.puestoFuncionalOverride = config?.puestoFuncional || '';
+    this.elaboradoPorNombre = config?.elaboradoPorNombre || this.elaboradoPorNombre;
+    this.elaboradoPorCargo = config?.elaboradoPorCargo || this.elaboradoPorCargo;
+    this.voBoNombreOverride = config?.voBoNombre || '';
+    this.voBoCargoOverride = config?.voBoCargo || '';
 
     this.comunicacionService.anioSeleccionado$.pipe(skip(1)).subscribe(anio => {
       this.anioSeleccion = anio;

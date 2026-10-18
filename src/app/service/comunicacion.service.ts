@@ -7,6 +7,16 @@ export interface ReporteConfig {
   anio: number;
   mes: number | null;
   todos?: boolean;
+  servicioNombre?: string;
+  atencionUsuario?: string;
+  subdireccionNombre?: string;
+  subdireccionTecnica?: string;
+  encargadoServicio?: string;
+  puestoFuncional?: string;
+  elaboradoPorNombre?: string;
+  elaboradoPorCargo?: string;
+  voBoNombre?: string;
+  voBoCargo?: string;
 }
 
 @Injectable({

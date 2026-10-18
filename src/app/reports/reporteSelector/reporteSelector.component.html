@@ -81,3 +81,25 @@
     </div>
   </div>
 </div>
+
+@if (modalCronograma) {
+  <div class="modal-backdrop" (click)="cerrarModalCronograma()">
+    <div class="modal-cronograma" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+      <h3>Verificar datos del cronograma</h3>
+      <p class="modal-sub">Actualice o verifique la información del encabezado y firmas antes de generar.</p>
+      <div class="modal-grid">
+        <label>Subdirección<input [(ngModel)]="cronogramaForm.subdireccion" /></label>
+        <label>Servicio<input [(ngModel)]="cronogramaForm.servicio" /></label>
+        <label>Encargado(a) del servicio<input [(ngModel)]="cronogramaForm.encargadoServicio" /></label>
+        <label>Elaborado por - Nombre<input [(ngModel)]="cronogramaForm.elaboradoPorNombre" /></label>
+        <label>Elaborado por - Cargo<input [(ngModel)]="cronogramaForm.elaboradoPorCargo" /></label>
+        <label>Vo. Bo. - Nombre<input [(ngModel)]="cronogramaForm.voBoNombre" /></label>
+        <label>Vo. Bo. - Cargo<input [(ngModel)]="cronogramaForm.voBoCargo" /></label>
+      </div>
+      <div class="modal-botones">
+        <button class="btn-modal-cancelar" (click)="cerrarModalCronograma()">Regresar</button>
+        <button class="btn-modal-confirmar" (click)="confirmarCronograma()">Generar cronograma</button>
+      </div>
+    </div>
+  </div>
+}

@@ -32,6 +32,17 @@ export class ReporteSelectorComponent implements OnInit {
   mensaje = '';
   hayReporte = false;
 
+  modalCronograma = false;
+  cronogramaForm = {
+    subdireccion: '',
+    servicio: '',
+    encargadoServicio: '',
+    elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
+    elaboradoPorCargo: 'Subdirección Técnica',
+    voBoNombre: '',
+    voBoCargo: ''
+  };
+
   constructor(
     private api: ApiService,
     private router: Router,
@@ -40,7 +51,7 @@ export class ReporteSelectorComponent implements OnInit {
 
   get aniosDisponibles(): number[] {
     const a = this.anioActual;
-    return [a, a - 1, a - 2, a - 3, a - 4];
+    return [a + 1, a, a - 1, a - 2, a - 3, a - 4];
   }
 
   get puedeGenerar(): boolean {
@@ -108,12 +119,39 @@ export class ReporteSelectorComponent implements OnInit {
 
   irCronograma() {
     if (!this.puedeGenerar) return;
+    const servicio = this.servicios.find(s => s.id === this.servicioId);
+    const sub = this.subdirecciones.find(s => s.id === this.subdireccionId);
+    this.cronogramaForm = {
+      subdireccion: sub?.nombre || '',
+      servicio: servicio?.nombre || '',
+      encargadoServicio: servicio?.encargado_servicio || '',
+      elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
+      elaboradoPorCargo: 'Subdirección Técnica',
+      voBoNombre: servicio?.subdireccion?.persona_encargada || sub?.persona_encargada || '',
+      voBoCargo: servicio?.subdireccion?.nombre || sub?.nombre || ''
+    };
+    this.modalCronograma = true;
+  }
+
+  cerrarModalCronograma() {
+    this.modalCronograma = false;
+  }
+
+  confirmarCronograma() {
     this.comunicacionService.setReporteConfig({
       servicioId: this.servicioId,
       subId: this.subdireccionId,
       anio: this.anioSeleccion,
-      mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null
+      mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null,
+      subdireccionNombre: this.cronogramaForm.subdireccion,
+      servicioNombre: this.cronogramaForm.servicio,
+      encargadoServicio: this.cronogramaForm.encargadoServicio,
+      elaboradoPorNombre: this.cronogramaForm.elaboradoPorNombre,
+      elaboradoPorCargo: this.cronogramaForm.elaboradoPorCargo,
+      voBoNombre: this.cronogramaForm.voBoNombre,
+      voBoCargo: this.cronogramaForm.voBoCargo
     });
+    this.modalCronograma = false;
     this.router.navigate(['/autorizado']);
   }
 }

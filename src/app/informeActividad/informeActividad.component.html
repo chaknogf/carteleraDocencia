@@ -66,9 +66,7 @@
         <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
       </div>
       <div class="datos-encabezado">
-        <span class="institucion">HOSPITAL NACIONAL DE SISTEMA</span>
-        <span class="area">{{ subdireccionNombre || "Subdirección" }}</span>
-        <span class="servicio">Servicio: {{ servicioNombre || "---" }}</span>
+        <span class="institucion">COMITÉ DE DOCENCIA E INVESTIGACIÓN</span>
       </div>
     </header>
 
@@ -82,12 +80,14 @@
             }}</strong
           ></span
         >
-        <span class="fecha-emision"
-          >Fecha de emisión:
-          <strong>{{
-            fechaEmision | date: "dd 'de' MMMM 'de' yyyy"
-          }}</strong></span
-        >
+        <span class="fecha-emision">
+          <span class="fecha-linea"
+            >Fecha de emisión:
+            <strong>{{
+              fechaEmision | date: "dd 'de' MMMM 'de' yyyy"
+            }}</strong></span
+          >
+        </span>
       </div>
       <h1 class="titulo-informe">Informe de Actividad</h1>
     </div>
@@ -223,15 +223,19 @@
           firmanteServicio.nombre || "______________________________"
         }}</strong>
         <span>{{ firmanteServicio.puesto || "Responsable del Servicio" }}</span>
-        <span class="firma-servicio">{{ servicioNombre }}</span>
+        <span>Hospital General Tipo I de Tecpán Guatemala</span>
       </div>
       <div class="firma">
         <div class="firma-linea"></div>
-        <strong> secretario(a) </strong>
-        <span>Comité de Docencia y Desarrollo</span>
-        <span>Recibido</span>
-        <span>Fecha:___________________ Hora: __________________</span>
+        <strong>{{
+          firmanteJefatura.nombre || "______________________________"
+        }}</strong>
+        <span>{{ subdireccionNombre || "Subdirección" }}</span>
+        <span>Hospital General Tipo I de Tecpán Guatemala</span>
       </div>
+    </section>
+    <section class="firmas firmas-secundaria" style="margin-top: 140px">
+      <span>Área de Recibido</span>
     </section>
 
     <footer class="pie-hoja">

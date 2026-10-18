@@ -1,7 +1,6 @@
 <app-navbar class="no-print"></app-navbar>
 
 <div class="preview">
-
   <!-- ===== Barra de herramientas (solo pantalla) ===== -->
   <div class="toolbar no-print">
     <div class="toolbar-izq">
@@ -22,24 +21,36 @@
 
   <!-- ===== Resumen de filtros (solo pantalla) ===== -->
   <div class="chips no-print" *ngIf="!cargando">
-    <span class="chip"><b>Servicio:</b> {{ servicioR.nombre || '—' }}</span>
-    <span class="chip"><b>Subdirección:</b> {{ nombreSubdireccion || '—' }}</span>
-    <span class="chip" [class.chip-acento]="mesSeleccion > 0"><b>Período:</b> {{ periodo }}</span>
+    <span class="chip"
+      ><b>Subdirección:</b>
+      {{ subdireccionNombreOverride || nombreSubdireccion || "—" }}</span
+    >
+    <span class="chip"
+      ><b>Servicio:</b>
+      {{ servicioNombreOverride || servicioR.nombre || "—" }}</span
+    >
+
+    <span class="chip" [class.chip-acento]="mesSeleccion > 0"
+      ><b>Período:</b> {{ periodo }}</span
+    >
     <span class="chip"><b>Actividades:</b> {{ totales.total }}</span>
   </div>
 
   <!-- ===== Hoja del documento ===== -->
   <div class="hoja" *ngIf="!cargando">
-
     <!-- Membrete institucional -->
     <header class="membrete">
       <div class="logo">
         <img src="assets/images/logoDocumento.svg" alt="Logo Institucional" />
       </div>
       <div class="membrete-texto">
-        <span class="m-linea1">Ministerio de Salud Pública y Asistencia Social</span>
-        <span class="m-linea2">Hospital General Tipo I de Tecpán Guatemala</span>
-        <span class="m-linea3">Departamento de Docencia e Investigación</span>
+        <span class="m-linea1"
+          >Ministerio de Salud Pública y Asistencia Social</span
+        >
+        <span class="m-linea2"
+          >Hospital General Tipo I de Tecpán Guatemala</span
+        >
+        <span class="m-linea3">Comité de Docencia e Investigación</span>
       </div>
     </header>
 
@@ -52,20 +63,25 @@
     <!-- Datos del servicio -->
     <div class="datos">
       <div class="dato">
-        <span>Servicio</span>
-        <b>{{ servicioR.nombre || '—' }}</b>
+        <span>Subdirección</span>
+        <b>{{ subdireccionNombreOverride || nombreSubdireccion || "—" }}</b>
       </div>
       <div class="dato">
-        <span>Subdirección</span>
-        <b>{{ nombreSubdireccion || '—' }}</b>
+        <span>Servicio</span>
+        <b>{{ servicioNombreOverride || servicioR.nombre || "—" }}</b>
       </div>
       <div class="dato">
         <span>Encargado(a) del servicio</span>
-        <b>{{ servicioR.encargado_servicio || '—' }}</b>
+        <b>{{
+          encargadoServicioOverride || servicioR.encargado_servicio || "—"
+        }}</b>
       </div>
       <div class="dato">
-        <span>Puesto funcional</span>
-        <b>{{ servicioR.puesto_funcional || '—' }}</b>
+        <span>Lugar y Fecha</span>
+        <b
+          >Tecpán Guatemala,
+          {{ fechaGeneracion | date: "dd 'de' MMMM 'de' yyyy" }}</b
+        >
       </div>
     </div>
 
@@ -91,13 +107,17 @@
           <td class="num">{{ i + 1 }}</td>
           <td class="izq">{{ item.tema }}</td>
           <td class="izq">{{ item.actividad }}</td>
-          <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
+          <td>{{ item.fecha_programada | date: "dd/MM/yyyy" }}</td>
           <td>{{ item.mes }}</td>
           <td>{{ item.anio }}</td>
           <td>{{ item.modalidad }}</td>
           <td>{{ item.lugar }}</td>
           <td>{{ item.horario_programado }}</td>
-          <td><span class="estado" [ngClass]="estadoInfo(item.estado).css">{{ estadoInfo(item.estado).label }}</span></td>
+          <td>
+            <span class="estado" [ngClass]="estadoInfo(item.estado).css">{{
+              estadoInfo(item.estado).label
+            }}</span>
+          </td>
           <td class="izq nota">{{ item.nota }}</td>
         </tr>
       </tbody>
@@ -112,33 +132,62 @@
 
     <!-- Conteo por estado -->
     <div class="resumen-estado">
-      <div class="se se-programadas"><b>{{ totales.programadas }}</b><span>Programadas</span></div>
-      <div class="se se-completadas"><b>{{ totales.completadas }}</b><span>Completadas</span></div>
-      <div class="se se-reprogramadas"><b>{{ totales.reprogramadas }}</b><span>Reprogramadas</span></div>
-      <div class="se se-suspendidas"><b>{{ totales.suspendidas }}</b><span>Suspendidas</span></div>
-      <div class="se se-anuladas"><b>{{ totales.anuladas }}</b><span>Anuladas</span></div>
+      <div class="se se-programadas">
+        <b>{{ totales.programadas }}</b
+        ><span>Programadas</span>
+      </div>
+      <div class="se se-completadas">
+        <b>{{ totales.completadas }}</b
+        ><span>Completadas</span>
+      </div>
+      <div class="se se-reprogramadas">
+        <b>{{ totales.reprogramadas }}</b
+        ><span>Reprogramadas</span>
+      </div>
+      <div class="se se-suspendidas">
+        <b>{{ totales.suspendidas }}</b
+        ><span>Suspendidas</span>
+      </div>
+      <div class="se se-anuladas">
+        <b>{{ totales.anuladas }}</b
+        ><span>Anuladas</span>
+      </div>
     </div>
 
     <!-- Firmas -->
     <div class="firmas">
       <div class="firma">
         <p class="linea"></p>
-        <p class="nombre">{{ servicioR.encargado_servicio || '________' }}</p>
-        <p class="cargo">{{ servicioR.puesto_funcional }}</p>
-        <p class="rol">Elaborado por</p>
+        <p class="nombre">
+          {{ elaboradoPorNombre || servicioR.encargado_servicio || "________" }}
+        </p>
+        <p class="cargo">
+          {{ elaboradoPorCargo || servicioR.puesto_funcional }}
+        </p>
       </div>
       <div class="firma">
-        <p class="linea"></p>
-        <p class="nombre">{{ servicioR.subdireccion?.persona_encargada || '________' }}</p>
-        <p class="cargo">{{ servicioR.subdireccion?.nombre }}</p>
         <p class="rol">Vo. Bo.</p>
+        <p class="linea"></p>
+        <p class="nombre">
+          {{
+            voBoNombreOverride ||
+              servicioR.subdireccion?.persona_encargada ||
+              "________"
+          }}
+        </p>
+        <p class="cargo">
+          {{ voBoCargoOverride || servicioR.subdireccion?.nombre }}
+        </p>
       </div>
     </div>
 
     <!-- Pie institucional -->
     <footer class="pie">
-      <span>Hospital General Tipo I de Tecpán Guatemala</span>
-      <span>Generado el {{ fechaGeneracion | date : "dd/MM/yyyy 'a las' HH:mm" }}</span>
+      <span>https://www.htecpan.com/cartelera/eventos</span>
+      <span
+        >Generado el
+        {{ fechaGeneracion | date: "dd/MM/yyyy 'a las' HH:mm" }}</span
+      >
     </footer>
   </div>
 
@@ -151,5 +200,4 @@
       Ajustar filtros del reporte
     </button>
   </div>
-
 </div>

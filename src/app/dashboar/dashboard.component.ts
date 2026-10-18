@@ -37,6 +37,18 @@ export class DashboardComponent implements OnInit {
   reporteGenerado = false;
   mensajeReporte = '';
 
+  modalCronograma = false;
+  _cronogramaTodos = false;
+  cronogramaForm = {
+    subdireccion: '',
+    servicio: '',
+    encargadoServicio: '',
+    elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
+    elaboradoPorCargo: 'Subdirección Técnica',
+    voBoNombre: '',
+    voBoCargo: ''
+  };
+
   // ===== Analítica =====
   anioAnalitica = this.anioActual;
   subAnalitica = 0;
@@ -47,7 +59,7 @@ export class DashboardComponent implements OnInit {
 
   get aniosDisponibles(): number[] {
     const a = this.anioActual;
-    return [a, a - 1, a - 2, a - 3, a - 4];
+    return [a + 1, a, a - 1, a - 2, a - 3, a - 4];
   }
 
   get puedeReporte(): boolean {
@@ -176,24 +188,80 @@ export class DashboardComponent implements OnInit {
 
   irCronograma() {
     if (this.reporteTodos) {
+      // Para "todos", no hay servicio único; abrir modal con datos genéricos
+      this.cronogramaForm = {
+        subdireccion: '',
+        servicio: '',
+        encargadoServicio: '',
+        elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
+        elaboradoPorCargo: 'Subdirección Técnica',
+        voBoNombre: '',
+        voBoCargo: ''
+      };
+      this._cronogramaTodos = true;
+      this.modalCronograma = true;
+      return;
+    }
+    if (!this.puedeReporte) {
+      this.comunicacionService.clearReporteConfig();
+      this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
+      this.router.navigate(['/autorizado']);
+      return;
+    }
+    const servicio = this.servicios.find(s => s.id === this.servicioId);
+    const sub = this.subdirecciones.find(s => s.id === this.subdireccionId);
+    this.cronogramaForm = {
+      subdireccion: sub?.nombre || '',
+      servicio: servicio?.nombre || '',
+      encargadoServicio: servicio?.encargado_servicio || '',
+      elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
+      elaboradoPorCargo: 'Subdirección Técnica',
+      voBoNombre: servicio?.subdireccion?.persona_encargada || sub?.persona_encargada || '',
+      voBoCargo: servicio?.subdireccion?.nombre || sub?.nombre || ''
+    };
+    this._cronogramaTodos = false;
+    this.modalCronograma = true;
+  }
+
+  cerrarModalCronograma() {
+    this.modalCronograma = false;
+  }
+
+  confirmarCronograma() {
+    if (this._cronogramaTodos) {
       this.comunicacionService.setReporteConfig({
         servicioId: null,
         subId: null,
         anio: this.anioSeleccion,
         mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null,
-        todos: true
+        todos: true,
+        subdireccionNombre: this.cronogramaForm.subdireccion,
+        servicioNombre: this.cronogramaForm.servicio,
+        encargadoServicio: this.cronogramaForm.encargadoServicio,
+        elaboradoPorNombre: this.cronogramaForm.elaboradoPorNombre,
+        elaboradoPorCargo: this.cronogramaForm.elaboradoPorCargo,
+        voBoNombre: this.cronogramaForm.voBoNombre,
+        voBoCargo: this.cronogramaForm.voBoCargo
       });
     } else if (this.puedeReporte) {
       this.comunicacionService.setReporteConfig({
         servicioId: this.servicioId,
         subId: this.subdireccionId,
         anio: this.anioSeleccion,
-        mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null
+        mes: this.mesSeleccionado > 0 ? this.mesSeleccionado : null,
+        subdireccionNombre: this.cronogramaForm.subdireccion,
+        servicioNombre: this.cronogramaForm.servicio,
+        encargadoServicio: this.cronogramaForm.encargadoServicio,
+        elaboradoPorNombre: this.cronogramaForm.elaboradoPorNombre,
+        elaboradoPorCargo: this.cronogramaForm.elaboradoPorCargo,
+        voBoNombre: this.cronogramaForm.voBoNombre,
+        voBoCargo: this.cronogramaForm.voBoCargo
       });
     } else {
       this.comunicacionService.clearReporteConfig();
       this.comunicacionService.setAnioSeleccionado(this.anioSeleccion);
     }
+    this.modalCronograma = false;
     this.router.navigate(['/autorizado']);
   }
 
