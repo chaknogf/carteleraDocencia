@@ -7,37 +7,63 @@
     <div class="filtros-grid">
       <div class="filtro-item">
         <label for="sel-subdireccion">Subdirección</label>
-        <select id="sel-subdireccion" [(ngModel)]="subdireccionId" (ngModelChange)="onSubdireccionChange()">
+        <select
+          id="sel-subdireccion"
+          [(ngModel)]="subdireccionId"
+          (ngModelChange)="onSubdireccionChange()"
+        >
           <option [ngValue]="0" disabled>Seleccione</option>
-          <option *ngFor="let s of subdirecciones" [ngValue]="s.id">{{ s.nombre }}</option>
+          <option *ngFor="let s of subdirecciones" [ngValue]="s.id">
+            {{ s.nombre }}
+          </option>
         </select>
       </div>
       <div class="filtro-item">
         <label for="sel-servicio">Servicio</label>
-        <select id="sel-servicio" [(ngModel)]="servicioId" [disabled]="!subdireccionId">
-          <option [ngValue]="0" disabled>&mdash; Elija un servicio &mdash;</option>
-          <option *ngFor="let sv of servicios" [ngValue]="sv.id">{{ sv.nombre }}</option>
+        <select
+          id="sel-servicio"
+          [(ngModel)]="servicioId"
+          [disabled]="!subdireccionId"
+        >
+          <option [ngValue]="0" disabled>
+            &mdash; Elija un servicio &mdash;
+          </option>
+          <option *ngFor="let sv of servicios" [ngValue]="sv.id">
+            {{ sv.nombre }}
+          </option>
         </select>
       </div>
       <div class="filtro-item">
         <label for="sel-anio">Año</label>
         <select id="sel-anio" [(ngModel)]="anioSeleccion">
-          <option *ngFor="let a of aniosDisponibles" [ngValue]="a">{{ a }}</option>
+          <option *ngFor="let a of aniosDisponibles" [ngValue]="a">
+            {{ a }}
+          </option>
         </select>
       </div>
       <div class="filtro-item">
         <label for="sel-mes">Mes (opcional)</label>
         <select id="sel-mes" [(ngModel)]="mesSeleccionado">
           <option [ngValue]="0">Todos</option>
-          <option *ngFor="let m of meses" [ngValue]="m.value">{{ m.label }}</option>
+          <option *ngFor="let m of meses" [ngValue]="m.value">
+            {{ m.label }}
+          </option>
         </select>
       </div>
       <div class="filtro-acciones">
-        <button class="btn btn-primary" (click)="generar()" [disabled]="!puedeGenerar || buscando">
+        <button
+          class="btn btn-primary"
+          (click)="generar()"
+          [disabled]="!puedeGenerar || buscando"
+        >
           <span *ngIf="buscando" class="spinner"></span>
           Generar reporte
         </button>
-        <button class="btn btn-secondary" (click)="irCronograma()" [disabled]="!puedeGenerar">
+        <button
+          class="btn btn-secondary"
+          (click)="irCronograma()"
+          [disabled]="!puedeGenerar"
+        >
           Ver cronograma (/autorizado)
         </button>
       </div>
@@ -48,7 +74,9 @@
 
   <div *ngIf="hayReporte && reporte.length > 0" class="tabla-card">
     <div class="tabla-header">
-      <h2>Cronograma {{ anioSeleccion }} &mdash; {{ nombreServicio(servicioId) }}</h2>
+      <h2>
+        Cronograma {{ anioSeleccion }} &mdash; {{ nombreServicio(servicioId) }}
+      </h2>
       <span>{{ reporte.length }} actividad(es)</span>
     </div>
     <div class="tabla-scroll">
@@ -70,7 +98,7 @@
             <td>{{ i + 1 }}</td>
             <td>{{ item.tema }}</td>
             <td>{{ item.actividad }}</td>
-            <td>{{ item.fecha_programada | date : "dd/MM/yyyy" }}</td>
+            <td>{{ item.fecha_programada | date: "dd/MM/yyyy" }}</td>
             <td>{{ item.mes }}</td>
             <td>{{ item.modalidad }}</td>
             <td>{{ item.estado }}</td>
@@ -84,21 +112,50 @@
 
 @if (modalCronograma) {
   <div class="modal-backdrop" (click)="cerrarModalCronograma()">
-    <div class="modal-cronograma" (click)="$event.stopPropagation()" role="dialog" aria-modal="true">
+    <div
+      class="modal-cronograma"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+    >
       <h3>Verificar datos del cronograma</h3>
-      <p class="modal-sub">Actualice o verifique la información del encabezado y firmas antes de generar.</p>
+      <p class="modal-sub">
+        Actualice o verifique la información del encabezado y firmas antes de
+        generar.
+      </p>
       <div class="modal-grid">
-        <label>Subdirección<input [(ngModel)]="cronogramaForm.subdireccion" /></label>
+        <label
+          >Subdirección<input [(ngModel)]="cronogramaForm.subdireccion"
+        /></label>
         <label>Servicio<input [(ngModel)]="cronogramaForm.servicio" /></label>
-        <label>Encargado(a) del servicio<input [(ngModel)]="cronogramaForm.encargadoServicio" /></label>
-        <label>Elaborado por - Nombre<input [(ngModel)]="cronogramaForm.elaboradoPorNombre" /></label>
-        <label>Elaborado por - Cargo<input [(ngModel)]="cronogramaForm.elaboradoPorCargo" /></label>
-        <label>Vo. Bo. - Nombre<input [(ngModel)]="cronogramaForm.voBoNombre" /></label>
-        <label>Vo. Bo. - Cargo<input [(ngModel)]="cronogramaForm.voBoCargo" /></label>
+        <label
+          >Encargado(a) del servicio<input
+            [(ngModel)]="cronogramaForm.encargadoServicio"
+        /></label>
+        <label
+          >Elaborado por - Nombre quien firma<input
+            [(ngModel)]="cronogramaForm.elaboradoPorNombre"
+        /></label>
+        <label
+          >Elaborado por - Cargo quien firma<input
+            [(ngModel)]="cronogramaForm.elaboradoPorCargo"
+        /></label>
+        <label
+          >Vo. Bo. - Nombre de subdirecctor<input
+            [(ngModel)]="cronogramaForm.voBoNombre"
+        /></label>
+        <label
+          >Vo. Bo. - Cargo de subdirector<input
+            [(ngModel)]="cronogramaForm.voBoCargo"
+        /></label>
       </div>
       <div class="modal-botones">
-        <button class="btn-modal-cancelar" (click)="cerrarModalCronograma()">Regresar</button>
-        <button class="btn-modal-confirmar" (click)="confirmarCronograma()">Generar cronograma</button>
+        <button class="btn-modal-cancelar" (click)="cerrarModalCronograma()">
+          Regresar
+        </button>
+        <button class="btn-modal-confirmar" (click)="confirmarCronograma()">
+          Generar cronograma
+        </button>
       </div>
     </div>
   </div>

@@ -164,6 +164,9 @@ export interface Reportes {
   subdireccion: string;
   subdireccion_id: number;
   fecha_programada: string;
+  horario_programado: string;
+  lugar_id: number;
+  lugar: string;
   mes: string;
   mes_id: number;
   anio: number;

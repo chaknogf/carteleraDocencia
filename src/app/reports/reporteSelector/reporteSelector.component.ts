@@ -37,8 +37,8 @@ export class ReporteSelectorComponent implements OnInit {
     subdireccion: '',
     servicio: '',
     encargadoServicio: '',
-    elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
-    elaboradoPorCargo: 'Subdirección Técnica',
+    elaboradoPorNombre: '',
+    elaboradoPorCargo: '',
     voBoNombre: '',
     voBoCargo: ''
   };
@@ -47,7 +47,7 @@ export class ReporteSelectorComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private comunicacionService: ComunicacionService
-  ) {}
+  ) { }
 
   get aniosDisponibles(): number[] {
     const a = this.anioActual;
@@ -125,10 +125,10 @@ export class ReporteSelectorComponent implements OnInit {
       subdireccion: sub?.nombre || '',
       servicio: servicio?.nombre || '',
       encargadoServicio: servicio?.encargado_servicio || '',
-      elaboradoPorNombre: 'Mgtr. Ana Cecilia Colón Gaspar',
-      elaboradoPorCargo: 'Subdirección Técnica',
-      voBoNombre: servicio?.subdireccion?.persona_encargada || sub?.persona_encargada || '',
-      voBoCargo: servicio?.subdireccion?.nombre || sub?.nombre || ''
+      elaboradoPorNombre: '',
+      elaboradoPorCargo: '',
+      voBoNombre: '',
+      voBoCargo: ''
     };
     this.modalCronograma = true;
   }

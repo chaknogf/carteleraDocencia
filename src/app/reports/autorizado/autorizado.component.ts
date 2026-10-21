@@ -11,6 +11,15 @@ import { skip } from 'rxjs';
 const ICON_IMPRIMIR = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`;
 const ICON_VOLVER = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>`;
 
+// Normaliza el estado que devuelve la API (texto o código) a un código de una letra
+const CODIGO_ESTADO: Record<string, string> = {
+  P: 'P', PROGRAMADA: 'P', PROGRAMADO: 'P', PLANIFICADA: 'P',
+  C: 'C', COMPLETADA: 'C', COMPLETADO: 'C',
+  S: 'S', SUSPENDIDA: 'S', SUSPENDIDO: 'S',
+  R: 'R', REPROGRAMADA: 'R', REPROGRAMADO: 'R',
+  A: 'A', ANULADA: 'A', ANULADO: 'A', CANCELADA: 'A', CANCELADO: 'A'
+};
+
 @Component({
   selector: 'app-autorizado',
   templateUrl: './autorizado.component.html',
@@ -37,8 +46,8 @@ export class AutorizadoComponent implements OnInit {
   subdireccionTecnica = '';
   encargadoServicioOverride = '';
   puestoFuncionalOverride = '';
-  elaboradoPorNombre = 'Mgtr. Ana Cecilia Colón Gaspar';
-  elaboradoPorCargo = 'Subdirección Técnica';
+  elaboradoPorNombre = '';
+  elaboradoPorCargo = '';
   voBoNombreOverride = '';
   voBoCargoOverride = '';
 
@@ -56,7 +65,7 @@ export class AutorizadoComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private comunicacionService: ComunicacionService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const localServid = Number(localStorage.getItem('servicio_id')) || null;
@@ -123,7 +132,7 @@ export class AutorizadoComponent implements OnInit {
   get totales() {
     const t = { total: this.resumen.length, programadas: 0, completadas: 0, suspendidas: 0, reprogramadas: 0, anuladas: 0 };
     for (const item of this.resumen) {
-      const s = item?.estado;
+      const s = this.estadoCodigo(item?.estado);
       if (s === 'P') t.programadas++;
       else if (s === 'C') t.completadas++;
       else if (s === 'S') t.suspendidas++;
@@ -133,12 +142,29 @@ export class AutorizadoComponent implements OnInit {
     return t;
   }
 
+  /**
+   * La API (/reporte/vista) devuelve el estado como texto ("Programado", "Completada"...),
+   * pero algunos orígenes lo envían como código ("P", "C"...). Se normaliza a un código.
+   */
+  estadoCodigo(value: any): string {
+    const v = String(value ?? '').trim().toUpperCase();
+    if (!v) return '';
+    if (CODIGO_ESTADO[v]) return CODIGO_ESTADO[v];
+    if (v.includes('COMPLET')) return 'C';
+    if (v.includes('REPROGRA')) return 'R';
+    if (v.includes('SUSPEND')) return 'S';
+    if (v.includes('ANULAD') || v.includes('CANCEL')) return 'A';
+    if (v.includes('PROGRAM')) return 'P';
+    return '';
+  }
+
   mesLabel(value: number): string {
     return this.meses.find(m => m.value === value)?.label || '';
   }
 
   estadoInfo(value: string): { label: string; css: string } {
-    const e = this.estados.find(s => s.value === value);
+    const codigo = this.estadoCodigo(value);
+    const e = this.estados.find(s => s.value === codigo);
     const cssMap: Record<string, string> = {
       P: 'est-programada',
       C: 'est-completada',
@@ -146,7 +172,7 @@ export class AutorizadoComponent implements OnInit {
       R: 'est-reprogramada',
       A: 'est-anulada'
     };
-    return { label: e?.label || value || '—', css: cssMap[value] || 'est-default' };
+    return { label: e?.label || value || '—', css: cssMap[codigo] || 'est-default' };
   }
 
   regresar() {
